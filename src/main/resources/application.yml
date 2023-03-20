@@ -17,6 +17,8 @@ spring:
   web:
     resources:
       static-locations: classpath:/healingimgs/
+  profiles:
+    include: security
 
 # 이미지 저장할 위치와 응답할 때 이미지 주소 세팅
 image:
@@ -37,9 +39,7 @@ image:
 
 # HS512 알고리즘을 사용할 것이기 때문에 512bit, 즉 64byte 이상의 secret key를 사용
 # Secret 값은 특정 문자열을 Base64 로 인코딩한 값 사용
-jwt:
-  secret: #your secret key
-
+# jwt 설정은 application-security.yml 파일에서 적용
 
 mybatis:
   # mapper.xml location Setting
