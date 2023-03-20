@@ -1,0 +1,56 @@
+server:
+  port: 8090
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    #url: jdbc:oracle:thin:@3.36.218.186:1522/xe
+    #url: jdbc:oracle:thin:@192.168.0.10:1522/xe
+    url: jdbc:mysql:@localhost:3306/healingdog
+    username: healingdog
+    password: healingdog
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
+  web:
+    resources:
+      static-locations: classpath:/healingimgs/
+
+# 이미지 저장할 위치와 응답할 때 이미지 주소 세팅
+image:
+  # WebConfig에 세팅
+  #add-resource-locations: classpath:/static/healingimgs/
+  #add-resource-handler: /healingimgs/**
+
+  add-resource-locations: /healingimgs/
+  add-resource-handler: /healingimgs/**
+
+
+  # ProductService에 세팅
+  #image-dir: src/main/resources/static/healingimgs/
+  image-dir: /healingimgs/
+  #image-url: http://3.36.218.186:8090/healingimgs/
+  #image-url: http://192.168.0.10:8090/healingimgs/
+  image-url: http://localhost:8090/healingimgs/
+
+# HS512 알고리즘을 사용할 것이기 때문에 512bit, 즉 64byte 이상의 secret key를 사용
+# Secret 값은 특정 문자열을 Base64 로 인코딩한 값 사용
+jwt:
+  secret: #your secret key
+
+
+mybatis:
+  # mapper.xml location Setting
+  mapper-locations: mybatis/mapper/*.xml
+  # alias Setting
+  type-aliases-package: com.healing.healingdog
+  configuration:
+    map-underscore-to-camel-case: true
+
+logging:
+  level:
+    root: info
+
+
