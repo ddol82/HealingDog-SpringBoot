@@ -10,10 +10,12 @@ import org.springframework.stereotype.Service;
 public class BoardingManageService {
 
 
-
-
-
     public Object selectBoarding(int providerCode) {
         return "";
     }
+
+    public Object selectBoardingInfo(int providerCode) {
+        return "";
+    }
+
 }
