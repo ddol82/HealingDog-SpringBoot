@@ -40,11 +40,11 @@
 
 <configuration scan="true" scanPeriod="30 seconds">
 
-<!--    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">-->
-<!--        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">-->
-<!--            <pattern>%-5level %d{HH:mm:ss.SSS} [%thread] %logger{36} - %msg%n</pattern>-->
-<!--        </encoder>-->
-<!--    </appender>-->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%-5level %d{HH:mm:ss.SSS} [%thread] %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
 
 
 <!--    <appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
@@ -76,11 +76,11 @@
 <!--        <encoder class="net.logstash.logback.encoder.LogstashEncoder"></encoder>-->
 <!--    </appender>-->
 
-<!--    &lt;!&ndash; root레벨 설정 &ndash;&gt;-->
-<!--    <root level="DEBUG">-->
-<!--        <appender-ref ref="console" />-->
+    <!-- root레벨 설정 -->
+    <root level="DEBUG">
+        <appender-ref ref="console" />
 <!--        <appender-ref ref="stash" />-->
 <!--        <appender-ref ref="ROLLING" />-->
-<!--    </root>-->
+    </root>
 
 </configuration>
