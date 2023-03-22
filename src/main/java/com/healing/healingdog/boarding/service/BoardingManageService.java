@@ -23,7 +23,7 @@ public class BoardingManageService {
 
         BoardingServiceDTO result = boardingManageMapper.selectBoardingInfo(providerCode);
 
-        return "result";
+        return result;
     }
 
 }
