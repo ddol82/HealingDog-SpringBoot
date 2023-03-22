@@ -14,12 +14,13 @@ public class BoardingServiceDTO {
     private String title;
     private String address;
     private String hashtag;
-    private String intorduce;
+    private String introduce;
     private int daysCostS;
     private int daysCostM;
     private int daysCostL;
     private int timeCostS;
     private int timeCostM;
     private int timeCostL;
+    private String state;
 
 }

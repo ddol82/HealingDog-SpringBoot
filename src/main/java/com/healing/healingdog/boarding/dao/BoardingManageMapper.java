@@ -8,4 +8,10 @@ public interface BoardingManageMapper {
 
 
     BoardingServiceDTO selectBoardingInfo(int providerCode);
+
+    int registerBoardingInfo(BoardingServiceDTO boardingServiceDTO);
+
+    int updateBoardingInfo(BoardingServiceDTO boardingServiceDTO);
+
+    int deleteBoardingInfo(int providerCode);
 }
