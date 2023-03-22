@@ -28,6 +28,7 @@ public class BoardingManageController {
 //  위탁돌봄 정보 관리
     @GetMapping("info")
     public ResponseEntity<ResponseDTO> selectBoardingInfo(int providerCode) {
+        log.info("REQUEST API selectBoardingInfo ={}",providerCode);
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "위탁돌봄정보 조회 성공", boardingManageService.selectBoardingInfo(providerCode)));
     }
 
