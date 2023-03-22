@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.healing.healingdog.boarding.dao.BoardingManageMapper">
+
+
+<!--  borading-manage/info CRUD  -->
+
+    <select id="selectBoardingInfo" resultType="BoardingServiceDTO">
+        SELECT
+            *
+        FROM boarding_services
+        WHERE
+            provider_code=#{providerCode}
+    </select>
+
+    <insert id="registerBoardingInfo">
+        INSERT INTO
+            boarding_services
+        VALUES (
+                null,
+                #{providerCode},
+                #{title},
+                #{address},
+                #{hashtag},
+                #{introduce},
+                #{daysCostS},
+                #{daysCostM},
+                #{daysCostL},
+                #{timeCostS},
+                #{timeCostM},
+                #{timeCostL},
+                DEFAULT
+                );
+    </insert>
+
+    <update id="updateBoardingInfo">
+        UPDATE boarding_services
+        SET
+            title=#{title},
+            address=#{address},
+            hashtag=#{hashtag},
+            introduce=#{introduce},
+            days_cost_s=#{daysCostS},
+            days_cost_m=#{daysCostM},
+            days_cost_l=#{daysCostL},
+            time_cost_s=#{timeCostS},
+            time_cost_m=#{timeCostM},
+            time_cost_l=#{timeCostL}
+        WHERE provider_code = #{providerCode};
+    </update>
+
+    <delete id="deleteBoardingInfo">
+        DELETE FROM boarding_services
+        WHERE boarding_service_code=(
+            SELECT
+                boarding_service_code
+            FROM(
+                SELECT
+                    boarding_service_code
+                FROM boarding_services
+                WHERE provider_code=#{providerCode}
+            )tmp
+        );
+    </delete>
+
+
+
+</mapper>
