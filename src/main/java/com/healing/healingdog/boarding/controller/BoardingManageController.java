@@ -6,10 +6,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
 
 @Slf4j
 @RestController
@@ -21,15 +20,16 @@ public class BoardingManageController {
 
 //  위탁돌봄 관리페이지 접속 시 모든 정보 불러옴
     @GetMapping("/")
-    public ResponseEntity<ResponseDTO> selectBoarding(@RequestParam int providerCode) {
+    public ResponseEntity<ResponseDTO> selectBoarding(int providerCode) {
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "갤러리 조회 성공", boardingManageService.selectBoarding(providerCode)));
     }
 
 
 //  위탁돌봄 정보 관리
     @GetMapping("/info")
-    public ResponseEntity<ResponseDTO> selectBoardingInfo(int providerCode) {
-        log.info("REQUEST API selectBoardingInfo ={}",providerCode);
+    public ResponseEntity<ResponseDTO> selectBoardingInfo(@RequestBody HashMap<String, String> input) {
+        log.info("REQUEST API selectBoardingInfo ={}",input);
+        int providerCode = Integer.parseInt(input.get("providerCode"));
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "위탁돌봄정보 조회 성공", boardingManageService.selectBoardingInfo(providerCode)));
     }
 
