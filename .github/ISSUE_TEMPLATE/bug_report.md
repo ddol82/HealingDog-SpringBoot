@@ -1,0 +1,32 @@
+---
+name: Bug report
+about: Create a report to help us improve
+title: ''
+labels: ''
+assignees: ''
+
+---
+
+**Describe the bug**
+발생한 버그에 대한 설명을 적어주세요.
+
+**To Reproduce**
+버그를 재현하는 과정을 작성해주세요.
+1. Go to '...'
+2. Click on '....'
+3. Scroll down to '....'
+4. See error
+
+**Expected behavior**
+기대했던 동작 결과를 작성해주세요.
+
+**Screenshots**
+동작이 가능하다면, 스크린샷을 남겨주세요.
+
+**Operating Environment**
+ - OS: [e.g. iOS]
+ - Browser [e.g. chrome, safari]
+ - Version [e.g. 22]
+
+**Additional context**
+추가적으로 작성할 내용이 있다면 기술해주세요.
