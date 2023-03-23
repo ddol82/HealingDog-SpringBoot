@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.healing.healingdog.common.file.model.dao.ImageMapper">
+    <resultMap id="boardImageResultMap" type="ImageDTO">
+        <id property="code" column="board_image_code"/>
+        <result property="refCode" column="board_code"/>
+        <result property="usage" column="usage"/>
+        <result property="thumbnail" column="thumbnail"/>
+        <result property="original" column="original"/>
+    </resultMap>
+    <resultMap id="serviceImageResultMap" type="ImageDTO">
+        <id property="code" column="service_image_code"/>
+        <result property="category" column="service_category_code"/>
+        <result property="refCode" column="ref_code"/>
+        <result property="usage" column="usage"/>
+        <result property="thumbnail" column="thumbnail"/>
+        <result property="original" column="original"/>
+    </resultMap>
+    <resultMap id="memberImageResultMap" type="ImageDTO">
+        <id property="code" column="member_image_code"/>
+        <result property="category" column="member_category_code"/>
+        <result property="refCode" column="ref_code"/>
+        <result property="usage" column="usage"/>
+        <result property="thumbnail" column="thumbnail"/>
+        <result property="original" column="original"/>
+    </resultMap>
+    <resultMap id="reviewImageResultMap" type="ImageDTO">
+        <id property="code" column="review_image_code"/>
+        <result property="refCode" column="reviews_code"/>
+        <result property="usage" column="usage"/>
+        <result property="thumbnail" column="thumbnail"/>
+        <result property="original" column="original"/>
+    </resultMap>
+    <resultMap id="certificateImageResultMap" type="ImageDTO">
+        <id property="code" column="certificate_image_code"/>
+        <result property="refCode" column="certificate_code"/>
+        <result property="usage" column="usage"/>
+        <result property="thumbnail" column="thumbnail"/>
+        <result property="original" column="original"/>
+    </resultMap>
+
+    <select id="boardImageListLoadByRef" resultMap="boardImageResultMap" parameterType="string">
+        SELECT BI.board_image_code
+             , BI.board_code
+             , BI.usage
+             , BI.thumbnail
+             , BI.original
+          FROM board_images BI
+         WHERE BI.board_code = #{ refCode }
+    </select>
+</mapper>
