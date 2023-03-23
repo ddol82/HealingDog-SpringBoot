@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.healing.healingdog.boarding.dao.BoardingMapper">
+
+
+<!--  boarding/{boarding_service_code}/booking CRUD  -->
+
+    <insert id="registerBoardingBooking">
+        INSERT INTO boarding_bookings
+        VALUES (
+            NULL,
+            #{boardingServiceCode},
+            #{userCode},
+            #{mypetCode},
+            CURRENT_TIMESTAMP,
+            #{boardingCategory},
+            #{checkIn},
+            #{checkOut},
+            #{payment}
+        )
+    </insert>
+
+    <delete id="deleteBoardingBooking">
+        DELETE FROM boarding_bookings
+        WHERE
+            boarding_booking_code=#{boardingBookingCode}
+    </delete>
+
+
+</mapper>

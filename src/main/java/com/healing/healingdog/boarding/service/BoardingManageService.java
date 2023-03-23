@@ -42,7 +42,7 @@ public class BoardingManageService {
     public int deleteBoardingInfo(int providerCode) {
         log.info("REQUEST SERVICE selectBoardingInfo ={}",providerCode);
         int result = boardingManageMapper.deleteBoardingInfo(providerCode);
-        log.info("result.toString() ={}", result + "개 수정 완료.");
+        log.info("result.toString() ={}", result + "개 삭제 완료.");
         return result;
     }
 }
