@@ -4,8 +4,8 @@ import com.healing.healingdog.exception.DuplicatedUsernameException;
 import com.healing.healingdog.exception.LoginFailedException;
 import com.healing.healingdog.jwt.TokenProvider;
 import com.healing.healingdog.login.dao.UserMapper;
-import com.healing.healingdog.login.dto.UserDto;
-import com.healing.healingdog.login.dto.TokenDto;
+import com.healing.healingdog.login.dto.UserDTO;
+import com.healing.healingdog.login.dto.TokenDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -28,7 +28,7 @@ public class AuthService {
     }
 
     @Transactional
-    public UserDto signup(UserDto userDto) {
+    public UserDTO signup(UserDTO userDto) {
         log.info("[AuthService] Signup Start ===================================");
         log.info("[AuthService] UserRequestDto {}", userDto);
 
@@ -49,13 +49,13 @@ public class AuthService {
     }
 
     @Transactional
-    public TokenDto login(UserDto userDto) {
+    public TokenDTO login(UserDTO userDto) {
         log.info("[AuthService] Login Start ===================================");
         log.info("[AuthService] {}", userDto);
 
 
         // 1. 이메일 조회
-        UserDto user = userMapper.findByUserEmail(userDto.getEmail())
+        UserDTO user = userMapper.findByUserEmail(userDto.getEmail())
                 .orElseThrow(() -> new LoginFailedException("잘못된 이메일 또는 비밀번호입니다"));
         log.info("[AuthService] 이메일조회 완료 {} ", user);
 
@@ -66,7 +66,7 @@ public class AuthService {
         }
 
         // 3. 토큰 발급
-        TokenDto tokenDto = tokenProvider.generateTokenDto(user);
+        TokenDTO tokenDto = tokenProvider.generateTokenDto(user);
         log.info("[AuthService] tokenDto {}", tokenDto);
 
         log.info("[AuthService] Login End ===================================");

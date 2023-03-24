@@ -1,7 +1,7 @@
 package com.healing.healingdog.login.controller;
 
 
-import com.healing.healingdog.common.ResponseDto;
+import com.healing.healingdog.common.ResponseDTO;
 import com.healing.healingdog.login.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +20,9 @@ public class UserController {
     }
 
     @GetMapping("/members/{memberId}")
-    public ResponseEntity<ResponseDto> selectMyMemberInfo(@PathVariable String email) {
+    public ResponseEntity<ResponseDTO> selectMyMemberInfo(@PathVariable String email) {
 
-        return ResponseEntity.ok().body(new ResponseDto(HttpStatus.OK, "조회 성공", userService.selectMyInfo(email)));
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "조회 성공", userService.selectMyInfo(email)));
     }
 
 

@@ -1,6 +1,6 @@
 package com.healing.healingdog.login.dao;
 
-import com.healing.healingdog.login.dto.UserDto;
+import com.healing.healingdog.login.dto.UserDTO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.Optional;
@@ -10,14 +10,14 @@ import java.util.Optional;
 public interface UserMapper {
 
     //이메일 중복조회
-    UserDto selectByEmail(String email);
+    UserDTO selectByEmail(String email);
 
     //회원가입
-    int insertUser(UserDto user);
+    int insertUser(UserDTO user);
 
     //로그인
-    Optional<UserDto> findByUserEmail(String email);
+    Optional<UserDTO> findByUserEmail(String email);
 
     //유저정보조회
-    UserDto selectByUserEmail(String email);
+    UserDTO selectByUserEmail(String email);
 }

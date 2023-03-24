@@ -17,31 +17,32 @@ spring:
   web:
     resources:
       static-locations: classpath:/healingimgs/
-  profiles:
-    include: security
+  config:
+    import:
+      - classpath:/application-security.yml
 
-# 이미지 저장할 위치와 응답할 때 이미지 주소 세팅
-image:
-  # configuration/WebConfig.java
-  add-resource-handler: /healingimgs/**
-  add-resource-locations: C:/edu/file/healingimgs/
-
-  # **Service.java
-  image-directory-prefix: /healingimgs/
-  # AWS EC2 등록 시 필요한 prefix
-  # image-url-prefix: http://3.36.218.186:8090/healingimgs/
-  image-url-prefix: http://localhost:8090/healingimgs/
-
-  type:
-    member: member/
-    service: service/
-    review: review/
-    board: board/
-    certificate: certificate/
-
-page:
-  show-list-amount: 10
-  show-page-amount: 10
+## 이미지 저장할 위치와 응답할 때 이미지 주소 세팅
+#image:
+#  # configuration/WebConfig.java
+#  add-resource-handler: /healingimgs/**
+#  add-resource-locations: C:/edu/file/healingimgs/
+#
+#  # **Service.java
+#  image-directory-prefix: /healingimgs/
+#  # AWS EC2 등록 시 필요한 prefix
+#  # image-url-prefix: http://3.36.218.186:8090/healingimgs/
+#  image-url-prefix: http://localhost:8090/healingimgs/
+#
+#  type:
+#    member: member/
+#    service: service/
+#    review: review/
+#    board: board/
+#    certificate: certificate/
+#
+#page:
+#  show-list-amount: 10
+#  show-page-amount: 10
 
 # HS512 알고리즘을 사용할 것이기 때문에 512bit, 즉 64byte 이상의 secret key를 사용
 # Secret 값은 특정 문자열을 Base64 로 인코딩한 값 사용
