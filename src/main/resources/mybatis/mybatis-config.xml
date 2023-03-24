@@ -21,9 +21,5 @@
 		<mapper resource="BoardingManageMapper.xml" />
 <!--		<mapper resource="MemberMapper.xml" />-->
 		<mapper resource="BoardImageMapper.xml" />
-		<mapper resource="BoardImageMapper.xml" />
-		<mapper resource="BoardImageMapper.xml" />
-		<mapper resource="BoardImageMapper.xml" />
-		<mapper resource="BoardImageMapper.xml" />
 	</mappers>
 </configuration>

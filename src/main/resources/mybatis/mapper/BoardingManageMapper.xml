@@ -32,7 +32,7 @@
                 #{timeCostM},
                 #{timeCostL},
                 DEFAULT
-                );
+                )
     </insert>
 
     <update id="updateBoardingInfo">
@@ -48,7 +48,7 @@
             time_cost_s=#{timeCostS},
             time_cost_m=#{timeCostM},
             time_cost_l=#{timeCostL}
-        WHERE provider_code = #{providerCode};
+        WHERE provider_code = #{providerCode}
     </update>
 
     <delete id="deleteBoardingInfo">
@@ -62,7 +62,7 @@
                 FROM boarding_services
                 WHERE provider_code=#{providerCode}
             )tmp
-        );
+        )
     </delete>
 
 
