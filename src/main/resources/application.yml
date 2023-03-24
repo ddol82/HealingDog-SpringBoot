@@ -17,8 +17,9 @@ spring:
   web:
     resources:
       static-locations: classpath:/healingimgs/
-  profiles:
-    include: security
+  config:
+    import:
+      - classpath:/application-security.yml
 
 # 이미지 저장할 위치와 응답할 때 이미지 주소 세팅
 image:

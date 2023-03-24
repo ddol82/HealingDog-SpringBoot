@@ -15,8 +15,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/community")
 public class CommunityController {
-    @Value("${page.show-list-amount.community}")
-    private int showItemAmount;
+    @Value("page.show-list-amount")
+    private static int SHOW_ITEMS_PER_PAGE;
+    @Value("page.show-page-amount")
+    private static int SHOW_PAGES_AT_ONCE;
     private final CommunityService communityService;
 
     public CommunityController(CommunityService communityService) {

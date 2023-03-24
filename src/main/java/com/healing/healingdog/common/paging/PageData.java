@@ -9,7 +9,6 @@ import lombok.*;
 @ToString
 public class PageData {
     private int itemAllCount;
-    private int showItemAmount;
     private int pageAmount;
     private int currPage;
     private int startPage;

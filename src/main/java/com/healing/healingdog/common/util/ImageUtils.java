@@ -18,13 +18,14 @@ import java.util.UUID;
 /**
  * 이미지를 관리합니다.
  * 파일 이름은 UUID를 이용하여 랜덤 생성합니다.
- * {@link Slf4j} Annotation을 사용하여 log를 통한 Logger사용이 가능합니다.
+ * {@link Slf4j @Slf4j} Annotation을 사용하여 log를 통한 Logger사용이 가능합니다.
  * <pre>
  * {@code
  * ImageUtils imageUtils = new ImageUtils();
  * imageUtils.uploadImage(...);
  * }
  * </pre>
+ * @since 1.0
  * @author 이진녕
  * @version 1.0
  */
