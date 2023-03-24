@@ -12,12 +12,12 @@
 	</settings>
 
 	<typeAliases>
-<!--		<typeAlias alias="ProductDto" type="com.uni.reactpro.product.dto.ProductDto"/>-->
-<!--		<typeAlias alias="MemberDto" type="com.uni.reactpro.member.dto.MemberDto"/>-->
+		<typeAlias alias="UserDto" type="com.healing.healingdog.login.dto.UserDto"/>
+
 	</typeAliases>
 
 	<mappers>
-<!--		<mapper resource="ProductMapper.xml" />-->
-<!--		<mapper resource="MemberMapper.xml" />-->
+		<mapper resource="UserMapper.xml" />
+
 	</mappers>
 </configuration>
