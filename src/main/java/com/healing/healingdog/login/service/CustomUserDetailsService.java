@@ -3,7 +3,7 @@ package com.healing.healingdog.login.service;
 
 import com.healing.healingdog.login.dao.UserMapper;
 import com.healing.healingdog.exception.UserNotFoundException;
-import com.healing.healingdog.login.dto.UserDto;
+import com.healing.healingdog.login.dto.UserDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,7 +32,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .orElseThrow(() -> new UserNotFoundException(email + "> 찾을 수 없습니다."));
     }
 
-    private UserDto addAuthorities(UserDto userDto) {
+    private UserDTO addAuthorities(UserDTO userDto) {
         userDto.setAuthorities(Arrays.asList(new SimpleGrantedAuthority(userDto.getRole())));
 
         return userDto;

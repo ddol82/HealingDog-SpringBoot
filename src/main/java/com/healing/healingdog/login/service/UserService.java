@@ -1,7 +1,7 @@
 package com.healing.healingdog.login.service;
 
 import com.healing.healingdog.login.dao.UserMapper;
-import com.healing.healingdog.login.dto.UserDto;
+import com.healing.healingdog.login.dto.UserDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,10 +16,10 @@ public class UserService {
     }
 
     @GetMapping
-    public UserDto selectMyInfo(@PathVariable String email) {
+    public UserDTO selectMyInfo(@PathVariable String email) {
         log.info("[MemberService] getMyInfo Start ==============================");
 
-        UserDto user = userMapper.selectByUserEmail(email);
+        UserDTO user = userMapper.selectByUserEmail(email);
         log.info("[MemberService] {}", user);
         log.info("[MemberService] getMyInfo End ==============================");
 

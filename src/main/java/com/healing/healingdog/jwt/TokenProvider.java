@@ -2,8 +2,8 @@ package com.healing.healingdog.jwt;
 
 
 import com.healing.healingdog.exception.TokenException;
-import com.healing.healingdog.login.dto.UserDto;
-import com.healing.healingdog.login.dto.TokenDto;
+import com.healing.healingdog.login.dto.UserDTO;
+import com.healing.healingdog.login.dto.TokenDTO;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -43,7 +43,7 @@ public class TokenProvider {
 
 
     // Authentication 객체(유저)의 권한정보를 이용해서 토큰을 생성
-    public TokenDto generateTokenDto(UserDto user) {
+    public TokenDTO generateTokenDto(UserDTO user) {
         log.info("[TokenProvider] generateTokenDto Start ===================================");
         log.info("[TokenProvider] {}", user.getRole());
 
@@ -67,7 +67,7 @@ public class TokenProvider {
                 .signWith(key, SignatureAlgorithm.HS512)   // header "alg": "HS512"  // "alg": "서명 시 사용하는 알고리즘",
                 .compact();
 
-        return new TokenDto(BEARER_TYPE, user.getName(), accessToken, accessTokenExpiresIn.getTime());
+        return new TokenDTO(BEARER_TYPE, user.getName(), accessToken, accessTokenExpiresIn.getTime());
     }
 
     public String getUserId(String accessToken) {

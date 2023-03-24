@@ -16,7 +16,7 @@
 
 		<typeAlias alias="ImageDTO" type="com.healing.healingdog.common.file.model.dto.ImageDTO" />
 
-		<typeAlias alias="UserDto" type="com.healing.healingdog.login.dto.UserDto"/>
+		<typeAlias alias="UserDto" type="com.healing.healingdog.login.dto.UserDTO"/>
 	</typeAliases>
 
 	<mappers>
