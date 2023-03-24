@@ -7,6 +7,14 @@
 
 <!--  boarding/{boarding_service_code}/booking CRUD  -->
 
+    <select id="selectBoardingBooking" resultType="BoardingBookingDTO">
+        SELECT
+            *
+        FROM boarding_bookings
+        WHERE
+            boarding_booking_code=#{boardingBookingCode}
+    </select>
+
     <insert id="registerBoardingBooking">
         INSERT INTO boarding_bookings
         VALUES (
