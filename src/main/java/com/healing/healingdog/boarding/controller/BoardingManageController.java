@@ -16,7 +16,6 @@ import java.util.HashMap;
 @RequestMapping("api/v1/boarding-manage")
 @RequiredArgsConstructor
 public class BoardingManageController {
-
     private final BoardingManageService boardingManageService;
 
 //  위탁돌봄 관리페이지 접속 시 모든 정보 불러옴
