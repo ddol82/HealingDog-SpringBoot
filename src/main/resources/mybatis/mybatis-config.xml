@@ -13,13 +13,15 @@
 
 	<typeAliases>
 		<typeAlias alias="BoardingServiceDTO" type="com.healing.healingdog.boarding.dto.BoardingServiceDTO"/>
-<!--		<typeAlias alias="MemberDto" type="com.uni.reactpro.member.dto.MemberDto"/>-->
+		<typeAlias alias="BoardingServiceDTO" type="com.healing.healingdog.boarding.dto.BoardingBookingDTO"/>
 		<typeAlias alias="ImageDTO" type="com.healing.healingdog.common.file.model.dto.ImageDTO" />
+		<typeAlias alias="ReviewDTO" type="com.healing.healingdog.review.dto.ReviewDTO" />
 	</typeAliases>
 
 	<mappers>
 		<mapper resource="BoardingManageMapper.xml" />
-<!--		<mapper resource="MemberMapper.xml" />-->
+		<mapper resource="BoardingMapper.xml" />
 		<mapper resource="BoardImageMapper.xml" />
+		<mapper resource="ReviewMapper.xml" />
 	</mappers>
 </configuration>
