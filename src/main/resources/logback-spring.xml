@@ -33,6 +33,11 @@
 
 <!--</configuration>-->
 
+
+
+
+
+
 <configuration scan="true" scanPeriod="30 seconds">
 
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">

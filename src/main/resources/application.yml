@@ -39,6 +39,10 @@ image:
     board: board/
     certificate: certificate/
 
+page:
+  show-list-amount: 10
+  show-page-amount: 10
+
 # HS512 알고리즘을 사용할 것이기 때문에 512bit, 즉 64byte 이상의 secret key를 사용
 # Secret 값은 특정 문자열을 Base64 로 인코딩한 값 사용
 # jwt 설정은 application-security.yml 파일에서 적용 - line 21
