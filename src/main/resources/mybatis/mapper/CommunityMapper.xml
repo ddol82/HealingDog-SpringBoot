@@ -4,16 +4,23 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.healing.healingdog.community.model.dao.CommunityMapper">
 
-    <select id="selectBoardListWithPage" resultType="BoardDTO" parameterType="string">
-        SELECT B.board_code
-             , B.user_code
-             , B.board_category_code
-             , B.title
-             , B.content
-             , B.uptime
-             , B.view
-             , B.share
-          FROM board_images BI
-         WHERE BI.board_code = #{ refCode }
+<!--    <select id="selectBoardListWithPage" resultType="BoardDTO" parameterType="string">-->
+<!--        SELECT B.board_code-->
+<!--             , B.user_code-->
+<!--             , B.board_category_code-->
+<!--             , B.title-->
+<!--             , B.content-->
+<!--             , B.uptime-->
+<!--             , B.view-->
+<!--             , B.share-->
+<!--          FROM board_images BI-->
+<!--         WHERE BI.board_code = #{ refCode }-->
+<!--    </select>-->
+
+    <select id="selectBoardCountAll" parameterType="_int" resultType="_int">
+        SELECT
+               COUNT(*)
+          FROM boards
+         WHERE board_category_code = #{ code }
     </select>
 </mapper>
