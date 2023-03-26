@@ -4,15 +4,8 @@ package com.healing.healingdog.common;
 import org.springframework.http.HttpStatus;
 
 /**
- * 이미지를 관리합니다.
- * 파일 이름은 UUID를 이용하여 랜덤 생성합니다.
- *  Annotation을 사용하여 log를 통한 Logger사용이 가능합니다.
- * <pre>
- * {@code
- * ImageUtils imageUtils = new ImageUtils();
- * imageUtils.uploadImage(...);
- * }
- * </pre>
+ * data에 {@link HttpStatus Http응답}과 관련된 내용을 덧붙입니다.
+ *
  * @since 1.0
  * @author 이진녕
  * @version 1.0
@@ -20,11 +13,13 @@ import org.springframework.http.HttpStatus;
 public class ResponseDTO {
 
     private int status;
+    private String detail;
     private String message;
     private Object data;
 
     public ResponseDTO(HttpStatus status, String message, Object data){
         this.status = status.value();
+        this.detail = status.getReasonPhrase();
         this.message = message;
         this.data = data;
     }
@@ -35,6 +30,14 @@ public class ResponseDTO {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public String getDetail() {
+        return detail;
+    }
+
+    public void setDetail(String detail) {
+        this.detail = detail;
     }
 
     public String getMessage() {
@@ -57,7 +60,8 @@ public class ResponseDTO {
     public String toString() {
         return "ResponseDto{" +
                 "status=" + status +
-                ", message='" + message + '\'' +
+                ", detail=" + detail +
+                ", message='" + message +
                 ", data=" + data +
                 '}';
     }
