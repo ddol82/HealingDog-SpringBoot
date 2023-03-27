@@ -23,7 +23,7 @@ public class ReviewController {
     public ResponseEntity<ResponseDTO> selectReviewList(@PathVariable("service_category_code") int serviceCategoryCode) {
         log.info("REQUEST API selectReview ={}", serviceCategoryCode);
 
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "위탁돌봄예약 삭제 성공", reviewService.selectReviewList(serviceCategoryCode)) );
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "리뷰조회 성공", reviewService.selectReviewList(serviceCategoryCode)) );
     }
 
 
