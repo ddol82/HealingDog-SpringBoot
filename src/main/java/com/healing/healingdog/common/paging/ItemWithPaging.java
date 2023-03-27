@@ -9,6 +9,6 @@ import lombok.*;
 @ToString
 public class ItemWithPaging {
 
-    private PageData pageData;
-    private Object data;
+    private PageData pageInfo;
+    private Object item;
 }
