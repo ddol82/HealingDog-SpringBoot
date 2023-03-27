@@ -23,4 +23,35 @@
           FROM boards
          WHERE board_category_code = #{ code }
     </select>
+
+    <select id="selectBoardList" parameterType="DetailForGettingBoard" resultType="BoardDTO">
+        SELECT
+               B.board_code
+             , B.user_code
+             , B.board_category_code
+             , B.title
+             , B.content
+             , B.uptime
+             , B.view
+             , B.share
+          FROM(
+                SELECT
+                       @rownum := @rownum+1 RN
+                     , BD.board_code
+                     , BD.user_code
+                     , BD.board_category_code
+                     , BD.title
+                     , BD.content
+                     , BD.uptime
+                     , BD.view
+                     , BD.share
+                FROM boards BD
+                WHERE(@rownum := 0) = 0
+                <if test="categoryCode != 5">
+                  AND BD.board_category_code = #{ categoryCode }
+                </if>
+              ) B
+         WHERE B.RN <![CDATA[>=]]> #{ start }
+           AND B.RN <![CDATA[<=]]> #{ end }
+    </select>
 </mapper>

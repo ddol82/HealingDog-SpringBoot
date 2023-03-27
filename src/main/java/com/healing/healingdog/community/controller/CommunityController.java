@@ -3,6 +3,8 @@ package com.healing.healingdog.community.controller;
 import com.healing.healingdog.common.ResponseDTO;
 import com.healing.healingdog.common.paging.PageData;
 import com.healing.healingdog.common.paging.PageDataAutoFill;
+import com.healing.healingdog.community.model.dto.BoardDTO;
+import com.healing.healingdog.community.model.dto.DetailForGettingBoard;
 import com.healing.healingdog.community.model.service.CommunityService;
 import com.healing.healingdog.community.model.type.BoardType;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 커뮤니티의 컨트롤러. {@link Slf4j @Slf4j}를 사용하여 {@code log}를 통한 logging 사용이 가능합니다.<br>
@@ -51,20 +56,28 @@ public class CommunityController {
     public ResponseEntity<ResponseDTO> selectBoardList(@RequestParam(name="cat", defaultValue = "all") String categoryType,
                                           @RequestParam(name="page", defaultValue = "1") int currPage) {
         log.info("[CommunityController] selectBoardList 호출");
-        log.trace("(selectBoardList) categoryType : " + categoryType);
-        log.trace("(selectBoardList) currPage : " + currPage);
+        log.debug("(selectBoardList) categoryType : " + categoryType);
+        log.debug("(selectBoardList) currPage : " + currPage);
 
         BoardType boardType = BoardType.getBoardType(categoryType);
-        log.debug("(selectBoardList) boardType : {}", boardType);
+        log.info("(selectBoardList) boardType : {}", boardType);
 
         int boardCountAll = communityService.selectBoardCountAll(boardType.getCode());
         PageData pageData = PageDataAutoFill.get(currPage, boardCountAll);
-        log.debug("(selectBoardList) pageData filled : {}", pageData);
+        log.info("(selectBoardList) pageData filled : {}", pageData);
         if(currPage < 1 || currPage > pageData.getEndPage()) {
             currPage = 1;
         }
 
+        DetailForGettingBoard detailData = new DetailForGettingBoard(pageData, boardType);
+
+        List<BoardDTO> boardList = new ArrayList<>();
+        if(boardCountAll > 0) {
+            boardList = communityService.selectBoardList(detailData);
+        }
+
+        String outputMessage = "카테고리 {" + boardType.getType() + "}의 " + currPage + "페이지 게시글 List 반환";
         return ResponseEntity.ok()
-                .body(new ResponseDTO(HttpStatus.OK, "a", boardCountAll));
+                .body(new ResponseDTO(HttpStatus.OK, outputMessage, boardList));
     }
 }

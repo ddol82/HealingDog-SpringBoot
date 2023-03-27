@@ -1,19 +1,19 @@
 package com.healing.healingdog.common.paging;
 
-import org.springframework.beans.factory.annotation.Value;
+import lombok.extern.slf4j.Slf4j;
 
 /**
- * {@link PageData}의 정보를 자동으로 채워주는 기능의 클래스입니다.
+ * {@link PageData}의 정보를 자동으로 채워주는 기능의 클래스입니다.<br>
+ * {@link Slf4j @Slf4j}를 사용하여 {@code log}를 통한 logging 사용이 가능합니다.
  *
  * @author 이진녕
  * @since 1.0
  * @version 1.0
  */
+@Slf4j
 public class PageDataAutoFill {
-    @Value("page.show-list-amount")
-    private static int SHOW_ITEMS_PER_PAGE;
-    @Value("page.show-page-amount")
-    private static int SHOW_PAGES_AT_ONCE;
+    private static final int SHOW_ITEMS_PER_PAGE = 10;
+    private static final int SHOW_PAGES_AT_ONCE = 10;
 
     /**
      * {@link PageData}의 정보 중 계산이 필요한 부분을 완성시켜줍니다.
@@ -26,6 +26,9 @@ public class PageDataAutoFill {
         PageData pageData = new PageData();
         pageData.setItemAllCount(totalItemAmount);
         pageData.setCurrPage(currPage);
+
+        log.debug("SHOW_ITEMS_PER_PAGE : " + SHOW_ITEMS_PER_PAGE);
+        log.debug("SHOW_PAGES_AT_ONCE : " + SHOW_PAGES_AT_ONCE);
 
         pageData.setPageAmount((int) Math.ceil((double) totalItemAmount / SHOW_ITEMS_PER_PAGE));
         pageData.setStartPage((int) (Math.ceil((double) currPage / SHOW_PAGES_AT_ONCE) - 1) * SHOW_PAGES_AT_ONCE + 1);

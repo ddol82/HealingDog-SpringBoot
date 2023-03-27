@@ -16,7 +16,6 @@ public class BoardDTO {
     private int boardCode;
     private int userCode;
     private int boardCategoryCode;
-    private String boardCategoryName;
     private String title;
     private String content;
     private Timestamp uptime;
