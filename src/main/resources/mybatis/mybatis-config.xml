@@ -27,6 +27,8 @@
 		<mapper resource="BoardImageMapper.xml" />
 		
 		<mapper resource="UserMapper.xml" />
+
+		<mapper resource="AuthMapper.xml" />
 	</mappers>
 
 
