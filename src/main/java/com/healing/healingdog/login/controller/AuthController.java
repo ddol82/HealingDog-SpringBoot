@@ -2,6 +2,7 @@ package com.healing.healingdog.login.controller;
 
 
 import com.healing.healingdog.common.ResponseDTO;
+import com.healing.healingdog.login.dto.ProviderDTO;
 import com.healing.healingdog.login.dto.UserDTO;
 import com.healing.healingdog.login.service.AuthService;
 import org.springframework.http.HttpStatus;
@@ -31,9 +32,9 @@ public class AuthController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<ResponseDTO> login(@RequestBody UserDTO userDto) {
+    public ResponseEntity<ResponseDTO> login(@RequestBody  UserDTO userDto, ProviderDTO providerDto) {
 
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "로그인 성공", authService.login(userDto)));
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "로그인 성공", authService.login(userDto,providerDto)));
     }
 
 }

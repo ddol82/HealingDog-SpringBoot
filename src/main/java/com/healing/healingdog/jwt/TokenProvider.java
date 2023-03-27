@@ -2,6 +2,7 @@ package com.healing.healingdog.jwt;
 
 
 import com.healing.healingdog.exception.TokenException;
+import com.healing.healingdog.login.dto.ProviderDTO;
 import com.healing.healingdog.login.dto.UserDTO;
 import com.healing.healingdog.login.dto.TokenDTO;
 import io.jsonwebtoken.*;
@@ -42,10 +43,29 @@ public class TokenProvider {
     }
 
 
+    public TokenDTO generateUserTokenDto(UserDTO user) {
+
+
+        return generateTokenDto(user);
+    }
+
+
+    public TokenDTO generateUserTokenDto(ProviderDTO provider) {
+
+        UserDTO temp = new UserDTO();
+        temp.setRole(provider.getRole());
+        temp.setEmail(provider.getEmail());
+        temp.setName(provider.getName());
+
+        return generateTokenDto(temp);
+    }
+
+
     // Authentication 객체(유저)의 권한정보를 이용해서 토큰을 생성
-    public TokenDTO generateTokenDto(UserDTO user) {
+    private TokenDTO generateTokenDto(UserDTO user) {
         log.info("[TokenProvider] generateTokenDto Start ===================================");
         log.info("[TokenProvider] {}", user.getRole());
+
 
         // 권한들 가져오기
         List<String> roles =  Collections.singletonList(user.getRole());
@@ -132,4 +152,6 @@ public class TokenProvider {
             return e.getClaims();
         }
     }
+
+
 }

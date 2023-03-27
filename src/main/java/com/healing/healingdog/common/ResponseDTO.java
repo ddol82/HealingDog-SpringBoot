@@ -3,6 +3,7 @@ package com.healing.healingdog.common;
 
 import org.springframework.http.HttpStatus;
 
+
 /**
  * data에 {@link HttpStatus Http응답}과 관련된 내용을 덧붙입니다.
  *
@@ -14,12 +15,15 @@ public class ResponseDTO {
 
     private int status;
     private String detail;
+
     private String message;
     private Object data;
 
     public ResponseDTO(HttpStatus status, String message, Object data){
         this.status = status.value();
+
         this.detail = status.getReasonPhrase();
+
         this.message = message;
         this.data = data;
     }
@@ -32,6 +36,7 @@ public class ResponseDTO {
         this.status = status;
     }
 
+
     public String getDetail() {
         return detail;
     }
@@ -39,6 +44,7 @@ public class ResponseDTO {
     public void setDetail(String detail) {
         this.detail = detail;
     }
+
 
     public String getMessage() {
         return message;
@@ -58,6 +64,7 @@ public class ResponseDTO {
 
     @Override
     public String toString() {
+
         return "ResponseDto{" +
                 "status=" + status +
                 ", detail=" + detail +

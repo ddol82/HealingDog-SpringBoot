@@ -4,6 +4,7 @@ import com.healing.healingdog.exception.DuplicatedUsernameException;
 import com.healing.healingdog.exception.LoginFailedException;
 import com.healing.healingdog.jwt.TokenProvider;
 import com.healing.healingdog.login.dao.UserMapper;
+import com.healing.healingdog.login.dto.ProviderDTO;
 import com.healing.healingdog.login.dto.UserDTO;
 import com.healing.healingdog.login.dto.TokenDTO;
 import lombok.extern.slf4j.Slf4j;
@@ -11,11 +12,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
+
 @Service
 @Slf4j
 public class AuthService {
 
     private final UserMapper userMapper;
+
 
 
     private final PasswordEncoder passwordEncoder;
@@ -49,9 +53,10 @@ public class AuthService {
     }
 
     @Transactional
-    public TokenDTO login(UserDTO userDto) {
+    public TokenDTO login(UserDTO userDto, ProviderDTO providerDto) {
         log.info("[AuthService] Login Start ===================================");
         log.info("[AuthService] {}", userDto);
+        log.info("[AuthService] {}", providerDto);
 
 
         // 1. 이메일 조회
@@ -59,14 +64,29 @@ public class AuthService {
                 .orElseThrow(() -> new LoginFailedException("잘못된 이메일 또는 비밀번호입니다"));
         log.info("[AuthService] 이메일조회 완료 {} ", user);
 
+        ProviderDTO provider = userMapper.findByProviderEmail(providerDto.getEmail())
+                .orElseThrow(() -> new LoginFailedException("잘못된 이메일 또는 비밀번호입니다22222222"));
+        log.info("[AuthService] 이메일조회 완료 {} ", provider);
+
+
+
+
         // 2. 비밀번호 매칭
         if (!passwordEncoder.matches(userDto.getUserPassword(), user.getUserPassword())) {
             log.info("[AuthService] Password Match Fail!!!!!!!!!!!!");
             throw new LoginFailedException("잘못된 이메일 또는 비밀번호입니다");
         }
 
+        if (!passwordEncoder.matches(providerDto.getProviderPassword(), provider.getProviderPassword())) {
+            log.info("[AuthService] Password Match Fail!!!!!!!!!!!!");
+            throw new LoginFailedException("잘못된 이메일 또는 비밀번호입니다");
+        }
+
+
         // 3. 토큰 발급
-        TokenDTO tokenDto = tokenProvider.generateTokenDto(user);
+        TokenDTO tokenDto = tokenProvider.generateUserTokenDto(user);
+        log.info("[AuthService] tokenDto {}", tokenDto);
+        tokenDto = tokenProvider.generateUserTokenDto(provider);
         log.info("[AuthService] tokenDto {}", tokenDto);
 
         log.info("[AuthService] Login End ===================================");
