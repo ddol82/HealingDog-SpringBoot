@@ -1,6 +1,5 @@
 package com.healing.healingdog.community.model.dto;
 
-import com.healing.healingdog.common.paging.PageData;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,5 +22,4 @@ public class BoardDTO {
     private Timestamp uptime;
     private long view;
     private int share;
-    private PageData pageData;
 }

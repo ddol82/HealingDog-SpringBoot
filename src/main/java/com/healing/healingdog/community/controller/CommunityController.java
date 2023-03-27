@@ -5,6 +5,7 @@ import com.healing.healingdog.common.paging.PageData;
 import com.healing.healingdog.common.paging.PageDataAutoFill;
 import com.healing.healingdog.community.model.service.CommunityService;
 import com.healing.healingdog.community.model.type.BoardType;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -15,7 +16,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 커뮤니티의 컨트롤러. {@link Slf4j @Slf4j}를 사용하여 {@code log}를 통한 logging 사용이 가능합니다.
+ * 커뮤니티의 컨트롤러. {@link Slf4j @Slf4j}를 사용하여 {@code log}를 통한 logging 사용이 가능합니다.<br>
+ * 다음의 기능을 포함하고 있습니다.
+ * <ul>
+ *     <li>{@link CommunityController#selectBoardList(String, int)} : 게시판 리스트 조회</li>
+ * </ul>
  *
  * @since 1.0
  * @version 1.0
@@ -24,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequestMapping("/community")
+@RequiredArgsConstructor
 public class CommunityController {
     @Value("page.show-list-amount")
     private static int SHOW_ITEMS_PER_PAGE;
@@ -31,13 +37,9 @@ public class CommunityController {
     private static int SHOW_PAGES_AT_ONCE;
     private final CommunityService communityService;
 
-    public CommunityController(CommunityService communityService) {
-        this.communityService = communityService;
-    }
-
     /**
      * 게시판 리스트를 조회합니다.<br>
-     * Mapping : [<b>GET</b>] {@code /lists/boards?cat={}&page={}}
+     * Mapping: [<b>GET</b>] {@code /lists/boards?cat={}&page={}}
      *
      * @param categoryType 카테고리의 타입은 영어 소문자로만 구성되어있습니다.
      * @param currPage 현재 페이지를 입력받습니다.
