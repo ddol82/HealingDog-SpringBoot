@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.healing.healingdog.beauty.model.dao.BeautyManageMapper">
+
+
+    <!--  beauty-manage  -->
+
+    <select id="selectBeautyInfo" resultType="BeautyDTO">
+        SELECT
+            *
+        FROM beauties
+        WHERE
+            provider_code=#{providerCode}
+    </select>
+    <insert id="registerBeautyInfo">
+        INSERT INTO beauties
+        VALUES (
+                null,
+                #{providerCode},
+                #{beautyPriceCode},
+                #{categoryCode},
+                #{beautyReservationListCode},
+                #{timeCode},
+                #{name},
+                #{phone},
+                #{web},
+                #{address},
+                #{intro},
+                DEFAULT
+               )
+    </insert>
+
+
+
+</mapper>
