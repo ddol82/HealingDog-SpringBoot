@@ -10,4 +10,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class BeautyManageService {
     private final BeautyManageMapper beautyManageMapper;
+
+    public Object selectBeauty(int providerCode) {
+        return "result";
+    }
 }
