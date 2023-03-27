@@ -17,8 +17,8 @@ import java.util.UUID;
 
 /**
  * 이미지를 관리합니다.
- * 파일 이름은 UUID를 이용하여 랜덤 생성합니다.
- * {@link Slf4j @Slf4j} Annotation을 사용하여 log를 통한 Logger사용이 가능합니다.
+ * 파일 이름은 UUID를 이용하여 랜덤 생성합니다.<br>
+ * {@link Slf4j @Slf4j} 가 포함되어있어 {@code log}를 통한 Logger사용이 가능합니다.
  * <pre>
  * {@code
  * ImageUtils imageUtils = new ImageUtils();
@@ -37,7 +37,8 @@ public class ImageUtils {
     /**
      * 이미지 파일 한 개를 업로드합니다.
      *
-     * @param imageType 업로드 할 이미지의 타입이 입력됩니다.<br>(입력 가능한 값 : member/, service/, review/, board/, certificate/)
+     * @param imageType 업로드 할 이미지의 타입이 입력됩니다.<br>(입력 가능한 값 :
+     * {@code member/}, {@code service/}, {@code review/}, {@code board/}, {@code certificate/})
      * @param targetFile 업로드 할 {@link MultipartFile}입니다.
      * @return 업로드에 성공한 파일의 이름을 {@link List}<{@link String}> 형태로 출력합니다.
      * @throws IOException 파일 업로드 실패 시 {@link IOException}이 발생합니다.
