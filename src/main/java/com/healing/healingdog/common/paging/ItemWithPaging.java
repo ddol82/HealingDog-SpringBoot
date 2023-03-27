@@ -7,7 +7,7 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
-public class ItemDataWithPaging {
+public class ItemWithPaging {
 
     private PageData pageData;
     private Object data;

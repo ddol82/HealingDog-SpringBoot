@@ -40,10 +40,6 @@ image:
     board: board/
     certificate: certificate/
 
-page:
-  show-list-amount: 10
-  show-page-amount: 10
-
 # HS512 알고리즘을 사용할 것이기 때문에 512bit, 즉 64byte 이상의 secret key를 사용
 # Secret 값은 특정 문자열을 Base64 로 인코딩한 값 사용
 # jwt 설정은 application-security.yml 파일에서 적용 - line 21
@@ -58,7 +54,7 @@ mybatis:
 
 logging:
   level:
-    root: info
+    root: debug
 #어느 로그 단계 이상부터 출력할 것인지 설정, 예)info 기입 시 trace를 제외한 모든 로그 출력.
 #(가장 낮음) trace, info, debug, warn, error (가장 높음)
 
