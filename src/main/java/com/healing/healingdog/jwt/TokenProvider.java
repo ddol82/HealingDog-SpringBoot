@@ -43,27 +43,9 @@ public class TokenProvider {
     }
 
 
+    // Authentication 객체(유저)의 권한정보를 이용해서 토큰을 생성 사용자
     public TokenDTO generateUserTokenDto(UserDTO user) {
-
-
-        return generateTokenDto(user);
-    }
-
-
-    public TokenDTO generateUserTokenDto(ProviderDTO provider) {
-
-        UserDTO temp = new UserDTO();
-        temp.setRole(provider.getRole());
-        temp.setEmail(provider.getEmail());
-        temp.setName(provider.getName());
-
-        return generateTokenDto(temp);
-    }
-
-
-    // Authentication 객체(유저)의 권한정보를 이용해서 토큰을 생성
-    private TokenDTO generateTokenDto(UserDTO user) {
-        log.info("[TokenProvider] generateTokenDto Start ===================================");
+        log.info("[TokenProvider] generateUserTokenDto Start ===================================");
         log.info("[TokenProvider] {}", user.getRole());
 
 
@@ -89,6 +71,36 @@ public class TokenProvider {
 
         return new TokenDTO(BEARER_TYPE, user.getName(), accessToken, accessTokenExpiresIn.getTime());
     }
+
+    // Authentication 객체(유저)의 권한정보를 이용해서 토큰을 생성 제공자
+    public TokenDTO generateProviderTokenDto(ProviderDTO provider) {
+        log.info("[TokenProvider] generateProviderTokenDto Start ===================================");
+        log.info("[TokenProvider] {}", provider.getRole());
+
+
+        // 권한들 가져오기
+        List<String> roles =  Collections.singletonList(provider.getRole());
+
+        //유저 권한정보 담기
+        Claims claims = Jwts
+                .claims()
+                .setSubject(provider.getEmail()); // sub : Subject. 토큰 제목을 나타낸다.
+        //.setSubject(String.valueOf(member.getMemberCode()));
+        claims.put(AUTHORITIES_KEY, roles);// 권한 담기
+
+        long now = (new Date()).getTime();
+
+        // Access Token 생성
+        Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
+        String accessToken = Jwts.builder()
+                .setClaims(claims)                        // payload "auth": "ROLE_USER" // aud : Audience. 토큰 대상자를 나타낸다.
+                .setExpiration(accessTokenExpiresIn)       // payload "exp": 1516239022 (예시) // exp : Expiration Time. 토큰 만료 시각을 나타낸다.
+                .signWith(key, SignatureAlgorithm.HS512)   // header "alg": "HS512"  // "alg": "서명 시 사용하는 알고리즘",
+                .compact();
+
+        return new TokenDTO(BEARER_TYPE, provider.getName(), accessToken, accessTokenExpiresIn.getTime());
+    }
+
 
     public String getUserId(String accessToken) {
         return Jwts

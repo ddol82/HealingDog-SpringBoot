@@ -24,17 +24,23 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @PostMapping("/signup")
+    @PostMapping("/user/signup")
     public ResponseEntity<ResponseDTO> signup(@RequestBody UserDTO userDto) {
 
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.CREATED, "회원가입 성공", authService.signup(userDto)));
     }
 
 
-    @PostMapping("/login")
-    public ResponseEntity<ResponseDTO> login(@RequestBody  UserDTO userDto, ProviderDTO providerDto) {
+    @PostMapping("/user/login")
+    public ResponseEntity<ResponseDTO> userLogin(@RequestBody UserDTO userDto) {
 
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "로그인 성공", authService.login(userDto,providerDto)));
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "사용자 로그인 성공", authService.userLogin(userDto)));
+    }
+
+    @PostMapping("/provider/login")
+    public ResponseEntity<ResponseDTO> providerLogin(@RequestBody ProviderDTO providerDTO) {
+
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "제공자 로그인 성공", authService.providerLogin(providerDTO)));
     }
 
 }

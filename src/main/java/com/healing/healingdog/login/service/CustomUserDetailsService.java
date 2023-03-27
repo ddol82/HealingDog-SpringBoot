@@ -1,8 +1,8 @@
 package com.healing.healingdog.login.service;
 
 
-import com.healing.healingdog.login.dao.UserMapper;
 import com.healing.healingdog.exception.UserNotFoundException;
+import com.healing.healingdog.login.dao.AuthMapper;
 import com.healing.healingdog.login.dto.UserDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,9 +16,9 @@ import java.util.Arrays;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final UserMapper mapper;
+    private final AuthMapper mapper;
 
-    public CustomUserDetailsService(UserMapper mapper) {
+    public CustomUserDetailsService(AuthMapper mapper) {
         this.mapper = mapper;
     }
 
