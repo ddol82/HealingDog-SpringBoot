@@ -1,7 +1,7 @@
 package com.healing.healingdog.beauty.controller;
 
+import com.healing.healingdog.beauty.model.service.BeautyManageService;
 import com.healing.healingdog.common.ResponseDTO;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
