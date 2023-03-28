@@ -19,8 +19,6 @@
         VALUES (
                 null,
                 #{providerCode},
-                #{beautyPriceCode},
-                #{categoryCode},
                 #{beautyReservationListCode},
                 #{timeCode},
                 #{name},
@@ -28,9 +26,33 @@
                 #{web},
                 #{address},
                 #{intro},
+                DEFAULT,
+                DEFAULT,
+                DEFAULT,
+                DEFAULT,
+                DEFAULT,
+                DEFAULT,
+                DEFAULT,
+                DEFAULT,
+                DEFAULT,
+                DEFAULT,
+                DEFAULT,
                 DEFAULT
                )
     </insert>
+    <update id="updateBeautyInfo">
+        UPDATE beauties
+        SET
+            #{beautyReservationListCode},
+            #{timeCode},
+            #{name},
+            #{phone},
+            #{web},
+            #{address},
+            #{intro},
+        WHERE provider_code = #{providerCode}
+    </update>
+
 
 
 
