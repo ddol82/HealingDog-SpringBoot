@@ -29,11 +29,11 @@ public class AuthService {
     }
 
     @Transactional
-    public UserDTO signup(UserDTO userDto) {
+    public UserDTO userSignup(UserDTO userDto) {
         log.info("[AuthService] Signup Start ===================================");
         log.info("[AuthService] UserRequestDto {}", userDto);
 
-        if(authMapper.selectByEmail(userDto.getEmail()) != null) {
+        if(authMapper.selectByUserSignupEmail(userDto.getEmail()) != null) {
             log.info("[AuthService] 이메일이 중복됩니다.");
             throw new DuplicatedUsernameException("이메일이 중복됩니다.");
         }
@@ -48,6 +48,29 @@ public class AuthService {
 
         return userDto;
     }
+
+    @Transactional
+    public ProviderDTO providerSignup(ProviderDTO providerDTO) {
+        log.info("[AuthService] Signup Start ===================================");
+        log.info("[AuthService] UserRequestDto {}", providerDTO);
+
+        if(authMapper.selectByProviderSignupEmail(providerDTO.getEmail()) != null) {
+            log.info("[AuthService] 이메일이 중복됩니다.");
+            throw new DuplicatedUsernameException("이메일이 중복됩니다.");
+        }
+
+        log.info("[AuthService] User Signup Start ==============================");
+        providerDTO.setProviderPassword(passwordEncoder.encode(providerDTO.getProviderPassword()));
+        log.info("[AuthService] User {}", providerDTO);
+        int result = authMapper.insertProvider(providerDTO);
+        log.info("[AuthService] User Insert Result {}", result > 0 ? "회원 가입 성공" : "회원 가입 실패");
+
+        log.info("[AuthService] Signup End ==============================");
+
+        return providerDTO;
+    }
+
+
 
     @Transactional
     public TokenDTO userLogin(UserDTO userDto) {
