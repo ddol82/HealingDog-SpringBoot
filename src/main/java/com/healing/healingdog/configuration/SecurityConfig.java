@@ -82,7 +82,8 @@ public class SecurityConfig  {
                 .antMatchers("/auth/**").permitAll()// 로그인, 회원가입 API 는 토큰이 없는 상태에서 요청이 들어오기 때문에 permitAll 설정
                 .antMatchers("/api/v1/products/**").permitAll()// 제품 누구나 접근가능
                 .antMatchers("/api/v1/reviews/**").permitAll()// 리뷰도 누구나 접근가능
-                .antMatchers("/api/**").hasAnyRole("USER", "PROVIDER", "ADMIN")  // 나머지 API 는 전부 인증 필요
+                //.antMatchers("/api/**").hasAnyRole("USER", "PROVIDER", "ADMIN")  // 나머지 API 는 전부 인증 필요
+                 .antMatchers("/api/**").permitAll()  // 테스트용
                  .and()
                  .cors()
                  .and()
@@ -94,8 +95,8 @@ public class SecurityConfig  {
     CorsConfigurationSource corsConfigurationSource(){
         CorsConfiguration configuration = new CorsConfiguration();
         // 로컬 React에서 오는 요청은 CORS 허용해준다.
-         //configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000" ));// 해당 ip만 응답
-         configuration.setAllowedOrigins(Arrays.asList("http://3.35.112.25:3000" ));// 해당 ip만 응답
+         configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000" ));// 해당 ip만 응답
+         //configuration.setAllowedOrigins(Arrays.asList("http://3.35.112.25:3000" ));// 해당 ip만 응답
 
         configuration.setAllowedMethods(Arrays.asList("GET", "PUT", "POST", "DELETE"));// 해당메소드만응답하겠다
         configuration.setAllowedHeaders(Arrays.asList("Access-Control-Allow-Origin", "Content-Type", "Access-Control-Allow-Headers", "Authorization", "X-Requested-With"));// 해당 헤더의 응답만허용
