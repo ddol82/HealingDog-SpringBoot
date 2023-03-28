@@ -20,6 +20,8 @@
 		<typeAlias alias="DetailForGettingBoard" type="com.healing.healingdog.community.model.dto.CatAndPageDataForBoard"/>
 		<typeAlias alias="BoardTableDTO" type="com.healing.healingdog.community.model.dto.BoardTableDTO"/>
 		<typeAlias alias="BeautyDTO" type="com.healing.healingdog.beauty.model.dto.BeautyDTO"/>
+		<typeAlias alias="CommonDTO" type="com.healing.healingdog.beauty.model.dto.CommonDTO"/>
+
 	</typeAliases>
 
 	<mappers>
