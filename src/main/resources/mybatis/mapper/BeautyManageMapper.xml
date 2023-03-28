@@ -6,7 +6,7 @@
 
 
     <!--  beauty-manage  -->
-
+<!--  미용실 정보조회  -->
     <select id="selectBeautyInfo" resultType="BeautyDTO">
         SELECT
             *
@@ -14,44 +14,126 @@
         WHERE
             provider_code=#{providerCode}
     </select>
+<!--  미용실 운영시간 조회  -->
+    <select id="selectBeautyTimes" resultType="CommonDTO">
+        SELECT *
+        FROM times
+        WHERE provider_code = #{providerCode}
+          AND service_category_code = 4
+    </select>
+<!--  미용실 정보등록  -->
     <insert id="registerBeautyInfo">
         INSERT INTO beauties
+        (
+            beauty_code,
+            provider_code,
+            name,
+            phone,
+            web,
+            address,
+            intro
+        )
         VALUES (
                 null,
                 #{providerCode},
-                #{beautyReservationListCode},
-                #{timeCode},
                 #{name},
                 #{phone},
                 #{web},
                 #{address},
-                #{intro},
-                DEFAULT,
-                DEFAULT,
-                DEFAULT,
-                DEFAULT,
-                DEFAULT,
-                DEFAULT,
-                DEFAULT,
-                DEFAULT,
-                DEFAULT,
-                DEFAULT,
-                DEFAULT,
-                DEFAULT
+                #{intro}
                )
     </insert>
+<!--  미용실 자격증 등록  -->
+    <insert id="registerBeautyCertificates">
+        INSERT INTO certificates
+        (
+            certificate_code,
+            provider_code,
+            service_category_code,
+            name,
+            text
+        )
+        VALUES (
+                null,
+                #{providerCode},
+                4,
+                #{name},
+                #{text}
+               )
+    </insert>
+
+<!--  미용실 운영시간 등록  -->
+    <insert id="registerBeautyTimes">
+        INSERT INTO times
+        (
+            time_code,
+            provider_code,
+            service_category_code,
+            day,
+            start_time,
+            end_time
+        )
+        VALUES (
+                null,
+                #{providerCode},
+                4,
+                #{day},
+                #{startTime},
+                #{endTime}
+               )
+    </insert>
+
+<!--  미용실 정보 수정  -->
     <update id="updateBeautyInfo">
         UPDATE beauties
         SET
-            #{beautyReservationListCode},
-            #{timeCode},
-            #{name},
-            #{phone},
-            #{web},
-            #{address},
-            #{intro},
+            name=#{name},
+            phone=#{phone},
+            web=#{web},
+            address=#{address},
+            intro=#{intro}
         WHERE provider_code = #{providerCode}
     </update>
+<!--  미용실 카테고리 수정  -->
+    <update id="updateBeautyCategories">
+        UPDATE beauties
+        SET
+            large=#{large},
+            medium=#{medium},
+            small=#{small},
+            open_beauty=#{openBeauty},
+            spa=#{spa},
+            massage=#{massage},
+            self_beauty=#{selfBeauty},
+            hoteling=#{hoteling},
+            playground=#{playground},
+            free_parking=#{freeParking},
+            wi_fi=#{wiFi}
+        WHERE provider_code = #{providerCode}
+    </update>
+<!--  미용실 자격증 수정  -->
+    <update id="updateCertificates">
+        UPDATE certificates
+        SET
+            name=#{name},
+            text=#{text}
+        WHERE provider_code = #{providerCode}
+        AND service_category_code = 4
+
+    </update>
+
+<!--  미용실 삭제  -->
+    <delete id="deleteBeautyInfo">
+        DELETE FROM beauties
+        WHERE beauty_code=(
+            SELECT beauty_code
+            FROM(
+                SELECT beauty_code
+                FROM beauties
+                WHERE provider_code=#{providerCode}
+                )tmp
+            )
+    </delete>
 
 
 

@@ -15,6 +15,10 @@ public class CommonDTO {
      * */
     private int schedulesCode;
     /**
+     * 제공자 코드
+     * */
+    private int providerCode;
+    /**
      * 서비스 카테고리 코드
      * */
     private int serviceCategoryCode;
