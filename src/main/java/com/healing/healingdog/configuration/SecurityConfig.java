@@ -104,7 +104,7 @@ public class SecurityConfig  {
         return source;
     }
 
-    /**기본적으로 프로토콜, 호스트, 포트 를 통틀어서 Origin(출처) 라고 한다.
+    /* 기본적으로 프로토콜, 호스트, 포트 를 통틀어서 Origin(출처) 라고 한다.
 
      즉 서로 같은 출처란 이 셋이 동일한 출처를 말하고, 여기서 하나라도 다르다면 Cross Origin, 즉 교차출처가 되는 것이다.
 

@@ -13,12 +13,12 @@
 
 	<typeAliases>
 		<typeAlias alias="BoardingServiceDTO" type="com.healing.healingdog.boarding.dto.BoardingServiceDTO"/>
-		<typeAlias alias="ImageDTO" type="com.healing.healingdog.common.file.model.dto.ImageDTO" />
+		<typeAlias alias="ImageTableDTO" type="com.healing.healingdog.common.file.model.dto.ImageTableDTO" />
 		<typeAlias alias="UserDTO" type="com.healing.healingdog.login.dto.UserDTO"/>
 		<typeAlias alias="ProviderDTO" type="com.healing.healingdog.login.dto.ProviderDTO"/>
 		<!-- community -->
-		<typeAlias alias="DetailForGettingBoard" type="com.healing.healingdog.community.model.dto.DetailForGettingBoard"/>
-		<typeAlias alias="BoardDTO" type="com.healing.healingdog.community.model.dto.BoardDTO"/>
+		<typeAlias alias="DetailForGettingBoard" type="com.healing.healingdog.community.model.dto.CatAndPageDataForBoard"/>
+		<typeAlias alias="BoardTableDTO" type="com.healing.healingdog.community.model.dto.BoardTableDTO"/>
 		<typeAlias alias="BeautyDTO" type="com.healing.healingdog.beauty.model.dto.BeautyDTO"/>
 	</typeAliases>
 

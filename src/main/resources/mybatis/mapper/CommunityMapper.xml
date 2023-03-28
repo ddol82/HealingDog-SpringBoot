@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.healing.healingdog.community.model.dao.CommunityMapper">
 
-    <select id="selectBoardHeadline" resultType="BoardDTO">
+    <select id="selectBoardHeadline" resultType="BoardTableDTO">
         SELECT
                B.board_code
              , B.user_code
@@ -28,7 +28,7 @@
         </if>
     </select>
 
-    <select id="selectBoardList" parameterType="DetailForGettingBoard" resultType="BoardDTO">
+    <select id="selectBoardList" parameterType="CatAndPageDataForBoard" resultType="BoardTableDTO">
         SELECT
                B.board_code
              , B.user_code
@@ -57,5 +57,20 @@
               ) B
          WHERE B.RN <![CDATA[>=]]> #{ start }
            AND B.RN <![CDATA[<=]]> #{ end }
+    </select>
+
+    <select id="selectBoardThumbnailUrl" parameterType="_int" resultType="string">
+        SELECT
+               I.thumbnail
+          FROM board_images I
+         WHERE I.board_code = #{ code }
+           AND I.thumbnail IS NOT NULL
+    </select>
+
+    <select id="selectBoardImageCount" parameterType="_int" resultType="_int">
+        SELECT
+               COUNT(*)
+          FROM board_images I
+         WHERE I.board_code = #{ code }
     </select>
 </mapper>

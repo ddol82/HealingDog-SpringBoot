@@ -1,6 +1,15 @@
 package com.healing.healingdog.common.file.model.dto;
 
-public class ImageDTO {
+/**
+ * images Table에 접근하여 자료를 조회하는 DTO입니다.<br>
+ * usages 추적을 위해 {@code @lombok}({@link lombok.AllArgsConstructor @Constructor}, {@link lombok.Getter @Getter},
+ * {@link lombok.Setter @Setter})을 사용하지 않고 직접 구현이 되어있습니다.
+ *
+ * @author 이진녕
+ * @since 1.0
+ * @version 1.0
+ */
+public class ImageTableDTO {
     private int code;
     private String imageType;
     private String category;
@@ -9,7 +18,7 @@ public class ImageDTO {
     private String thumbnail;
     private String original;
 
-    public ImageDTO(int code, ImageType imageType, String category, int refCode, String usage, String thumbnail, String original) {
+    public ImageTableDTO(int code, ImageType imageType, String category, int refCode, String usage, String thumbnail, String original) {
         this.code = code;
         this.imageType = imageType.getType();
         this.category = category;
