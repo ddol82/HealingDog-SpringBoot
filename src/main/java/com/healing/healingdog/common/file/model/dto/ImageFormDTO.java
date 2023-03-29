@@ -3,13 +3,14 @@ package com.healing.healingdog.common.file.model.dto;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * {@code image}를 Form-data로 받기 위한 DTO입니다.<br>
+ * {@code image}를 <b>POST</b>방식의 Form-data로 받기 위한 DTO입니다.<br>
  * 한 장의 경우 {@link ImageFormDTO}로 사용하고,<br>
  * 여러 장의 경우 {@link java.util.List List}<{@link ImageFormDTO}> 형태로 사용합니다.
  * form-data는 다음의 형식을 맞춰주세요.
+ * <hr>
  * <table border="1">
  *     <tr>
- *         <td rowspan="4">단일 사용 - </td>
+ *         <td rowspan="4">{@link ImageFormDTO 단일} 사용 - </td>
  *         <td>Key</td>
  *         <td>Value</td>
  *     </tr>
@@ -25,6 +26,9 @@ import org.springframework.web.multipart.MultipartFile;
  *         <td>ImageFormDTO.thumbnail</td>
  *         <td>[첨부 파일]</td>
  *     </tr>
+ * </table>
+ * <hr>
+ * <table>
  *     <tr>
  *         <td rowspan="4">{@link java.util.List List} 사용 - </td>
  *         <td>Key</td>
@@ -43,6 +47,7 @@ import org.springframework.web.multipart.MultipartFile;
  *         <td>[첨부 파일]</td>
  *     </tr>
  * </table>
+ * <hr>
  *
  * @author 이진녕
  * @since 1.0
@@ -50,6 +55,5 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public class ImageFormDTO {
     private String id;
-    private MultipartFile original;
-    private MultipartFile thumbnail;
+    private MultipartFile imageFile;
 }

@@ -35,29 +35,29 @@ public class CommunityController {
     private final CommunityService communityService;
 
     /**
-     * 커뮤니티 내의 카테고리 목록을 조회합니다.
-     * {@link CommunityService}를 이용하지 않고, {@link BoardType}을 순회하여
+     * 커뮤니티 내의 카테고리 목록을 조회합니다.<br>
+     * {@link BoardType}을 순회하여
      * {@link BoardType#getName()} 값을 가져옵니다.
-     * @return {@link List}<{@link String}>타입으로 카테고리 목록을 반환합니다.
+     * @return {@link List}<{@link String}>타입의 카테고리 값을
+     * {@code data}에 담아 반환합니다.
      */
     @GetMapping("/lists/categories")
     public ResponseEntity<ResponseDTO> selectCommunityCategoryList() {
         log.info("[CommunityController] selectCommunityCategoryList 호출");
 
-        List<String> categoryList = new ArrayList<>();
-        for(BoardType boardType : BoardType.values()) {
-            categoryList.add(boardType.getName());
-        }
-        String outputMessage = "카테고리 목록 " + categoryList.size() + "개 조회 완료";
+        List<String> categories = communityService.selectCommunityCategoryList();
 
+        log.info("[CommunityController] selectCommunityCategoryList 종료");
+        String outputMessage = "카테고리 목록 " + categories.size() + "개 조회 완료";
         return ResponseEntity.ok()
-                .body(new ResponseDTO(HttpStatus.OK, outputMessage, categoryList));
+                .body(new ResponseDTO(HttpStatus.OK, outputMessage, categories));
     }
 
     /**
      * 커뮤니티 상단에 고정되어야 할 게시글들을
      * {@link CommunityService#selectBoardHeadline()}로 조회합니다.
-     * @return 상단 고정 게시글들을 {@link List}<{@link BoardTableDTO}>타입으로 반환합니다.
+     * @return 상단 고정 게시글들을 {@link List}<{@link BoardTableDTO}>타입의
+     * data에 담아 반환합니다.
      */
     @GetMapping("/lists/importants")
     public ResponseEntity<ResponseDTO> selectBoardHeadline() {
@@ -69,6 +69,7 @@ public class CommunityController {
         List<SimpleBoardDTO> boardList = boardDataConverter(boardTableList, false);
 
         String outputMessage = "상단 고정의 게시글 " + boardList.size() + "개 반환";
+        log.info("[CommunityController] selectBoardHeadline 종료");
         return ResponseEntity.ok()
                 .body(new ResponseDTO(HttpStatus.OK, outputMessage, boardList));
     }
@@ -115,6 +116,7 @@ public class CommunityController {
         ItemWithPaging boardItem = new ItemWithPaging(pageData, boardList);
         String outputMessage = "카테고리 {" + boardType.getType() + "}의 " + pageData.getCurrPage() + "페이지 게시글 " + boardList.size() + "개 반환";
 
+        log.info("[CommunityController] selectBoardList 종료");
         return ResponseEntity.ok()
                 .body(new ResponseDTO(HttpStatus.OK, outputMessage, boardItem));
     }
@@ -130,7 +132,7 @@ public class CommunityController {
      * 선택적으로 {@code image} 정보를 {@link SimpleBoardDTO}타입으로 가공해 반환합니다.
      */
     private List<SimpleBoardDTO> boardDataConverter(List<BoardTableDTO> boardTableList, boolean containsImage) {
-        log.info("(boardDataConverter) 호출");
+        log.info("[CommunityController] boardDataConverter 호출");
         List<SimpleBoardDTO> result = new ArrayList<>();
         for(BoardTableDTO boardTableItem : boardTableList) {
             log.debug("게시글 번호 " + boardTableItem.getBoardCode() + " 변환 시작");
@@ -153,16 +155,21 @@ public class CommunityController {
             result.add(board);
             log.debug("게시글 번호 " + boardTableItem.getBoardCode() + " 변환 종료");
         }
-        log.info("(boardDataConverter) 종료");
+        log.info("[CommunityController] boardDataConverter 종료");
         return result;
     }
 
     @PostMapping("/articles/write/confirm")
     public ResponseEntity<ResponseDTO> insertBoard(@ModelAttribute BoardCreateDTO boardCreateDTO) {
-        log.info("(insertBoard) 호출");
+        log.info("[CommunityController] insertBoard 호출");
 
+        String outputMessage = "반환 결과는 다음과 같습니다.";
+        String returnValue = CommunityService.insertBoard(boardCreateDTO);
+        String outputData = (returnValue != null) ?
+                (returnValue + "번 게시글이 등록되었습니다.") : "게시글 등록에 실패했습니다.";
 
+        log.info("[CommunityController] insertBoard 종료");
         return ResponseEntity.ok()
-                .body(new ResponseDTO(HttpStatus.OK, "", null));
+                .body(new ResponseDTO(HttpStatus.OK, outputMessage, outputData));
     }
 }

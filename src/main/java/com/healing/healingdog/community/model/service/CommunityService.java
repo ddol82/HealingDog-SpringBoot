@@ -2,12 +2,14 @@ package com.healing.healingdog.community.model.service;
 
 import com.healing.healingdog.common.paging.PageData;
 import com.healing.healingdog.community.model.dao.CommunityMapper;
+import com.healing.healingdog.community.model.dto.BoardCreateDTO;
 import com.healing.healingdog.community.model.dto.BoardTableDTO;
 import com.healing.healingdog.community.model.dto.CatAndPageDataForBoard;
 import com.healing.healingdog.community.model.type.BoardType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,14 +28,40 @@ public class CommunityService {
         this.communityMapper = communityMapper;
     }
 
+    public static String insertBoard(BoardCreateDTO boardCreateDTO) {
+        log.info("[CommunityService] selectBoardHeadline 호출");
+
+        String result = "";
+
+        log.info("[CommunityService] selectBoardHeadline 종료");
+        return result;
+    }
+
+    /**
+     * 커뮤니티 내의 카테고리 목록을 조회합니다.<br>
+     * {@link BoardType}을 순회하여
+     * {@link BoardType#getName()} 값을 가져옵니다.
+     * @return {@link List}<{@link String}>타입으로 카테고리 목록을 반환합니다.
+     */
+    public List<String> selectCommunityCategoryList() {
+        List<String> categoryList = new ArrayList<>();
+        for(BoardType boardType : BoardType.values()) {
+            categoryList.add(boardType.getName());
+        }
+        return categoryList;
+    }
+
     /**
      * 커뮤니티 상단에 고정되어야 하는 게시글을 조회합니다.
      * @return 조회된 게시글을 {@link List}형태로 반환합니다.
      */
     public List<BoardTableDTO> selectBoardHeadline() {
         log.info("[CommunityService] selectBoardHeadline 호출");
+
         List<BoardTableDTO> boardList= communityMapper.selectBoardHeadline();
         log.debug("(selectBoardCount) 조회 결과 : " + boardList.size() + "건");
+
+        log.info("[CommunityService] selectBoardHeadline 종료");
         return boardList;
     }
 
@@ -45,8 +73,11 @@ public class CommunityService {
      */
     public int selectBoardCountAll(int categoryCode) {
         log.info("[CommunityService] selectBoardCount 호출");
+
         int count = communityMapper.selectBoardCountAll(categoryCode);
         log.debug("(selectBoardCount) 조회 결과 : " + count);
+
+        log.info("[CommunityService] selectBoardCount 종료");
         return count;
     }
 
@@ -58,8 +89,11 @@ public class CommunityService {
      */
     public List<BoardTableDTO> selectBoardList(CatAndPageDataForBoard detailData) {
         log.info("[CommunityService] selectBoardList 호출");
+
         List<BoardTableDTO> boardList= communityMapper.selectBoardList(detailData);
         log.debug("(selectBoardCount) 조회 결과 : " + boardList.size() + "건");
+
+        log.info("[CommunityService] selectBoardList 종료");
         return boardList;
     }
 
@@ -71,8 +105,11 @@ public class CommunityService {
      */
     public String selectBoardThumbnailUrl(int boardCode) {
         log.info("[CommunityService] selectBoardThumbnailUrl 호출");
+
         String thumbnailUrl = communityMapper.selectBoardThumbnailUrl(boardCode);
         log.debug("(selectBoardThumbnailUrl) 조회 결과 : " + (thumbnailUrl != null ? thumbnailUrl : "없음 - null 반환"));
+
+        log.info("[CommunityService] selectBoardThumbnailUrl 종료");
         return thumbnailUrl;
     }
 
@@ -84,8 +121,11 @@ public class CommunityService {
      */
     public int selectBoardImageCount(int boardCode) {
         log.info("[CommunityService] selectBoardImageCount 호출");
+
         int count = communityMapper.selectBoardImageCount(boardCode);
         log.debug("(selectBoardImageCount) 조회 결과 : " + count + "건");
+
+        log.info("[CommunityService] selectBoardImageCount 종료");
         return count;
     }
 }
