@@ -1,6 +1,7 @@
 package com.healing.healingdog.community.controller;
 
 import com.healing.healingdog.common.ResponseDTO;
+import com.healing.healingdog.common.file.model.dto.ImageForm;
 import com.healing.healingdog.common.paging.ItemWithPaging;
 import com.healing.healingdog.common.paging.PageData;
 import com.healing.healingdog.common.paging.PageDataAutoFill;
@@ -16,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -160,13 +162,27 @@ public class CommunityController {
     }
 
     @PostMapping("/articles/write/confirm")
-    public ResponseEntity<ResponseDTO> insertBoard(@ModelAttribute BoardCreateDTO boardCreateDTO) {
+    public ResponseEntity<ResponseDTO> insertBoard(
+            @RequestPart(value = "boardData") BoardCreateDTO boardCreateDTO,
+            @RequestPart(value = "fileItems", required = false) List<ImageForm> fileItems,
+            @RequestPart(value = "Images", required = false) List<MultipartFile> images) {
         log.info("[CommunityController] insertBoard 호출");
 
+        for(int i = 0; i < fileItems.size(); i++) {
+            fileItems.get(i).setImageFile(images.get(i));
+        }
+        boardCreateDTO.setFileItems(fileItems);
+
+        boardCreateDTO = communityService.insertBoard(boardCreateDTO);
+        String resultBoard = boardCreateDTO.getId() + "번 게시글이 등록되었습니다.";
+        log.debug("[CommunityController] resultBoard 결과 출력 : {}", resultBoard);
+        List<String> resultImage = new ArrayList<>();
+        if(boardCreateDTO.getFileItems() != null && boardCreateDTO.getFileItems().size() > 0) {
+            resultImage = communityService.insertBoardImage(boardCreateDTO);
+            log.debug("[CommunityController] resultImage 결과 출력 : {}건", resultImage.size());
+        }
         String outputMessage = "반환 결과는 다음과 같습니다.";
-        String returnValue = CommunityService.insertBoard(boardCreateDTO);
-        String outputData = (returnValue != null) ?
-                (returnValue + "번 게시글이 등록되었습니다.") : "게시글 등록에 실패했습니다.";
+        List<String> outputData = communityService.insertBoardResult(resultBoard, resultImage);
 
         log.info("[CommunityController] insertBoard 종료");
         return ResponseEntity.ok()

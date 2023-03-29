@@ -1,14 +1,21 @@
 package com.healing.healingdog.community.model.service;
 
+import com.healing.healingdog.common.file.model.dto.ImageForm;
+import com.healing.healingdog.common.file.model.dto.ImageTableDTO;
+import com.healing.healingdog.common.file.model.dto.ImageType;
 import com.healing.healingdog.common.paging.PageData;
+import com.healing.healingdog.common.util.ImageUtils;
 import com.healing.healingdog.community.model.dao.CommunityMapper;
 import com.healing.healingdog.community.model.dto.BoardCreateDTO;
 import com.healing.healingdog.community.model.dto.BoardTableDTO;
 import com.healing.healingdog.community.model.dto.CatAndPageDataForBoard;
 import com.healing.healingdog.community.model.type.BoardType;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,21 +29,17 @@ import java.util.List;
 @Slf4j
 @Service
 public class CommunityService {
+    @Value("${image.image-directory-prefix}")
+    private String IMAGE_DIR_PREFIX;
+    @Value("${image.image-url-prefix}")
+    private String IMAGE_URL_PREFIX;
+    @Value("${image.type.board}")
+    private String IMAGE_TYPE;
     private final CommunityMapper communityMapper;
 
     public CommunityService(CommunityMapper communityMapper) {
         this.communityMapper = communityMapper;
     }
-
-    public static String insertBoard(BoardCreateDTO boardCreateDTO) {
-        log.info("[CommunityService] selectBoardHeadline 호출");
-
-        String result = "";
-
-        log.info("[CommunityService] selectBoardHeadline 종료");
-        return result;
-    }
-
     /**
      * 커뮤니티 내의 카테고리 목록을 조회합니다.<br>
      * {@link BoardType}을 순회하여
@@ -127,5 +130,101 @@ public class CommunityService {
 
         log.info("[CommunityService] selectBoardImageCount 종료");
         return count;
+    }
+
+    /**
+     * 작성된 게시글을 등록합니다.
+     *
+     * @param boardCreateDTO 게시글의 정보가 담긴 DTO입니다.
+     * @return 등록된 게시글의 id(PK)가 포함되어 반환됩니다.<br>
+     * 등록 실패 시 {@code null}을 반환합니다.
+     */
+    public BoardCreateDTO insertBoard(BoardCreateDTO boardCreateDTO) {
+        log.info("[CommunityService] insertBoard 호출");
+
+        try {
+            communityMapper.insertBoard(boardCreateDTO);
+            /*
+             * Mapper Interface에서 void형으로 반환하고
+             * Mapper xml에 useGeneratedKeys, keyProperty 속성을 지정하면
+             * parameter로 쓰인 boardCreateDTO에
+             * PK값인 id가 저장됩니다.
+             */
+        } catch (Exception e) {
+            log.warn("[CommunityService] 예외 상황 발생 : ", e);
+        }
+
+        log.info("[CommunityService] insertBoard 종료");
+        return boardCreateDTO;
+    }
+
+    /**
+     * 게시글의 이미지 정보를 board_images 테이블에 담습니다.
+     *
+     * @param boardCreateDTO 파일이 포함된 DTO입니다.
+     * @return 이미지 등록 결과를 {@link List}<{@link String}>타입으로 반환합니다.
+     */
+    @Transactional
+    public List<String> insertBoardImage(BoardCreateDTO boardCreateDTO) {
+        log.info("[CommunityService] insertBoardImage 호출");
+
+        String direction = IMAGE_DIR_PREFIX + IMAGE_TYPE;
+        List<String> result = new ArrayList<>();
+        List<ImageForm> files = boardCreateDTO.getFileItems();
+        for(ImageForm imageFile : files) {
+            try {
+                log.info("[CommunityService] 이미지 1건의 저장을 시도합니다.");
+                String original = ImageUtils.saveImage(direction, imageFile.getImageFile());
+                String thumbnail = null;
+                if(imageFile.getHasThumbnail().equals("O")) {
+                    log.info("[CommunityService] 썸네일을 포함해서요!");
+                    int resizeWidth = 100;
+                    int resizeHeight = 100;
+                    thumbnail = ImageUtils.saveThumbnail(direction, imageFile.getImageFile(), resizeWidth, resizeHeight);
+                }
+
+                ImageTableDTO imageTableDTO = new ImageTableDTO();
+                imageTableDTO.setImageType(ImageType.BOARD);
+                imageTableDTO.setRefCode(boardCreateDTO.getId());
+                imageTableDTO.setUsage(imageFile.getUsage());
+                imageTableDTO.setOriginal(original);
+                imageTableDTO.setThumbnail(thumbnail);
+                communityMapper.insertBoardImage(imageTableDTO);
+
+                result.add("original - " + original);
+                if(thumbnail != null) {
+                    result.add("thumbnail - " + thumbnail);
+                }
+                log.info("[CommunityService] 이미지 1건의 저장이 끝났습니다.");
+            } catch (IOException e) {
+                log.error("이미지 저장 중 오류가 발생했습니다.");
+            }
+        }
+
+        log.info("[CommunityService] insertBoardImage 종료");
+        return result;
+    }
+
+    /**
+     * 게시글의 등록 결과와 게시글 사진의 등록 결과를 합쳐<br>
+     * 하나의 {@link List}<{@link String}>으로 만듭니다.<br>
+     * 게시글 등록 실패 시 <b>실패 문구</b>가 포함된<br>
+     * size 1의 {@link List}<{@link String}>을 반환합니다.
+     *
+     * @param resultBoard 게시글 등록 결과입니다.
+     * @param resultImage 이미지 등록 결과입니다.
+     * @return 합쳐진 {@link String}들의 {@link List}를 반환합니다.
+     */
+    public List<String> insertBoardResult(String resultBoard, List<String> resultImage) {
+        List<String> result = new ArrayList<>();
+
+        if(resultBoard == null) {
+            result.add("(fail) 게시글을 등록할 수 없었습니다.");
+            return result;
+        }
+        result.add(resultBoard);
+        result.addAll(resultImage);
+
+        return result;
     }
 }

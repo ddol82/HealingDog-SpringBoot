@@ -19,6 +19,8 @@
 		<!-- community -->
 		<typeAlias alias="DetailForGettingBoard" type="com.healing.healingdog.community.model.dto.CatAndPageDataForBoard"/>
 		<typeAlias alias="BoardTableDTO" type="com.healing.healingdog.community.model.dto.BoardTableDTO"/>
+		<typeAlias alias="BoardCreateDTO" type="com.healing.healingdog.community.model.dto.BoardCreateDTO"/>
+		<!-- beauty -->
 		<typeAlias alias="BeautyDTO" type="com.healing.healingdog.beauty.model.dto.BeautyDTO"/>
 	</typeAliases>
 
@@ -26,6 +28,7 @@
 		<mapper resource="BeautyManageMapper.xml" />
 
 		<mapper resource="BoardingManageMapper.xml" />
+		<!-- community -->
 		<mapper resource="BoardImageMapper.xml" />
 		<mapper resource="communityMapper.xml"/>
 		<mapper resource="UserMapper.xml" />

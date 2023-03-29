@@ -1,16 +1,20 @@
 package com.healing.healingdog.common.util;
 
+import com.healing.healingdog.common.file.model.dto.ImageTableDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
+import org.imgscalr.Scalr;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -31,89 +35,182 @@ import java.util.UUID;
 public class ImageUtils {
 
     /**
-     * 이미지 파일 한 개를 업로드합니다.
+     * 파일을 저장합니다.<br>
+     * 파일의 이름은 {@link UUID}를 이용하여 랜덤으로 생성됩니다.
      *
-     * @param imageType 업로드 할 이미지의 타입이 입력됩니다.<br>(입력 가능한 값 :
-     * {@code member/}, {@code service/}, {@code review/}, {@code board/}, {@code certificate/})
-     * @param targetFile 업로드 할 {@link MultipartFile}입니다.
-     * @return 업로드에 성공한 파일의 이름을 {@link List}<{@link String}> 형태로 출력합니다.
-     * @throws IOException 파일 업로드 실패 시 {@link IOException}이 발생합니다.
+     * @param uploadDir 업로드 할 경로입니다.
+     * @param multipartFile 업로드 할 이미지 파일입니다.
+     * @return 파일 저장 후 저장된 이름의 파일명을 반환합니다.
+     * @throws IOException 입출력 과정에서 오류 발생 시 IOException이 발생합니다.
      */
-    public List<String> makeImageFile(String imageType, MultipartFile targetFile) throws IOException {
-        List<MultipartFile> targetFileList = new ArrayList<>();
-        targetFileList.add(targetFile);
-        return makeFile(imageType, targetFileList);
+    public static String saveImage(String uploadDir, MultipartFile multipartFile) throws IOException {
+        log.info("saveFile 호출");
+        Path uploadPath = Paths.get(uploadDir);
+
+        pathExistCheckForSave(uploadPath);
+        //이름 랜덤 생성
+        String saveName = createRandomImageName(multipartFile);
+        //경로에 파일 복사
+        fileCopy(uploadPath, multipartFile, saveName);
+
+        log.info("saveFile 종료");
+        return "original : " + saveName;
     }
+
+    public static String saveThumbnail(String uploadDir, MultipartFile multipartFile, int width, int height) throws IOException {
+        log.info("saveThumbnail 호출");
+        Path uploadPath = Paths.get(uploadDir);
+        log.debug("경로 : {}", uploadPath.toRealPath());
+        //경로 확인
+        pathExistCheckForSave(uploadPath);
+        //이름 랜덤 생성
+        String saveName = createRandomImageName(multipartFile);
+        //경로에 파일 복사
+        String uploadFullDir = uploadDir + saveName;
+        try {
+            BufferedImage bufferedImage = ImageIO.read(multipartFile.getInputStream());
+            bufferedImage = resizeImage(bufferedImage, width, height);
+            ImageIO.write(
+                    bufferedImage,
+                    saveName.split("\\.")[1],
+                    new File(uploadFullDir)
+            );
+        } catch (IOException e) {
+            log.error("이미지 resize 과정에 오류가 발생했습니다.", e);
+
+
+        }
+
+        log.info("saveThumbnail 종료");
+        return saveName;
+    }
+
     /**
-     * 이미지 파일을 {@link List}<{@link MultipartFile}> 형태로 여러 개를 업로드합니다.
-     *
-     * @param imageType 업로드 할 이미지의 타입이 입력됩니다.<br>(입력 가능한 값 : member/, service/, review/, board/, certificate/)
-     * @param targetFileList 업로드 할 {@link MultipartFile}의 {@link List}입니다.
-     * @return 업로드에 성공한 파일의 이름을 {@link List}<{@link String}> 형태로 출력합니다.
-     * @throws IOException 파일 업로드 실패 시 {@link IOException}이 발생합니다.
+     * 파일의 경로가 존재하는지 확인하여<br>
+     * 존재하지 않는 경우 경로를 새로 생성합니다.
+     * @param uploadPath 존재를 확인할 경로입니다.
+     * @throws IOException 입출력 과정에서 오류 발생 시 IOException이 발생합니다.
      */
-    public List<String> makeImageFile(String imageType, List<MultipartFile> targetFileList) {
-        return makeFile(imageType, targetFileList);
+    private static void pathExistCheckForSave(Path uploadPath) throws IOException {
+        try {
+            if(!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+                log.info("폴더 생성 : {}", uploadPath);
+            }
+        } catch (IOException e) {
+            log.error("경로를 생성할 수 없었습니다 : " + uploadPath, e);
+            throw new IOException(e);
+        }
     }
 
-    private List<String> makeFile(String imageType, List<MultipartFile> multipartFileList) {
-//        Path uploadPath = Paths.get(IMAGE_DIRECTION_PREFIX + imageType + "/");
-//        try {
-//            if(!Files.exists(uploadPath)) {
-//                Files.createDirectories(uploadPath);
-//            }
-//        } catch (IOException e) {
-//            log.error("경로를 생성할 수 없었습니다 : " + uploadPath, e);
-//            throw new IOException(e);
-//        }
-//
-//        int result = 0;
-//        for(MultipartFile targetFile : targetFileList) {
-//            if(copyNameChangedImage(uploadPath, targetFile)) {
-//                result += 1;
-//            }
-//        }
-        return null;
-    }
-    private String createRandomImageName(MultipartFile multipartFile) {
-        String randomFileName = UUID.randomUUID().toString().replace("-", "");
-        return randomFileName + "." + FilenameUtils.getExtension(multipartFile.getResource().getFilename());
+    /**
+     * 파일의 이름을 {@link UUID}를 사용한 랜덤 문자열로 만들고<br>
+     * 확장자를 붙입니다.
+     *
+     * @param multipartFile 확장자를 붙일 파일입니다.
+     * @return "랜덤_이름.확장자" 이름이 반환됩니다.
+     */
+    private static String createRandomImageName(MultipartFile multipartFile) {
+        String randomFileName = UUID.randomUUID().toString()
+                .replace("-", "");
+        randomFileName += "." + FilenameUtils.getExtension(multipartFile.getResource().getFilename());
+        return randomFileName;
     }
 
-    private boolean copyNameChangedImage(Path uploadPath, MultipartFile targetFile) {
-        String fileName = createRandomImageName(targetFile);
-        try(InputStream inputStream = targetFile.getInputStream()) {
+    /**
+     * 생성된 이름으로 이미지 파일을 복사합니다.
+     *
+     * @param uploadPath 복사를 진행할 경로입니다.
+     * @param multipartFile 복사할 파일입니다.
+     * @param fileName 생성된 파일 이름입니다.
+     * @throws IOException 입출력 과정에서 오류 발생 시 IOException이 발생합니다.
+     */
+    private static void fileCopy(Path uploadPath, MultipartFile multipartFile, String fileName) throws IOException {
+        try(InputStream inputStream = multipartFile.getInputStream()) {
             Path filePath = uploadPath.resolve(fileName);
             Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             log.error("파일을 저장하지 못했습니다 : " + fileName, e);
+            throw new IOException("파일을 저장할 수 없었습니다 : " + fileName, e);
+        }
+    }
+
+    private static BufferedImage resizeImage(BufferedImage bufferedImage, int width, int height) {
+        int getWidth = bufferedImage.getWidth();
+        int getHeight = bufferedImage.getHeight();
+        if(getWidth < width) width = getWidth;
+        if(getHeight < height) height = getHeight;
+        if(width == getWidth && height == getHeight) return bufferedImage;
+        return Scalr.resize(
+                bufferedImage,
+                Scalr.Method.AUTOMATIC,
+                width,
+                height,
+                Scalr.OP_ANTIALIAS
+        );
+    }
+
+    /**
+     * 이미지를 삭제합니다.
+     *
+     * @param fileDir 이미지의 경로입니다.
+     * @param image {@link ImageTableDTO} 형식으로 이미지 파일을 받습니다.
+     * @return 삭제 성공 시 {@code true}가 반환되고,
+     * 오류가 발생할 시 {@code false}가 반환됩니다.
+     */
+    public static boolean deleteImage(String fileDir, ImageTableDTO image) {
+        boolean result = true;
+        log.info("deleteFile 호출");
+        Path imagePath = Paths.get(fileDir);
+        //경로 존재 확인
+        if(!pathExistCheckForDelete(imagePath)) {
+            result = false;
+        }
+        //경로가 없으면 패스
+        if(result) {
+            //썸네일이 존재할 때, 썸네일 삭제 시도. 실패 시 false
+            if(image.getThumbnail() != null && !fileDelete(imagePath, image.getThumbnail())) {
+                result = false;
+            }
+            //원본 이미지 삭제 시도. 실패 시 false
+            if(!fileDelete(imagePath, image.getOriginal())) {
+                result = false;
+            }
+        }
+
+        log.info("deleteFile 종료");
+        return result;
+    }
+
+    /**
+     * 파일의 경로가 존재하는지 확인하여<br>
+     * 존재하지 않는 경우 경로를 새로 생성합니다.
+     * @param fileDir 존재를 확인할 경로입니다.
+     * @return 경로가 존재한다면 {@code true}, 경로가 없다면 {@code false}를 반환합니다.
+     */
+    private static boolean pathExistCheckForDelete(Path fileDir) {
+        if(!Files.exists(fileDir)) {
+            log.warn("해당 경로가 존재하지 않습니다. : " + fileDir);
             return false;
         }
         return true;
     }
 
-//    /**
-//     * 이미지를 삭제합니다.
-//     *
-//     * @param uploadDir 이미지의 경로가 입력됩니다.<br>(입력 가능한 값 : member/, service/, review/, board/, certificate/)
-//     * @param fileName 업로드 할 파일의 이름입니다.
-//     * @return 삭제 성공 시 True가 반환됩니다. 삭제 중 오류가 발생할 시 False가 반환됩니다.
-//     */
-//    public boolean deleteImage(String uploadDir, String fileName) {
-//        Path imagePath = Paths.get(IMAGE_DIRECTION_PREFIX + uploadDir);
-//        if(!Files.exists(imagePath)) {
-//            log.warn("해당 경로가 존재하지 않습니다. : " + fileName);
-//            return false;
-//        }
-//
-//        try {
-//            Path filePath = imagePath.resolve(fileName);
-//            Files.delete(filePath);
-//        } catch (IOException e) {
-//            log.warn("파일을 삭제할 수 없었습니다. : " + fileName, e);
-//            return false;
-//        }
-//
-//        return true;
-//    }
+    /**
+     * 파일을 삭제합니다.
+     * @param filePath 파일의 경로입니다.
+     * @param fileName 파일의 이름입니다.
+     * @return 삭제 시 {@code true}를 반환하고, 실패 시 {@code false}를 반환합니다.
+     */
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    private static boolean fileDelete(Path filePath, String fileName) {
+        try {
+            Path imagePath = filePath.resolve(fileName);
+            Files.delete(imagePath);
+        } catch (IOException e) {
+            log.warn("파일을 삭제할 수 없었습니다. : " + fileName, e);
+            return false;
+        }
+        return true;
+    }
 }

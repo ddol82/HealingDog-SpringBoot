@@ -18,6 +18,24 @@ public class ResponseDTO {
     private String message;
     private Object data;
 
+    /**
+     * ResponseDTO의 생성자입니다.<br>
+     * <pre>
+     * {@code new ResponseDTO(
+     *     HttpStatus.상태 - params 설명 참조,
+     *     "메시지",
+     *     데이터(DTO 등)
+     * );}
+     * </pre>
+     * 의
+     * 형식으로 사용합니다.<br>
+     * React의 APICalls에서 result에 담기는 값입니다.
+     *
+     * @param status {@link HttpStatus}타입을 받습니다.<br>
+     * 이 파라미터는 {@link HttpStatus#OK}처럼 사용합니다.
+     * @param message 메시지를 적습니다.
+     * @param data 데이터를 반환합니다.
+     */
     public ResponseDTO(HttpStatus status, String message, Object data){
         this.status = status.value();
         this.detail = status.getReasonPhrase();

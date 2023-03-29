@@ -73,4 +73,24 @@
           FROM board_images I
          WHERE I.board_code = #{ code }
     </select>
+    
+    <insert id="insertBoard" parameterType="BoardCreateDTO" useGeneratedKeys="true" keyProperty="id">
+        INSERT
+          INTO boards (
+               board_code
+             , user_code
+             , board_category_code
+             , title
+             , content
+             , uptime
+        )
+        VALUES (
+               NULL
+             , #{ userCode }
+             , #{ boardCategoryCode }
+             , #{ title }
+             , #{ content }
+             , NOW()
+        );
+    </insert>
 </mapper>
