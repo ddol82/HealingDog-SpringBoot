@@ -30,24 +30,12 @@
              ,  phone
              ,  beauty_approval
              ,  petsitter_approval
-             ,  simple_itrainers_approvalntro
+             ,  trainers_approval
              ,  kindergarden_approval
              ,  boarding_approval
              ,  role
         FROM providers
         WHERE email = #{email}
-    </select>
-
-    <select id="findByEmail" resultType="UserDTO">
-        SELECT
-            MEMBER_CODE
-             ,  MEMBER_ID
-             ,  MEMBER_NAME
-             ,  MEMBER_PASSWORD
-             ,  MEMBER_ROLE
-             ,  MEMBER_EMAIL
-        FROM TBL_MEMBER
-        WHERE MEMBER_EMAIL = #{email}
     </select>
 
     <select id="findByUserEmail" resultType="UserDTO">
@@ -122,27 +110,14 @@
             name,
             email,
             provider_password,
-            phone,
-            beauty_approval,
-            petsitter_approval,
-            trainers_approval,
-            kindergarden_approval,
-            boarding_approval,
-            role
+            phone
         )
         VALUES (
                    null,
                    #{name},
                    #{email},
                    #{providerPassword},
-                   #{phone},
-                   #{beautyApproval},
-                   #{petsitterApproval},
-                   #{trainersApproval},
-                   #{kindergardenApproval},
-                   boardingApproval,
-                   role
-
+                   #{phone}
                )
     </insert>
 
