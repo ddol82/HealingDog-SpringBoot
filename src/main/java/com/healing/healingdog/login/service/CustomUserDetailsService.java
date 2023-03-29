@@ -29,7 +29,6 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         UserDetails userDetails = null;//UserDetails 을 null 로 선언
 
-
         userDetails = mapper.findByUserEmail(email)
                 .map(this::addAuthorities)
                 .orElse(null);
@@ -46,6 +45,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         return userDetails;
 
     }
+
 
     private ProviderDTO addAuthorities(ProviderDTO providerDTO) {
         providerDTO.setAuthorities(Arrays.asList(new SimpleGrantedAuthority(providerDTO.getRole())));
