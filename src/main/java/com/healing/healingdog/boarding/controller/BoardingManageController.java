@@ -13,7 +13,7 @@ import java.util.HashMap;
 
 @Slf4j
 @RestController
-@RequestMapping("api/v1/boarding-manage")
+@RequestMapping("api/v1/boarding-management")
 @RequiredArgsConstructor
 public class BoardingManageController {
 
