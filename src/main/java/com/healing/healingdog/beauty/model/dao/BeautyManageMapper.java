@@ -24,6 +24,8 @@ public interface BeautyManageMapper {
 
     int updateCertificates(CertificatesDTO certificatesDTO);
 
+    int updateBeautyTimes(CommonDTO commonDTO);
+
     int deleteBeautyInfo(int providerCode);
 
 
