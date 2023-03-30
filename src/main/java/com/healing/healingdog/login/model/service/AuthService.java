@@ -1,12 +1,12 @@
-package com.healing.healingdog.login.service;
+package com.healing.healingdog.login.model.service;
 
 import com.healing.healingdog.exception.DuplicatedUsernameException;
 import com.healing.healingdog.exception.LoginFailedException;
 import com.healing.healingdog.jwt.TokenProvider;
-import com.healing.healingdog.login.dao.AuthMapper;
-import com.healing.healingdog.login.dto.ProviderDTO;
-import com.healing.healingdog.login.dto.TokenDTO;
-import com.healing.healingdog.login.dto.UserDTO;
+import com.healing.healingdog.login.model.dao.AuthMapper;
+import com.healing.healingdog.login.model.dto.ProviderDTO;
+import com.healing.healingdog.login.model.dto.TokenDTO;
+import com.healing.healingdog.login.model.dto.UserDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

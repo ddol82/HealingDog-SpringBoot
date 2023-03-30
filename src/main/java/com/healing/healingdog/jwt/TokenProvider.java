@@ -2,9 +2,9 @@ package com.healing.healingdog.jwt;
 
 
 import com.healing.healingdog.exception.TokenException;
-import com.healing.healingdog.login.dto.ProviderDTO;
-import com.healing.healingdog.login.dto.UserDTO;
-import com.healing.healingdog.login.dto.TokenDTO;
+import com.healing.healingdog.login.model.dto.ProviderDTO;
+import com.healing.healingdog.login.model.dto.UserDTO;
+import com.healing.healingdog.login.model.dto.TokenDTO;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
