@@ -28,6 +28,7 @@
 
 	<mappers>
 		<mapper resource="BeautyManageMapper.xml" />
+		<mapper resource="BeautyMapper.xml" />
 
 		<mapper resource="BoardingManageMapper.xml" />
 		<!-- community -->

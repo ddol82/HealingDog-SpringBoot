@@ -117,6 +117,13 @@ public class BeautyManageService {
         return result;
     }
 
-
-
+    /**
+     *  미용실 운영시간 삭제
+     * */
+    public int deleteBeautyTimes(int providerCode) {
+        log.info("REQUEST SERVICE deleteBeautyTimes = {}", providerCode);
+        int result = beautyManageMapper.deleteBeautyTimes(providerCode);
+        log.info("result.toString() ={}", result +"개 삭제 완료.");
+        return result;
+    }
 }

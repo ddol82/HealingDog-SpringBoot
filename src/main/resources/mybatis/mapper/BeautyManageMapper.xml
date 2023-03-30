@@ -145,6 +145,12 @@
                 )tmp
             )
     </delete>
+<!--  미용실 운영시간 식제   -->
+    <delete id="deleteBeautyTimes">
+        DELETE FROM times
+        WHERE provider_code = #{providerCode}
+        AND time_code = #{timeCode}
+    </delete>
 
 
 
