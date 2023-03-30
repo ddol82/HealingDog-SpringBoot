@@ -102,6 +102,15 @@ public class BeautyManageController {
     }
 
     /**
+     * 미용실 카테고리 수정
+     */
+    @PutMapping("/times")
+    public ResponseEntity<ResponseDTO> updateBeautyTimes(CommonDTO commonDTO) {
+        log.info("REQUEST API updateBeautyTimes ={}", commonDTO);
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "미용실 운영시간 수정 성공", (beautyManageService.updateBeautyTimes(commonDTO)) + "개"));
+    }
+
+    /**
      * 미용실관리 미용실정보 삭제
      */
     @DeleteMapping("/info")

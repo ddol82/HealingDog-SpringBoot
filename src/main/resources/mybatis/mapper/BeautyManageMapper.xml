@@ -122,6 +122,17 @@
 
     </update>
 
+<!--  미용실 운영시간 수정  -->
+    <update id="updateBeautyTimes">
+        UPDATE times
+        SET
+            day=#{day},
+            start_time=#{startTime},
+            end_time=#{endTime}
+        WHERE provider_code = #{providerCode}
+        AND service_category_code = 4
+    </update>
+
 <!--  미용실 삭제  -->
     <delete id="deleteBeautyInfo">
         DELETE FROM beauties

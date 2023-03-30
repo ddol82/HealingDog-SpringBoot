@@ -96,6 +96,17 @@ public class BeautyManageService {
         log.info("result,toString() = {}", result + "개 수정 완료");
         return result;
     }
+
+    /**
+     * 미용실 운영시간 수정
+     */
+    public int updateBeautyTimes(CommonDTO commonDTO) {
+        log.info("REQUEST SERVICE updateBeautyTimes = {}",commonDTO);
+        int result = beautyManageMapper.updateBeautyTimes(commonDTO);
+        log.info("result,toString() = {}", result + "개 수정 완료");
+        return result;
+    }
+
     /**
      *  미용실 정보 삭제
      * */
@@ -105,6 +116,7 @@ public class BeautyManageService {
         log.info("result.toString() ={}", result +"개 삭제 완료.");
         return result;
     }
+
 
 
 }
