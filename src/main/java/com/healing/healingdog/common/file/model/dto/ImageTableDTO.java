@@ -10,15 +10,18 @@ package com.healing.healingdog.common.file.model.dto;
  * @version 1.0
  */
 public class ImageTableDTO {
-    private int code;
-    private String imageType;
-    private String category;
-    private int refCode;
-    private String usage;
-    private String thumbnail;
-    private String original;
+    private int code; // 코드
+    private String imageType; // 어느 images 테이블인지
+    private int category; // 카테고리 코드
+    private String refCode; // 참조 코드
+    private String usage; // 첨부 위치
+    private String thumbnail; // 썸네일 이름
+    private String original; // 원본 이름
 
-    public ImageTableDTO(int code, ImageType imageType, String category, int refCode, String usage, String thumbnail, String original) {
+    public ImageTableDTO() {
+    }
+
+    public ImageTableDTO(int code, ImageType imageType, int category, String refCode, String usage, String thumbnail, String original) {
         this.code = code;
         this.imageType = imageType.getType();
         this.category = category;
@@ -44,19 +47,19 @@ public class ImageTableDTO {
         this.imageType = imageType.getType();
     }
 
-    public String getCategory() {
+    public int getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(int category) {
         this.category = category;
     }
 
-    public int getRefCode() {
+    public String getRefCode() {
         return refCode;
     }
 
-    public void setRefCode(int refCode) {
+    public void setRefCode(String refCode) {
         this.refCode = refCode;
     }
 
