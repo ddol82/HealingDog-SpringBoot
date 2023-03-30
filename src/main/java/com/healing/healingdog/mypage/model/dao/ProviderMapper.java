@@ -12,4 +12,18 @@ public interface ProviderMapper {
      * @return xml 파일로 보낸다
      */
     ProviderDTO selectMyProviderInfo(int providerCode);
+
+    /**
+     * Provider 제공자의 정보를 수정(update) 합니다.
+     * @param providerDTO 제공자 DTO
+     * @return xml 파일로 보낸다
+     */
+    int updateMyProviderInfo(ProviderDTO providerDTO);
+
+    /**
+     * Provider 제공자의 정보를 삭제(탈퇴 ) 합니다
+     * @param providerCode 삭제(탈퇴) 할 제공자의 코드
+     * @return xml 파일로 보낸다
+     */
+    int deleteMyProviderInfo(int providerCode);
 }

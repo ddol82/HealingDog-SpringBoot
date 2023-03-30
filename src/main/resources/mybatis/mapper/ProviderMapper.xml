@@ -15,5 +15,22 @@
         WHERE provider_code = #{providerCode}
     </select>
 
+    <!--  제공자 정보 수정  -->
+    <update id="updateMyProviderInfo" parameterType="ProviderDTO">
+        UPDATE providers
+        SET
+            name = #{name},
+            email = #{email},
+            provider_password = #{providerPassword},
+            phone = #{phone}
+        WHERE provider_code = #{providerCode}
+    </update>
+
+    <!--  제공자 삭제 (탈퇴)  -->
+    <delete id="deleteMyProviderInfo" parameterType="_int">
+        DELETE
+        FROM providers
+        WHERE provider_code = #{providerCode}
+    </delete>
 
 </mapper>

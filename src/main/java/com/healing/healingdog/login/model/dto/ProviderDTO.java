@@ -11,17 +11,17 @@ public class ProviderDTO implements UserDetails {
     private String email;
     private String providerPassword;
     private String phone;
-    private char beautyApproval;
-    private char petsitterApproval;
-    private char trainersApproval;
-    private char kindergardenApproval;
-    private char boardingApproval;
+    private String beautyApproval;
+    private String petsitterApproval;
+    private String trainersApproval;
+    private String kindergardenApproval;
+    private String boardingApproval;
     private String role;
 
     public ProviderDTO() {
     }
 
-    public ProviderDTO(int providerCode, String name, String email, String providerPassword, String phone, char beautyApproval, char petsitterApproval, char trainersApproval, char kindergardenApproval, char boardingApproval, String role, Collection<? extends GrantedAuthority> authorities) {
+    public ProviderDTO(int providerCode, String name, String email, String providerPassword, String phone, String beautyApproval, String petsitterApproval, String trainersApproval, String kindergardenApproval, String boardingApproval, String role, Collection<? extends GrantedAuthority> authorities) {
         this.providerCode = providerCode;
         this.name = name;
         this.email = email;
@@ -76,43 +76,43 @@ public class ProviderDTO implements UserDetails {
         this.phone = phone;
     }
 
-    public char getBeautyApproval() {
+    public String getBeautyApproval() {
         return beautyApproval;
     }
 
-    public void setBeautyApproval(char beautyApproval) {
+    public void setBeautyApproval(String beautyApproval) {
         this.beautyApproval = beautyApproval;
     }
 
-    public char getPetsitterApproval() {
+    public String getPetsitterApproval() {
         return petsitterApproval;
     }
 
-    public void setPetsitterApproval(char petsitterApproval) {
+    public void setPetsitterApproval(String petsitterApproval) {
         this.petsitterApproval = petsitterApproval;
     }
 
-    public char getTrainersApproval() {
+    public String getTrainersApproval() {
         return trainersApproval;
     }
 
-    public void setTrainersApproval(char trainersApproval) {
+    public void setTrainersApproval(String trainersApproval) {
         this.trainersApproval = trainersApproval;
     }
 
-    public char getKindergardenApproval() {
+    public String getKindergardenApproval() {
         return kindergardenApproval;
     }
 
-    public void setKindergardenApproval(char kindergardenApproval) {
+    public void setKindergardenApproval(String kindergardenApproval) {
         this.kindergardenApproval = kindergardenApproval;
     }
 
-    public char getBoardingApproval() {
+    public String getBoardingApproval() {
         return boardingApproval;
     }
 
-    public void setBoardingApproval(char boardingApproval) {
+    public void setBoardingApproval(String boardingApproval) {
         this.boardingApproval = boardingApproval;
     }
 
