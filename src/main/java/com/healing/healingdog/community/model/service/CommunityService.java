@@ -29,10 +29,8 @@ import java.util.List;
 @Slf4j
 @Service
 public class CommunityService {
-    @Value("${image.image-directory-prefix}")
+    @Value("${image.add-resource-locations}")
     private String IMAGE_DIR_PREFIX;
-    @Value("${image.image-url-prefix}")
-    private String IMAGE_URL_PREFIX;
     @Value("${image.type.board}")
     private String IMAGE_TYPE;
     private final CommunityMapper communityMapper;
