@@ -1,4 +1,4 @@
-package com.healing.healingdog.login.dto;
+package com.healing.healingdog.login.model.dto;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -2,9 +2,9 @@ package com.healing.healingdog.login.controller;
 
 
 import com.healing.healingdog.common.ResponseDTO;
-import com.healing.healingdog.login.dto.ProviderDTO;
-import com.healing.healingdog.login.dto.UserDTO;
-import com.healing.healingdog.login.service.AuthService;
+import com.healing.healingdog.login.model.dto.ProviderDTO;
+import com.healing.healingdog.login.model.dto.UserDTO;
+import com.healing.healingdog.login.model.service.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -11,7 +11,7 @@ import com.healing.healingdog.community.model.dto.CatAndPageDataForBoard;
 import com.healing.healingdog.community.model.dto.SimpleBoardDTO;
 import com.healing.healingdog.community.model.service.CommunityService;
 import com.healing.healingdog.community.model.type.BoardType;
-import com.healing.healingdog.login.dto.UserDTO;
+import com.healing.healingdog.login.model.dto.UserDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

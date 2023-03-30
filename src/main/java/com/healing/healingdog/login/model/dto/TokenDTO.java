@@ -1,4 +1,4 @@
-package com.healing.healingdog.login.dto;
+package com.healing.healingdog.login.model.dto;
 
 
 

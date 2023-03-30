@@ -1,9 +1,9 @@
-package com.healing.healingdog.login.service;
+package com.healing.healingdog.login.model.service;
 
 
-import com.healing.healingdog.login.dao.AuthMapper;
-import com.healing.healingdog.login.dto.ProviderDTO;
-import com.healing.healingdog.login.dto.UserDTO;
+import com.healing.healingdog.login.model.dao.AuthMapper;
+import com.healing.healingdog.login.model.dto.ProviderDTO;
+import com.healing.healingdog.login.model.dto.UserDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -1,7 +1,7 @@
-package com.healing.healingdog.login.dao;
+package com.healing.healingdog.login.model.dao;
 
-import com.healing.healingdog.login.dto.ProviderDTO;
-import com.healing.healingdog.login.dto.UserDTO;
+import com.healing.healingdog.login.model.dto.ProviderDTO;
+import com.healing.healingdog.login.model.dto.UserDTO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.Optional;
