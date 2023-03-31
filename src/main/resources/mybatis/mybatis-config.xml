@@ -1,18 +1,22 @@
-<?xml version="1.0" encoding="UTF-8" ?> 
-<!DOCTYPE configuration 
-    PUBLIC "-//mybatis.org//DTD SQL Map Config 3.0//EN"
-    "http://mybatis.org/dtd/mybatis-3-config.dtd"> 
-<configuration> 
-	<!-- http://www.mybatis.org/mybatis-3/configuration.html#settings 참고 --> 
-	<settings> 
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+		PUBLIC "-//mybatis.org//DTD SQL Map Config 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- http://www.mybatis.org/mybatis-3/configuration.html#settings 참고 -->
+	<settings>
 		<!-- query 결과 컬럼의 값이 null일 경우 result에 null로 setting할지 여부 -->
-		<setting name="callSettersOnNulls" value="true" /> 
-		<!-- null parameter 허용 --> 
-		<setting name="jdbcTypeForNull" value="NULL" /> 
+		<setting name="callSettersOnNulls" value="true" />
+		<!-- null parameter 허용 -->
+		<setting name="jdbcTypeForNull" value="NULL" />
 	</settings>
 
 	<typeAliases>
+		<!-- boarding -->
 		<typeAlias alias="BoardingServiceDTO" type="com.healing.healingdog.boarding.dto.BoardingServiceDTO"/>
+		<!-- review -->
+		<typeAlias alias="ReviewDTO" type="com.healing.healingdog.review.dto.ReviewDTO" />
+
 		<typeAlias alias="ImageTableDTO" type="com.healing.healingdog.common.file.model.dto.ImageTableDTO" />
 		<!-- login -->
 		<typeAlias alias="UserDTO" type="com.healing.healingdog.login.model.dto.UserDTO"/>
@@ -32,8 +36,11 @@
 	<mappers>
 		<mapper resource="BeautyManageMapper.xml" />
 		<mapper resource="BeautyMapper.xml" />
-
+		<!-- boarding -->
 		<mapper resource="BoardingManageMapper.xml" />
+		<mapper resource="BoardingMapper.xml" />
+		<!-- review -->
+		<mapper resource="ReviewMapper.xml" />
 		<!-- community -->
 		<mapper resource="BoardImageMapper.xml" />
 		<mapper resource="communityMapper.xml"/>
@@ -42,6 +49,9 @@
 		<mapper resource="ProviderMapper.xml" />
 		<mapper resource="MypetMapper.xml" />
 	</mappers>
+
+
+
 
 
 </configuration>

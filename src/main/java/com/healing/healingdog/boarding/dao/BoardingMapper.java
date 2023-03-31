@@ -10,4 +10,6 @@ public interface BoardingMapper {
     int registerBoardingBooking(BoardingBookingDTO boardingBookingDTO);
 
     int deleteBoardingBooking(BoardingBookingDTO boardingBookingDTOe);
+
+    BoardingBookingDTO selectBoardingBooking(BoardingBookingDTO boardingBookingDTO);
 }

@@ -14,6 +14,13 @@ public class BoardingService {
     private final BoardingMapper boardingMapper;
 
 
+    public Object selectBoardingBooking(BoardingBookingDTO boardingBookingDTO) {
+        log.info("REQUEST SERVICE selectBoardingBooking ={}",boardingBookingDTO);
+        BoardingBookingDTO result = boardingMapper.selectBoardingBooking(boardingBookingDTO);
+        log.info("result.toString() ={}", result);
+        return result;
+    }
+
     public int registerBoardingBooking(BoardingBookingDTO boardingBookingDTO) {
         log.info("REQUEST SERVICE registerBoardingBooking ={}",boardingBookingDTO);
         int result = boardingMapper.registerBoardingBooking(boardingBookingDTO);
@@ -21,10 +28,12 @@ public class BoardingService {
         return result;
     }
 
-    public int deleteBoardingBooking(BoardingBookingDTO boardingBookingDTOe) {
-        log.info("REQUEST SERVICE deleteBoardingBooking ={}",boardingBookingDTOe);
-        int result = boardingMapper.deleteBoardingBooking(boardingBookingDTOe);
+    public int deleteBoardingBooking(BoardingBookingDTO boardingBookingDTO) {
+        log.info("REQUEST SERVICE deleteBoardingBooking ={}",boardingBookingDTO);
+        int result = boardingMapper.deleteBoardingBooking(boardingBookingDTO);
         log.info("result.toString() ={}", result + "개 삭제 완료.");
         return result;
     }
+
+
 }

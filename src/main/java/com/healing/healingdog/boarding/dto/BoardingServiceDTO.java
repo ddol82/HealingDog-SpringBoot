@@ -1,12 +1,10 @@
 package com.healing.healingdog.boarding.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class BoardingServiceDTO {
     // boarding-service table
     private int boardingServiceCode;
