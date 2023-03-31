@@ -28,6 +28,5 @@ public interface BeautyManageMapper {
 
     int deleteBeautyInfo(int providerCode);
 
-
-
+    int deleteBeautyTimes(int providerCode);
 }

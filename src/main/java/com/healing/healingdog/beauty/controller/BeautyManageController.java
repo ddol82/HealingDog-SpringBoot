@@ -74,6 +74,7 @@ public class BeautyManageController {
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "미용실 운영시간등록 성공", (beautyManageService.registerBeautyTimes(commonDTO)) + "개"));
     }
 
+
     /**
      * 미용실관리 미용실정보 수정
      */
@@ -102,7 +103,7 @@ public class BeautyManageController {
     }
 
     /**
-     * 미용실 카테고리 수정
+     * 미용실 운영시간 수정
      */
     @PutMapping("/times")
     public ResponseEntity<ResponseDTO> updateBeautyTimes(CommonDTO commonDTO) {
@@ -118,5 +119,16 @@ public class BeautyManageController {
         log.info("REQUEST API deleteBeautyInfo ={}", input);
         int providerCode = Integer.parseInt(input.get("providerCode"));
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "미용실 정보삭제 성공", (beautyManageService.deleteBeautyInfo(providerCode)) + "개"));
+    }
+
+    /**
+     * @param input HashMap<String, String>타입으로 providerCode를 받아 정수형으로 변환.
+     * @return HTTP 응답코드가 200 OK 이며, ResponseDTO 객체와 함께 응답 데이터를 반환. ResponseDTO 객체는 성공적인 응답을 표시하기 위한 HttpStatus.OK 상태코드, 응답 메시지, 그리고 삭제한 미용실 운영시간의 개수를 가진다.
+     */
+    @DeleteMapping("/times")
+    public ResponseEntity<ResponseDTO> deleteBeautyTimes(@RequestBody HashMap<String, String>input){
+        log.info("REQUEST API deleteBeautyTimes ={}", input);
+        int providerCode = Integer.parseInt(input.get("providerCode"));
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "미용실 운영시간 삭제 성공", (beautyManageService.deleteBeautyTimes(providerCode)) + "개"));
     }
 }
