@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("api/v1/beautys")
+@RequestMapping("api/v1/beauties")
 @RequiredArgsConstructor
 public class BeautyController {
     private final BeautyService BeautyService;

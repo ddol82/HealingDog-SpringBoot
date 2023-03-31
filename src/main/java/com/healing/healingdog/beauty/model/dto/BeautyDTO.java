@@ -22,6 +22,10 @@ public class BeautyDTO {
      * */
     private int providerCode;
     /**
+     * 제공자 코드
+     * */
+    private int userCode;
+    /**
      * 미용실 가격코드
      * */
     private int beautyPriceCode;

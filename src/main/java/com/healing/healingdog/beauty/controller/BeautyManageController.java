@@ -48,6 +48,15 @@ public class BeautyManageController {
     }
 
     /**
+     * 미용실 신청내역 조회
+     */
+    @GetMapping("/reservation")
+    public ResponseEntity<ResponseDTO> selectBeautyReservation(@RequestBody HashMap<String, String> input){
+        log.info("REQUEST API selectBeautyReservation ={}", input);
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK,"미용실 신청내역 조회 성공",beautyManageService.selectBeautyReservation(input)));
+    }
+
+    /**
      * 미용실관리 미용실정보 등록
      */
     @PostMapping("/info")
@@ -109,6 +118,16 @@ public class BeautyManageController {
     public ResponseEntity<ResponseDTO> updateBeautyTimes(CommonDTO commonDTO) {
         log.info("REQUEST API updateBeautyTimes ={}", commonDTO);
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "미용실 운영시간 수정 성공", (beautyManageService.updateBeautyTimes(commonDTO)) + "개"));
+    }
+
+    /**
+     * 미용실 신청내역 조회
+     */
+    @PutMapping("/reservation")
+    public ResponseEntity<ResponseDTO> updateBeautyReservation(BeautyDTO beautyDTO){
+        log.info("REQUEST API updateBeautyReservation ={}", beautyDTO);
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "미용실 신청 수락 성공",(beautyManageService.updateBeautyReservation(beautyDTO)) + "개"));
+
     }
 
     /**

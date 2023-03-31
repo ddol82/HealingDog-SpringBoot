@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -34,6 +36,16 @@ public class BeautyManageService {
     public Object selectBeautyTimes(int providerCode) {
         log.info("REQUEST SERVICE selectBeautyTimes = {}", providerCode);
         CommonDTO result = beautyManageMapper.selectBeautyTimes(providerCode);
+        log.info("result = {}", result.toString());
+        return result;
+    }
+
+    /**
+     * 미용실 신청내역 조회
+     */
+    public BeautyDTO selectBeautyReservation(HashMap<String, String> input) {
+        log.info("REQUEST SERVICE selectBeautyReservation = {}", input);
+        BeautyDTO result = beautyManageMapper.selectBeautyReservation(input);
         log.info("result = {}", result.toString());
         return result;
     }
@@ -108,6 +120,16 @@ public class BeautyManageService {
     }
 
     /**
+     *  미용실 신청내역 수락(수정)
+     * */
+    public int updateBeautyReservation(BeautyDTO beautyDTO) {
+        log.info("REQUEST SERVICE updateBeautyReservation = {}",beautyDTO);
+        int result = beautyManageMapper.updateBeautyReservation(beautyDTO);
+        log.info("result,toString() = {}", result + "개 수정 완료");
+        return result;
+    }
+
+    /**
      *  미용실 정보 삭제
      * */
     public int deleteBeautyInfo(int providerCode) {
@@ -126,4 +148,6 @@ public class BeautyManageService {
         log.info("result.toString() ={}", result +"개 삭제 완료.");
         return result;
     }
+
+
 }
