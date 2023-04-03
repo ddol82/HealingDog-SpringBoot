@@ -55,5 +55,12 @@ public class BoardingManageController {
     }
 
 
+//  위탁돌봄예약 조회
+    @GetMapping("/booking")
+    public ResponseEntity<ResponseDTO> selectBoardingBooking(@AuthenticationPrincipal ProviderDTO provider) {
+        log.info("REQUEST API selectBoardingBooking ={}",provider);
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "위탁돌봄예약 조회 성공", boardingManageService.selectBoardingBooking(provider.getProviderCode())));
+    }
+
 
 }
