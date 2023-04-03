@@ -28,13 +28,21 @@ public class BeautyManageController {
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "미용실 조회 성공", beautyManageService.selectBeauty(providerCode)));
     }
 
+//    /**
+//     * 미용실관리 미용실 상세정보 조회
+//     */
+//    @GetMapping("/info")
+//    public ResponseEntity<ResponseDTO> selectBeautyInfo(@RequestBody HashMap<String, String> input) {
+//        log.info("REQUEST API selectBeautyInfo ={}", input);
+//        int providerCode = Integer.parseInt(input.get("providerCode"));
+//        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "미용실 정보조회 성공", beautyManageService.selectBeautyInfo(providerCode)));
+//    }
+
     /**
      * 미용실관리 미용실 상세정보 조회
      */
-    @GetMapping("/info")
-    public ResponseEntity<ResponseDTO> selectBeautyInfo(@RequestBody HashMap<String, String> input) {
-        log.info("REQUEST API selectBeautyInfo ={}", input);
-        int providerCode = Integer.parseInt(input.get("providerCode"));
+    @GetMapping("/info/{providerCode}")
+    public ResponseEntity<ResponseDTO> selectBeautyInfo(@PathVariable String providerCode) {
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "미용실 정보조회 성공", beautyManageService.selectBeautyInfo(providerCode)));
     }
     /**
@@ -45,6 +53,15 @@ public class BeautyManageController {
         log.info("REQUEST API selectBeautyTimes ={}", input);
         int providerCode = Integer.parseInt(input.get("providerCode"));
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "미용실 운영시간조회 성공",beautyManageService.selectBeautyTimes(providerCode)));
+    }
+
+    /**
+     * 미용실 신청내역 조회
+     */
+    @GetMapping("/reservation")
+    public ResponseEntity<ResponseDTO> selectBeautyReservation(@RequestBody HashMap<String, String> input){
+        log.info("REQUEST API selectBeautyReservation ={}", input);
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK,"미용실 신청내역 조회 성공",beautyManageService.selectBeautyReservation(input)));
     }
 
     /**
@@ -109,6 +126,16 @@ public class BeautyManageController {
     public ResponseEntity<ResponseDTO> updateBeautyTimes(CommonDTO commonDTO) {
         log.info("REQUEST API updateBeautyTimes ={}", commonDTO);
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "미용실 운영시간 수정 성공", (beautyManageService.updateBeautyTimes(commonDTO)) + "개"));
+    }
+
+    /**
+     * 미용실 신청내역 조회
+     */
+    @PutMapping("/reservation")
+    public ResponseEntity<ResponseDTO> updateBeautyReservation(BeautyDTO beautyDTO){
+        log.info("REQUEST API updateBeautyReservation ={}", beautyDTO);
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "미용실 신청 수락 성공",(beautyManageService.updateBeautyReservation(beautyDTO)) + "개"));
+
     }
 
     /**
