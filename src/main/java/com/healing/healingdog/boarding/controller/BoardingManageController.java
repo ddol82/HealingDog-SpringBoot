@@ -3,10 +3,12 @@ package com.healing.healingdog.boarding.controller;
 import com.healing.healingdog.boarding.dto.BoardingServiceDTO;
 import com.healing.healingdog.boarding.service.BoardingManageService;
 import com.healing.healingdog.common.ResponseDTO;
+import com.healing.healingdog.login.model.dto.ProviderDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -21,16 +23,16 @@ public class BoardingManageController {
 //  위탁돌봄 관리페이지 접속 시 모든 정보 불러옴
     @GetMapping("/")
     public ResponseEntity<ResponseDTO> selectBoarding(int providerCode) {
+        log.info("REQUEST API selectBoardingInfo ={}",providerCode);
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "갤러리 조회 성공", boardingManageService.selectBoarding(providerCode)));
     }
 
 
 //  위탁돌봄 정보 관리 CRUD
     @GetMapping("/info")
-    public ResponseEntity<ResponseDTO> selectBoardingInfo(@RequestBody HashMap<String, String> input) {
-        log.info("REQUEST API selectBoardingInfo ={}",input);
-        int providerCode = Integer.parseInt(input.get("providerCode"));
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "위탁돌봄정보 조회 성공", boardingManageService.selectBoardingInfo(providerCode)));
+    public ResponseEntity<ResponseDTO> selectBoardingInfo(@AuthenticationPrincipal ProviderDTO provider) {
+        log.info("REQUEST API selectBoardingInfo ={}",provider);
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "위탁돌봄정보 조회 성공", boardingManageService.selectBoardingInfo(provider.getProviderCode())));
     }
 
     @PostMapping("/info")
