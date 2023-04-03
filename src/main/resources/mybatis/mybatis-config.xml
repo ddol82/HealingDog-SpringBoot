@@ -19,6 +19,7 @@
 		<typeAlias alias="ProviderDTO" type="com.healing.healingdog.login.model.dto.ProviderDTO"/>
 		<!-- mypage -->
 		<typeAlias alias="MypetDTO" type="com.healing.healingdog.mypage.model.dto.MypetDTO"/>
+		<typeAlias alias="ChecklistDTO" type="com.healing.healingdog.mypage.model.dto.ChecklistDTO"/>
 		<!-- community -->
 		<typeAlias alias="DetailForGettingBoard" type="com.healing.healingdog.community.model.dto.CatAndPageDataForBoard"/>
 		<typeAlias alias="BoardTableDTO" type="com.healing.healingdog.community.model.dto.BoardTableDTO"/>

@@ -27,10 +27,12 @@ public class SecurityConfig  {
     private final TokenProvider tokenProvider;
     private  final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    //private final CustomOAuth2UserService customOAuth2UserService; ,CustomOAuth2UserService customOAuth2UserService  this.customOAuth2UserService = customOAuth2UserService;
 
     public SecurityConfig(TokenProvider tokenProvider
             ,JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint
-            ,JwtAccessDeniedHandler jwtAccessDeniedHandler){
+            ,JwtAccessDeniedHandler jwtAccessDeniedHandler
+            ){
         this.tokenProvider = tokenProvider;
         this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;
         this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;

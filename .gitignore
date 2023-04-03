@@ -38,3 +38,4 @@ out/
 
 ### healingdog ###
 application-security.yml
+application-oauth2.yml
