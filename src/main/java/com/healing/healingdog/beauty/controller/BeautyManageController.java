@@ -28,13 +28,21 @@ public class BeautyManageController {
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "미용실 조회 성공", beautyManageService.selectBeauty(providerCode)));
     }
 
+//    /**
+//     * 미용실관리 미용실 상세정보 조회
+//     */
+//    @GetMapping("/info")
+//    public ResponseEntity<ResponseDTO> selectBeautyInfo(@RequestBody HashMap<String, String> input) {
+//        log.info("REQUEST API selectBeautyInfo ={}", input);
+//        int providerCode = Integer.parseInt(input.get("providerCode"));
+//        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "미용실 정보조회 성공", beautyManageService.selectBeautyInfo(providerCode)));
+//    }
+
     /**
      * 미용실관리 미용실 상세정보 조회
      */
-    @GetMapping("/info")
-    public ResponseEntity<ResponseDTO> selectBeautyInfo(@RequestBody HashMap<String, String> input) {
-        log.info("REQUEST API selectBeautyInfo ={}", input);
-        int providerCode = Integer.parseInt(input.get("providerCode"));
+    @GetMapping("/info/{providerCode}")
+    public ResponseEntity<ResponseDTO> selectBeautyInfo(@PathVariable String providerCode) {
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "미용실 정보조회 성공", beautyManageService.selectBeautyInfo(providerCode)));
     }
     /**

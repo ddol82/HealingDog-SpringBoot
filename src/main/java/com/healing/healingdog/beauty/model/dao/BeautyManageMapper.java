@@ -10,7 +10,7 @@ import java.util.HashMap;
 @Mapper
 public interface BeautyManageMapper {
 
-    BeautyDTO selectBeautyInfo(int providerCode);
+    BeautyDTO selectBeautyInfo(String providerCode);
 
     CommonDTO selectBeautyTimes(int providerCode);
 

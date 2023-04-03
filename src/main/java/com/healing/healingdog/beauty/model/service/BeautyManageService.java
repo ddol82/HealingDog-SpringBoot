@@ -23,7 +23,7 @@ public class BeautyManageService {
     /**
      *  미용실 정보조회
      * */
-    public Object selectBeautyInfo(int providerCode){
+    public Object selectBeautyInfo(String providerCode){
         log.info("REQUEST SERVICE selectBeautyInfo = {}", providerCode);
         BeautyDTO result = beautyManageMapper.selectBeautyInfo(providerCode);
         log.info("result = {}", result.toString());
