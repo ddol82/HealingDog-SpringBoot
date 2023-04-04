@@ -165,4 +165,20 @@
         WHERE mypet_code = #{mypetCode}
     </update>
 
+    <!-- 마이펫 정보 조회   -->
+    <select id="selectMyPetInfo" resultType="MypetDTO">
+        SELECT
+            mypet_code
+             ,  user_code
+             ,  name
+             ,  gender
+             ,  variety
+             ,  birthday
+             ,  weight
+             ,  neutered
+             ,  animal_hospital
+             ,  reference_info
+        FROM mypets
+        WHERE mypet_code = #{mypetCode}
+    </select>
 </mapper>

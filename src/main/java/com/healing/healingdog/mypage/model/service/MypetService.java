@@ -143,4 +143,20 @@ public class MypetService {
 
         return result;
     }
+
+    /**
+     *Service
+     * MyPet 사용자의 마이펫을 조회 합니다
+     * @param mypetCode 마이펫코드
+     * @return myPet 마이펫리스트를 반환한다
+     */
+    public MypetDTO selectMyPetInfo(int mypetCode) {
+        log.info("[MypetService] selectMyPetInfo Start ==============================");
+
+        MypetDTO myPet = mypetMapper.selectMyPetInfo(mypetCode);
+        log.info("[MypetService] {}", myPet);
+        log.info("[MypetService] selectMyPetInfo End ==============================");
+
+        return myPet;
+    }
 }

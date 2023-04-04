@@ -64,4 +64,11 @@ public interface MypetMapper {
      * @return xml 파일로 보낸다
      */
     int updateMyPetCheckList(ChecklistDTO checklistDTO, int mypetCode);
+
+    /**
+     * MyPet 사용자의 마이펫을 조회 합니다
+     * @param mypetCode 마이팻코드
+     * @return xml 파일로 보낸다
+     */
+    MypetDTO selectMyPetInfo(int mypetCode);
 }
