@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.healing.healingdog.mypage.model.dao.MypetMapper">
+
+    <!--  마이펫 목록 조회  -->
+    <select id="selectMyPetList" resultType="MypetDTO">
+        SELECT
+            name
+             ,  gender
+             ,  birthday
+        FROM mypets
+        WHERE userCode = #{userCode}
+    </select>
+
+    <!-- 마이펫 상세정보 조회   -->
+    <select id="selectMyPetDetailInfo" resultType="MypetDTO">
+        SELECT
+            name
+             ,  gender
+             ,  variety
+             ,  birthday
+             ,  weight
+             ,  neutered
+             ,  animal_hospital
+             ,  reference_info
+        FROM mypets
+        WHERE user_code = #{userCode}
+        AND mypet_code = #{mypetCode}
+    </select>
+
+    <!-- 마이펫 추가   -->
+    <insert id="insertMyPetInfo" parameterType="MypetDTO">
+        INSERT INTO mypets
+        (
+            mypet_code,
+            user_code,
+            name,
+            gender,
+            variety,
+            birthday,
+            weight,
+            neutered,
+            animal_hospital,
+            reference_info
+        )
+        VALUES (
+                   null,
+                   #{userCode},
+                   #{name},
+                   #{gender},
+                   #{variety},
+                   DATE,
+                   #{weight},
+                   #{neutered},
+                   #{animalHospital},
+                   #{referenceInfo}
+               )
+    </insert>
+
+    <!-- 마이펫 수정   -->
+    <update id="updateMyPetInfo" parameterType="MypetDTO">
+        UPDATE mypets
+        SET
+            name = #{name},
+            gender = #{gender},
+            variety = #{variety},
+            birthday = #{birthday},
+            weight = #{weight},
+            neutered = #{neutered},
+            animal_hospital = #{animalHospital},
+            reference_info = #{referenceInfo}
+        WHERE mypet_code = #{mypetCode}
+    </update>
+
+    <!--  마이펫 삭제  -->
+    <delete id="deleteMyPetInfo" parameterType="_int">
+        DELETE
+        FROM mypets
+        WHERE mypet_code = #{mypetCode}
+        AND user_code = #{userCode}
+    </delete>
+
+    <!-- 마이펫 체크리스트 조회   -->
+    <select id="selectMyPetCheckList" resultType="ChecklistDTO">
+        SELECT
+            stranger_reaction
+             ,  skinship
+             ,  walk_line_reaction
+             ,  walk_attention
+             ,  walk_foot
+             ,  required _accinations
+             ,  parasite_prevention
+             ,  health_precautions
+             ,  rabies
+             ,  synthesis_vaccine
+             ,  corona
+             ,  kennelcorp
+             ,  unvaccinated
+             ,  heartworm
+             ,  ectoparasite
+
+        FROM checklists
+        WHERE mypet_code = #{mypetCode}
+    </select>
+
+    <!-- 마이펫 체크리스트 추가   -->
+    <insert id="insertMyPetCheckList" parameterType="ChecklistDTO">
+        INSERT INTO checklists
+        (
+            checklist_code,
+            mypet_code,
+            stranger_reaction,
+            skinship,
+            walk_line_reaction,
+            walk_attention,
+            walk_foot,
+            health_precautions,
+            rabies,
+            synthesis_vaccine,
+            corona,
+            kennelcorp,
+            unvaccinated,
+            heartworm,
+            ectoparasite
+        )
+        VALUES (
+                   null,
+                   #{mypetCode},
+                   #{strangerReaction},
+                   #{skinship},
+                   #{walkLineReaction},
+                   #{walkAttention},
+                   #{walkFoot},
+                   #{healthPrecautions},
+                   #{rabies},
+                   #{synthesisVaccine},
+                   #{corona},
+                   #{kennelcorp},
+                   #{unvaccinated},
+                   #{heartworm},
+                   #{ectoparasite}
+               )
+    </insert>
+
+    <!-- 마이펫 수정   -->
+    <update id="updateMyPetCheckList" parameterType="ChecklistDTO">
+        UPDATE checklists
+        SET
+            stranger_reaction = #{strangerReaction},
+            skinship = #{skinship},
+            walk_line_reaction = #{walkLineReaction},
+            walk_attention = #{walkAttention},
+            walk_foot = #{walkFoot},
+            health_precautions = #{healthPrecautions},
+            rabies = #{rabies},
+            synthesis_vaccine = #{synthesisVaccine},
+            corona = #{corona},
+            kennelcorp = #{kennelcorp},
+            unvaccinated = #{unvaccinated},
+            heartworm = #{heartworm},
+            ectoparasite = #{ectoparasite}
+        WHERE mypet_code = #{mypetCode}
+    </update>
+
+</mapper>

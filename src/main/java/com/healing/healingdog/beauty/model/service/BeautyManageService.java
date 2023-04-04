@@ -4,9 +4,14 @@ import com.healing.healingdog.beauty.model.dao.BeautyManageMapper;
 import com.healing.healingdog.beauty.model.dto.BeautyDTO;
 import com.healing.healingdog.beauty.model.dto.CommonDTO;
 import com.healing.healingdog.common.file.model.dto.CertificatesDTO;
+import com.healing.healingdog.login.model.dto.ProviderDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -28,12 +33,23 @@ public class BeautyManageService {
         return result;
     }
 
+
     /**
      * 미용실 운영시간 조회
      */
     public Object selectBeautyTimes(int providerCode) {
         log.info("REQUEST SERVICE selectBeautyTimes = {}", providerCode);
         CommonDTO result = beautyManageMapper.selectBeautyTimes(providerCode);
+        log.info("result = {}", result.toString());
+        return result;
+    }
+
+    /**
+     * 미용실 신청내역 조회
+     */
+    public List<BeautyDTO> selectBeautyReservation(int providerCode) {
+        log.info("REQUEST SERVICE selectBeautyReservation = {}", providerCode);
+        List<BeautyDTO> result = beautyManageMapper.selectBeautyReservation(providerCode);
         log.info("result = {}", result.toString());
         return result;
     }
@@ -108,6 +124,16 @@ public class BeautyManageService {
     }
 
     /**
+     *  미용실 신청내역 수락(수정)
+     * */
+    public int updateBeautyReservation(BeautyDTO beautyDTO) {
+        log.info("REQUEST SERVICE updateBeautyReservation = {}",beautyDTO);
+        int result = beautyManageMapper.updateBeautyReservation(beautyDTO);
+        log.info("result,toString() = {}", result + "개 수정 완료");
+        return result;
+    }
+
+    /**
      *  미용실 정보 삭제
      * */
     public int deleteBeautyInfo(int providerCode) {
@@ -117,6 +143,15 @@ public class BeautyManageService {
         return result;
     }
 
+    /**
+     *  미용실 운영시간 삭제
+     * */
+    public int deleteBeautyTimes(int providerCode) {
+        log.info("REQUEST SERVICE deleteBeautyTimes = {}", providerCode);
+        int result = beautyManageMapper.deleteBeautyTimes(providerCode);
+        log.info("result.toString() ={}", result +"개 삭제 완료.");
+        return result;
+    }
 
 
 }

@@ -32,4 +32,40 @@ public class ProviderService {
 
         return provider;
     }
+
+    /**
+     *Service
+     *Provider 제공자의 정보를 수정(update) 합니다
+     * @param providerDTO,providerCode 제공자 DTO와 제공자코드
+     * @return result 를 반환한다
+     */
+    public Object updateMyProviderInfo(ProviderDTO providerDTO, int providerCode) {
+        log.info("[ProviderService] updateMyProviderInfo Start ==============================");
+        log.info("[ProviderService] {}", providerDTO);
+
+        int result = 0 ;
+        providerDTO.setProviderCode(providerCode);
+
+        providerDTO.setProviderPassword(passwordEncoder.encode(providerDTO.getProviderPassword()));
+
+        log.info("[ProviderService] {}", providerDTO);
+
+        result = providerMapper.updateMyProviderInfo(providerDTO);
+
+        log.info("[ProviderService] updateMyProviderInfo End ==============================");
+
+        return result;
+
+    }
+
+    /**
+     *Service
+     *Provider 제공자의 정보를 삭제(탈퇴 ) 합니다
+     * @param providerCode 삭제(탈퇴) 할 제공자의 코드
+     * @return providerCode 를 반환한다
+     */
+    public int deleteMyProviderInfo(int providerCode) {
+
+        return providerMapper.deleteMyProviderInfo(providerCode);
+    }
 }

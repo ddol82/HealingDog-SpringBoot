@@ -15,13 +15,13 @@ public class UserDTO implements UserDetails {
     private String address;
     private String simpleIntro;
     private String selfIntro;
-    private char blacklist;
+    private String blacklist;
     private String role;
 
     public UserDTO() {
     }
 
-    public UserDTO(int userCode, String name, String email, String userPassword, String phone, String nickname, String address, String simpleIntro, String selfIntro, char blacklist, String role, Collection<? extends GrantedAuthority> authorities) {
+    public UserDTO(int userCode, String name, String email, String userPassword, String phone, String nickname, String address, String simpleIntro, String selfIntro, String blacklist, String role, Collection<? extends GrantedAuthority> authorities) {
         this.userCode = userCode;
         this.name = name;
         this.email = email;
@@ -108,11 +108,11 @@ public class UserDTO implements UserDetails {
         this.selfIntro = selfIntro;
     }
 
-    public char getBlacklist() {
+    public String getBlacklist() {
         return blacklist;
     }
 
-    public void setBlacklist(char blacklist) {
+    public void setBlacklist(String blacklist) {
         this.blacklist = blacklist;
     }
 

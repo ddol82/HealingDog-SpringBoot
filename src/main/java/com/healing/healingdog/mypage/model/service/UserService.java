@@ -59,7 +59,7 @@ public class UserService {
     /**
      *Service
      *User 사용자의 정보를 수정(update) 합니다
-     * @param userDTO UserDTO 객체
+     * @param userDTO,userCode 사용자 DTO 와 사용자코드
      * @return result 를 반환한다
      */
     public int updateMyUserDetailInfo(UserDTO userDTO, int userCode) {

@@ -21,6 +21,26 @@
         WHERE provider_code = #{providerCode}
           AND service_category_code = 4
     </select>
+<!--  미용실 신청내역 조회  -->
+    <select id="selectBeautyReservation"  resultType="BeautyDTO">
+        SELECT
+            beauty_reservation_list_code,
+            beauty_code,
+            user_code,
+            date,
+            time,
+            reservation
+        FROM beauty_reservation_lists
+        WHERE beauty_code=(
+            SELECT beauty_code
+            FROM(
+                    SELECT beauty_code
+                    FROM beauties
+                    WHERE provider_code=#{providerCode}
+                )tmp
+        )
+    </select>
+
 <!--  미용실 정보등록  -->
     <insert id="registerBeautyInfo">
         INSERT INTO beauties
@@ -132,6 +152,13 @@
         WHERE provider_code = #{providerCode}
         AND service_category_code = 4
     </update>
+<!--  미용실 신청내역 수락(수정)  -->
+    <update id="updateBeautyReservation">
+        UPDATE beauty_reservation_lists
+        SET
+            reservation=#{reservation}
+        WHERE beauty_reservation_list_code = #{beautyReservationListCode}
+    </update>
 
 <!--  미용실 삭제  -->
     <delete id="deleteBeautyInfo">
@@ -144,6 +171,12 @@
                 WHERE provider_code=#{providerCode}
                 )tmp
             )
+    </delete>
+<!--  미용실 운영시간 식제   -->
+    <delete id="deleteBeautyTimes">
+        DELETE FROM times
+        WHERE provider_code = #{providerCode}
+        AND time_code = #{timeCode}
     </delete>
 
 
