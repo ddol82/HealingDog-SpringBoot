@@ -6,15 +6,16 @@ import com.healing.healingdog.common.file.model.dto.CertificatesDTO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.HashMap;
+import java.util.List;
 
 @Mapper
 public interface BeautyManageMapper {
 
-    BeautyDTO selectBeautyInfo(String providerCode);
+    BeautyDTO selectBeautyInfo(int providerCode);
 
     CommonDTO selectBeautyTimes(int providerCode);
 
-    BeautyDTO selectBeautyReservation(HashMap<String, String> input);
+    List<BeautyDTO> selectBeautyReservation(int providerCode);
 
     int registerBeautyInfo(BeautyDTO beautyDTO);
 
