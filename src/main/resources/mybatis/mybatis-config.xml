@@ -49,6 +49,7 @@
 		<mapper resource="AuthMapper.xml" />
 		<mapper resource="ProviderMapper.xml" />
 		<mapper resource="MypetMapper.xml" />
+		<mapper resource="MemberMapper.xml" />
 	</mappers>
 
 

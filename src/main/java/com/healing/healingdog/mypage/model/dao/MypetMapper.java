@@ -21,7 +21,7 @@ public interface MypetMapper {
      * @param userCode,mypetCode 사용자코드, 마이팻코드
      * @return xml 파일로 보낸다
      */
-    MypetDTO selectMyPetDetailInfo(int userCode, int mypetCode);
+    MypetDTO selectMyPetDetailInfo(int userCode);
 
     /**
      * MyPet 사용자의 마이펫을 추가 합니다

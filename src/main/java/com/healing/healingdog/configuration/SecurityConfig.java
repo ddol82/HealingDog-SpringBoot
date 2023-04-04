@@ -27,7 +27,7 @@ public class SecurityConfig  {
     private final TokenProvider tokenProvider;
     private  final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
-    //private final CustomOAuth2UserService customOAuth2UserService; ,CustomOAuth2UserService customOAuth2UserService  this.customOAuth2UserService = customOAuth2UserService;
+//    private final CustomOAuth2UserService customOAuth2UserService; ,CustomOAuth2UserService customOAuth2UserService /this.customOAuth2UserService = customOAuth2UserService;
 
     public SecurityConfig(TokenProvider tokenProvider
             ,JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint
@@ -88,6 +88,7 @@ public class SecurityConfig  {
                  .and()
                  .cors()
                  .and()
+                 //.oauth2Login().userInfoEndpoint().userService(customOAuth2UserService)
                  .apply(new JwtSecurityConfig(tokenProvider));
        return http.build();
     }
