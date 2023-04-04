@@ -22,12 +22,23 @@
           AND service_category_code = 4
     </select>
 <!--  미용실 신청내역 조회  -->
-    <select id="selectBeautyReservation" parameterType="java.util.HashMap" resultType="BeautyDTO">
+    <select id="selectBeautyReservation"  resultType="BeautyDTO">
         SELECT
-            *
+            beauty_reservation_list_code,
+            beauty_code,
+            user_code,
+            date,
+            time,
+            reservation
         FROM beauty_reservation_lists
-        WHERE beauty_code =#{beautyCode}
-        AND reservation = #{reservation}
+        WHERE beauty_code=(
+            SELECT beauty_code
+            FROM(
+                    SELECT beauty_code
+                    FROM beauties
+                    WHERE provider_code=#{providerCode}
+                )tmp
+        )
     </select>
 
 <!--  미용실 정보등록  -->

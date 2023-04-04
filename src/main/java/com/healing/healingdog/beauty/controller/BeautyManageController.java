@@ -5,10 +5,12 @@ import com.healing.healingdog.beauty.model.dto.CommonDTO;
 import com.healing.healingdog.beauty.model.service.BeautyManageService;
 import com.healing.healingdog.common.ResponseDTO;
 import com.healing.healingdog.common.file.model.dto.CertificatesDTO;
+import com.healing.healingdog.login.model.dto.ProviderDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -28,22 +30,14 @@ public class BeautyManageController {
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "미용실 조회 성공", beautyManageService.selectBeauty(providerCode)));
     }
 
-//    /**
-//     * 미용실관리 미용실 상세정보 조회
-//     */
-//    @GetMapping("/info")
-//    public ResponseEntity<ResponseDTO> selectBeautyInfo(@RequestBody HashMap<String, String> input) {
-//        log.info("REQUEST API selectBeautyInfo ={}", input);
-//        int providerCode = Integer.parseInt(input.get("providerCode"));
-//        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "미용실 정보조회 성공", beautyManageService.selectBeautyInfo(providerCode)));
-//    }
 
     /**
      * 미용실관리 미용실 상세정보 조회
      */
-    @GetMapping("/info/{providerCode}")
-    public ResponseEntity<ResponseDTO> selectBeautyInfo(@PathVariable String providerCode) {
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "미용실 정보조회 성공", beautyManageService.selectBeautyInfo(providerCode)));
+    @GetMapping("/info")
+    public ResponseEntity<ResponseDTO> selectBeautyInfo(@AuthenticationPrincipal ProviderDTO provider) {
+        log.info("REQUEST API selectBeautyInfo ={}", provider);
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "미용실 정보조회 성공", beautyManageService.selectBeautyInfo(provider.getProviderCode())));
     }
     /**
      * 미용실 운영시간 조회
@@ -58,10 +52,15 @@ public class BeautyManageController {
     /**
      * 미용실 신청내역 조회
      */
+//    @GetMapping("/reservation")
+//    public ResponseEntity<ResponseDTO> selectBeautyReservation(@RequestBody HashMap<String, String> input){
+//        log.info("REQUEST API selectBeautyReservation ={}", input);
+//        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK,"미용실 신청내역 조회 성공",beautyManageService.selectBeautyReservation(input)));
+//    }
     @GetMapping("/reservation")
-    public ResponseEntity<ResponseDTO> selectBeautyReservation(@RequestBody HashMap<String, String> input){
-        log.info("REQUEST API selectBeautyReservation ={}", input);
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK,"미용실 신청내역 조회 성공",beautyManageService.selectBeautyReservation(input)));
+    public ResponseEntity<ResponseDTO> selectBeautyReservation(@AuthenticationPrincipal ProviderDTO provider){
+        log.info("REQUEST API selectBeautyReservation ={}", provider);
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK,"미용실 신청내역 조회 성공",beautyManageService.selectBeautyReservation(provider.getProviderCode())));
     }
 
     /**

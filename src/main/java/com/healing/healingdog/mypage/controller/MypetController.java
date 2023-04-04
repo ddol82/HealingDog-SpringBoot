@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/api/v1/mypage")
+//@RestController
+//@RequestMapping("/api/v1/mypage")
 public class MypetController {
     private final MypetService mypetService;
 
