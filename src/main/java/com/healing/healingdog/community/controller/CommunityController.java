@@ -1,14 +1,11 @@
 package com.healing.healingdog.community.controller;
 
 import com.healing.healingdog.common.ResponseDTO;
-import com.healing.healingdog.common.file.model.dto.ImageForm;
+import com.healing.healingdog.common.file.model.dto.ImageFormDTO;
 import com.healing.healingdog.common.paging.ItemWithPaging;
 import com.healing.healingdog.common.paging.PageData;
 import com.healing.healingdog.common.paging.PageDataAutoFill;
-import com.healing.healingdog.community.model.dto.BoardCreateDTO;
-import com.healing.healingdog.community.model.dto.BoardTableDTO;
-import com.healing.healingdog.community.model.dto.CatAndPageDataForBoard;
-import com.healing.healingdog.community.model.dto.SimpleBoardDTO;
+import com.healing.healingdog.community.model.dto.*;
 import com.healing.healingdog.community.model.service.CommunityService;
 import com.healing.healingdog.community.model.type.BoardType;
 import com.healing.healingdog.login.model.dto.UserDTO;
@@ -47,10 +44,10 @@ public class CommunityController {
     public ResponseEntity<ResponseDTO> selectCommunityCategoryList() {
         log.info("[CommunityController] selectCommunityCategoryList 호출");
 
-        List<String> categories = communityService.selectCommunityCategoryList();
+        List<CategotyDTO> categories = communityService.selectCommunityCategoryList();
+        String outputMessage = "카테고리 목록 " + categories.size() + "개 조회 완료";
 
         log.info("[CommunityController] selectCommunityCategoryList 종료");
-        String outputMessage = "카테고리 목록 " + categories.size() + "개 조회 완료";
         return ResponseEntity.ok()
                 .body(new ResponseDTO(HttpStatus.OK, outputMessage, categories));
     }
@@ -69,6 +66,9 @@ public class CommunityController {
         log.debug("상단 고정의 게시글 " + boardTableList.size() + "개 조회 완료");
 
         List<SimpleBoardDTO> boardList = boardDataConverter(boardTableList, false);
+        for(SimpleBoardDTO board : boardList) {
+            log.info(board.toString());
+        }
 
         String outputMessage = "상단 고정의 게시글 " + boardList.size() + "개 반환";
         log.info("[CommunityController] selectBoardHeadline 종료");
@@ -86,10 +86,14 @@ public class CommunityController {
      * 카테고리 값이 비정상적인 경우 <b>전체 게시글</b>을 조회합니다.<br>
      * 현재 페이지 값이 비정상적인 경우 <b>1</b>페이지로 이동합니다.
      */
-    @GetMapping("/lists/boards")
-    public ResponseEntity<ResponseDTO> selectBoardList(@RequestParam(name="cat", defaultValue = "all") String categoryType,
-                                          @RequestParam(name="page", defaultValue = "1") int currPage) {
+    @GetMapping("/lists/boards/{cat}/{page}")
+    public ResponseEntity<ResponseDTO> selectBoardList(@PathVariable(value = "cat") String categoryType,
+                                          @PathVariable(value = "page") int currPage) {
         log.info("[CommunityController] selectBoardList 호출");
+        if(categoryType == null) {
+            categoryType = "all";
+            log.debug("(selectBoardList) categoryType is null!!! it will be set \"all\"");
+        }
         log.debug("(selectBoardList) categoryType : " + categoryType);
         log.debug("(selectBoardList) currPage : " + currPage);
 
@@ -164,7 +168,7 @@ public class CommunityController {
     @PostMapping("/articles/write/confirm")
     public ResponseEntity<ResponseDTO> insertBoard(
             @RequestPart(value = "boardData") BoardCreateDTO boardCreateDTO,
-            @RequestPart(value = "fileItems", required = false) List<ImageForm> fileItems,
+            @RequestPart(value = "fileItems", required = false) List<ImageFormDTO> fileItems,
             @RequestPart(value = "Images", required = false) List<MultipartFile> images) {
         log.info("[CommunityController] insertBoard 호출");
 

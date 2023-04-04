@@ -1,5 +1,6 @@
 package com.healing.healingdog.community.model.dto;
 
+import com.healing.healingdog.community.model.type.BoardType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -7,6 +8,7 @@ import lombok.ToString;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 
 /**
  * 게시글 리스트 출력에 필요한 정보가 들어있습니다.<br>
@@ -24,18 +26,21 @@ import java.sql.Timestamp;
 public class SimpleBoardDTO {
     private int boardCode;
     private int boardCategoryCode;
+    private String boardCategoryName;
     private String title;
     private String content;
     private MultipartFile userProfileImage;
     private String userProfileImageUrl;
     private String userNickname;
-    private Timestamp uptime;
+    private Timestamp uptimestamp;
+    private String uptime;
     private int view;
     private int share;
     private int like;
     private MultipartFile thumbnailImage;
     private String thumbnailImageUrl;
     private int imageCount;
+    private int commentCount;
 
     /**
      * 테이블의 정보만을 가지고 있는 {@link BoardTableDTO}를 사용해
@@ -55,11 +60,14 @@ public class SimpleBoardDTO {
     public void setBoard(BoardTableDTO boardTableItem) {
         this.boardCode = boardTableItem.getBoardCode();
         this.boardCategoryCode = boardTableItem.getBoardCategoryCode();
+        this.boardCategoryName = BoardType.getBoardType(this.boardCategoryCode).getName();
         this.title = boardTableItem.getTitle();
         this.content = boardTableItem.getContent();
-        this.uptime = boardTableItem.getUptime();
+        this.uptimestamp = boardTableItem.getUptime();
+        this.uptime = new SimpleDateFormat("yy.MM.dd").format(this.uptimestamp);
         this.view = boardTableItem.getView();
         this.share = boardTableItem.getShare();
         this.like = boardTableItem.getLike();
+        this.commentCount = boardTableItem.getCommentCount();
     }
 }
