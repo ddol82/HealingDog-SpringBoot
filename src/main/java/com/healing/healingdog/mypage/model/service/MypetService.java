@@ -39,10 +39,10 @@ public class MypetService {
      * @param userCode,mypetCode 사용자코드, 마이펫코드
      * @return myPet 마이펫리스트를 반환한다
      */
-    public MypetDTO selectMyPetDetailInfo(int userCode, int mypetCode) {
+    public MypetDTO selectMyPetDetailInfo(int userCode) {
         log.info("[MypetService] selectMyPetDetailInfo Start ==============================");
 
-        MypetDTO myPet = mypetMapper.selectMyPetDetailInfo(userCode,mypetCode);
+        MypetDTO myPet = mypetMapper.selectMyPetDetailInfo(userCode);
         log.info("[MypetService] {}", myPet);
         log.info("[MypetService] selectMyPetDetailInfo End ==============================");
 

@@ -6,6 +6,7 @@ import com.healing.healingdog.login.model.dto.UserDTO;
 import com.healing.healingdog.mypage.model.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,11 +24,17 @@ public class UserController {
      * @param userCode User의 번호
      * @return 받은값 userCode 을 데이터에 담아 반환한다.
      */
-    @GetMapping("/user/{userCode}")
-    public ResponseEntity<ResponseDTO> selectMyUserInfo(@PathVariable int userCode) {
+//    @GetMapping("/user/{userCode}")
+//    public ResponseEntity<ResponseDTO> selectMyUserInfo(@PathVariable int userCode) {
+//
+//        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "사용자 조회 성공", userService.selectMyUserInfo(userCode)));
+//    }
+    @GetMapping("/user")
+    public ResponseEntity<ResponseDTO> selectMyUserInfo(@AuthenticationPrincipal UserDTO user) {
 
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "사용자 조회 성공", userService.selectMyUserInfo(userCode)));
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "사용자 조회 성공", userService.selectMyUserInfo(user.getUserCode())));
     }
+
 
     /**
      *Controller
