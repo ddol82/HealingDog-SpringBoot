@@ -25,7 +25,8 @@ public enum BoardType {
     PRODUCT(10, "product", "제품 후기"),
     WELCOME(11, "welcome", "가입인사"),
     ATTENDANCE(12, "attendance", "출석체크"),
-    WALKING(13, "walking", "산책 게시판");
+    WALKING(13, "walking", "산책 게시판"),
+    FREE(14, "free", "자유 게시판");
 
 
     private int code;

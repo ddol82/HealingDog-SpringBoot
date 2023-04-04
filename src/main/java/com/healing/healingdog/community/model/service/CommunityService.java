@@ -1,6 +1,6 @@
 package com.healing.healingdog.community.model.service;
 
-import com.healing.healingdog.common.file.model.dto.ImageForm;
+import com.healing.healingdog.common.file.model.dto.ImageFormDTO;
 import com.healing.healingdog.common.file.model.dto.ImageTableDTO;
 import com.healing.healingdog.common.file.model.dto.ImageType;
 import com.healing.healingdog.common.paging.PageData;
@@ -9,6 +9,7 @@ import com.healing.healingdog.community.model.dao.CommunityMapper;
 import com.healing.healingdog.community.model.dto.BoardCreateDTO;
 import com.healing.healingdog.community.model.dto.BoardTableDTO;
 import com.healing.healingdog.community.model.dto.CatAndPageDataForBoard;
+import com.healing.healingdog.community.model.dto.CategotyDTO;
 import com.healing.healingdog.community.model.type.BoardType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,10 +45,14 @@ public class CommunityService {
      * {@link BoardType#getName()} 값을 가져옵니다.
      * @return {@link List}<{@link String}>타입으로 카테고리 목록을 반환합니다.
      */
-    public List<String> selectCommunityCategoryList() {
-        List<String> categoryList = new ArrayList<>();
+    public List<CategotyDTO> selectCommunityCategoryList() {
+        List<CategotyDTO> categoryList = new ArrayList<>();
         for(BoardType boardType : BoardType.values()) {
-            categoryList.add(boardType.getName());
+            categoryList.add(new CategotyDTO(
+                    boardType.getCode(),
+                    boardType.getType(),
+                    boardType.getName()
+            ));
         }
         return categoryList;
     }
@@ -59,7 +64,7 @@ public class CommunityService {
     public List<BoardTableDTO> selectBoardHeadline() {
         log.info("[CommunityService] selectBoardHeadline 호출");
 
-        List<BoardTableDTO> boardList= communityMapper.selectBoardHeadline();
+        List<BoardTableDTO> boardList = communityMapper.selectBoardHeadline();
         log.debug("(selectBoardCount) 조회 결과 : " + boardList.size() + "건");
 
         log.info("[CommunityService] selectBoardHeadline 종료");
@@ -168,8 +173,8 @@ public class CommunityService {
 
         String direction = IMAGE_DIR_PREFIX + IMAGE_TYPE;
         List<String> result = new ArrayList<>();
-        List<ImageForm> files = boardCreateDTO.getFileItems();
-        for(ImageForm imageFile : files) {
+        List<ImageFormDTO> files = boardCreateDTO.getFileItems();
+        for(ImageFormDTO imageFile : files) {
             try {
                 log.info("[CommunityService] 이미지 1건의 저장을 시도합니다.");
                 String original = ImageUtils.saveImage(direction, imageFile.getImageFile());
