@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-//@RestController
-//@RequestMapping("/api/v1/mypage")
+@RestController
+@RequestMapping("/api/v1/mypage")
 public class MypetController {
     private final MypetService mypetService;
 
@@ -38,7 +38,7 @@ public class MypetController {
     /**
      *Controller
      * Mypet 사용자의 마이펫을 상세조회합니다
-     * @param userCode,mypetCode 사용자 코드, 마이펫 코드
+     * @param
      * @return 받은값 userCode 을 데이터에 담아 반환한다.
      */
 //    @GetMapping("/mypet/detail/{mypetCode}")
