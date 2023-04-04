@@ -25,6 +25,7 @@
     <select id="selectBeautyReservation"  resultType="BeautyDTO">
         SELECT
             beauty_reservation_list_code,
+            mypet_code,
             beauty_code,
             user_code,
             date,

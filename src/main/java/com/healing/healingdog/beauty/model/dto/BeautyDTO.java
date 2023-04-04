@@ -38,6 +38,10 @@ public class BeautyDTO {
      * */
     private int beautyReservationListCode;
     /**
+     * 마이펫 코드
+     * */
+    private int mypetCode;
+    /**
      * 운영시간 코드
      * */
     private int timeCode;
