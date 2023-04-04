@@ -24,30 +24,36 @@ public class MypetController {
     /**
      *Controller
      * Mypet 사용자의 마이펫을 목록조회합니다
-     * @param userCode 사용자의 코드
+     * @param user 사용자의 코드
      * @return 받은값 userCode 을 데이터에 담아 반환한다.
      */
     @GetMapping("/mypet/list")
-    public ResponseEntity<ResponseDTO> selectMyPetList(@RequestParam(name="userCode") int userCode) {
+    public ResponseEntity<ResponseDTO> selectMyPetList(@AuthenticationPrincipal UserDTO user) {
 
-        List<MypetDTO> mypetList = mypetService.selectMyPetList(userCode);
+        List<MypetDTO> mypetList = mypetService.selectMyPetList(user.getUserCode());
 
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "마이펫 목록 조회 성공", mypetList));
     }
 
     /**
      *Controller
-     * Mypet 사용자의 마이펫을 상세조회합니다
-     * @param
-     * @return 받은값 userCode 을 데이터에 담아 반환한다.
+     * Mypet 사용자의 마이펫을 조회 합니다
+     * @param mypetCode 사용자의 코드
+     * @return 받은값 mypetCode 을 데이터에 담아 반환한다.
      */
-//    @GetMapping("/mypet/detail/{mypetCode}")
-//    public ResponseEntity<ResponseDTO> selectMyPetDetailInfo(@RequestParam(name="userCode") int userCode, @PathVariable int mypetCode) {
-//
-//
-//        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "마이펫 상세정보조회 성공", mypetService.selectMyPetDetailInfo(userCode,mypetCode)));
-//    }
-    @GetMapping("/mypet")
+    @GetMapping("/mypet/{mypetCode}")
+    public ResponseEntity<ResponseDTO> selectMyPetInfo(@PathVariable int mypetCode) {
+
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "마이펫 정보조회 성공", mypetService.selectMyPetInfo(mypetCode)));
+    }
+
+    /**
+     *Controller
+     * Mypet 사용자의 마이펫을 상세조회합니다
+     * @param user 사용자 코드
+     * @return 받은값 user.getUserCode 을 데이터에 담아 반환한다.
+     */
+    @GetMapping("/mypet/detail")
     public ResponseEntity<ResponseDTO> selectMyPetDetailInfo(@AuthenticationPrincipal UserDTO user) {
 
 
@@ -60,7 +66,7 @@ public class MypetController {
      * @param mypetCode 마이펫의 코드
      * @return 받은값 mypetCode 을 데이터에 담아 반환한다.
      */
-    @GetMapping("/mypet/detail/check/{mypetCode}")
+    @GetMapping("/mypet/checklist/{mypetCode}")
     public ResponseEntity<ResponseDTO> selectMyPetCheckList(@PathVariable int mypetCode) {
 
 
@@ -86,7 +92,7 @@ public class MypetController {
      * @param checklistDTO,mypetCode 체크리스트DTO, 마이펫코드
      * @return 받은값 checklistDTO,mypetCode 을 데이터에 담아 반환한다.
      */
-    @PutMapping("/mypet/detail/check/{mypetCode}")
+    @PutMapping("/mypet/checklist/{mypetCode}")
     public ResponseEntity<ResponseDTO> updateMyPetCheckList(@RequestBody ChecklistDTO checklistDTO ,@PathVariable int mypetCode) {
 
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "마이펫 체크리스트 수정 성공",  mypetService.updateMyPetCheckList(checklistDTO,mypetCode)));
@@ -95,13 +101,13 @@ public class MypetController {
     /**
      *Controller
      * Mypet 사용자의 마이펫을 추가합니다
-     * @param userCode,mypetDTO 사용자 코드,마이펫DTO
+     * @param user,mypetDTO 사용자 코드,마이펫DTO
      * @return 받은값 userCode,mypetDTO 을 데이터에 담아 반환한다.
      */
     @PostMapping("/mypet/insert")
-    public ResponseEntity<ResponseDTO> insertMyPetInfo(@RequestBody MypetDTO mypetDTO, @PathVariable int userCode) {
+    public ResponseEntity<ResponseDTO> insertMyPetInfo(@RequestBody MypetDTO mypetDTO, @AuthenticationPrincipal UserDTO user) {
 
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.CREATED, "마이펫 추가 성공", mypetService.insertMyPetInfo(mypetDTO,userCode)));
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.CREATED, "마이펫 추가 성공", mypetService.insertMyPetInfo(mypetDTO,user.getUserCode())));
     }
 
     /**
