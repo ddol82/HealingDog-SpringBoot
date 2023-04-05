@@ -21,7 +21,7 @@ public class MemberController {
 
     /**
      *Controller
-     * User 사용자들을 목록조회합니다.
+     * 관리자가 User 사용자들을 목록조회합니다.
      * @param
      * @return 받은값 userList 을 데이터에 담아 반환한다.
      */
@@ -35,7 +35,7 @@ public class MemberController {
 
     /**
      *Controller
-     * User 사용자의 정보를 상세조회 합니다
+     * 관리자가 User 사용자의 정보를 상세조회 합니다
      * @param userCode User의 번호
      * @return 받은값 userCode 을 데이터에 담아 반환한다.
      */
@@ -48,19 +48,21 @@ public class MemberController {
 
     /**
      *Controller
-     * User 사용자의 정보를 수정 합니다
+     * 관리자가 User 사용자의 정보를 수정 합니다
      * @param userDTO,userCode  userDTO  userCode
      * @return 받은값 userDTO,userCode 을 데이터에 담아 반환한다.
      */
     @PutMapping("/user/detail/{userCode}")
     public ResponseEntity<ResponseDTO> updateUserDetailInfo(@RequestBody UserDTO userDTO , @PathVariable int userCode) {
 
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "사용자 정보 수정 성공",  memberService.updateUserDetailInfo(userDTO,userCode)));
+        userDTO.setUserCode(userCode);
+
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "사용자 정보 수정 성공",  memberService.updateUserDetailInfo(userDTO)));
     }
 
     /**
      *Controller
-     * User 사용자의 정보를 삭제 합니다
+     * 관리자가 User 사용자의 정보를 삭제 합니다
      * @param userCode 사용자코드
      * @return 받은값 userCode 을 데이터에 담아 반환한다.
      */
@@ -72,7 +74,7 @@ public class MemberController {
 
     /**
      *Controller
-     * Provider 제공자들을 목록조회합니다.
+     * 관리자가 Provider 제공자들을 목록조회합니다.
      * @param
      * @return 받은값 providerList 을 데이터에 담아 반환한다.
      */
@@ -86,7 +88,7 @@ public class MemberController {
 
     /**
      *Controller
-     * Provider 제공자의 정보를  상세조회 합니다.
+     * 관리자가 Provider 제공자의 정보를  상세조회 합니다.
      * @param providerCode 제공자코드
      * @return 받은값 userCode 을 데이터에 담아 반환한다.
      */
@@ -99,26 +101,28 @@ public class MemberController {
 
     /**
      *Controller
-     *Provider 제공자의 정보를 수정 합니다
+     * 관리자가 Provider 제공자의 정보를 수정 합니다
      * @param providerDTO,providerCode  제공자 DTO 와 제공자코드
      * @return 받은값 providerDTO,providerCode 을 데이터에 담아 반환한다.
      */
     @PutMapping("/provider/detail/{providerCode}")
     public ResponseEntity<ResponseDTO> updateProviderDetailInfo(@RequestBody ProviderDTO providerDTO , @PathVariable int providerCode) {
 
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "사용자 정보 수정 성공",  memberService.updateProviderDetailInfo(providerDTO,providerCode)));
+        providerDTO.setProviderCode(providerCode);
+
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "제공자 정보 수정 성공",  memberService.updateProviderDetailInfo(providerDTO)));
     }
 
     /**
      *Controller
-     *Provider 제공자의 정보를 삭제 합니다
+     * 관리자가 Provider 제공자의 정보를 삭제 합니다
      * @param providerCode 제공자코드
      * @return 받은값 providerCode 을 데이터에 담아 반환한다.
      */
-    @DeleteMapping("/provider/{providerCode}")
+    @DeleteMapping("/provider/detail/{providerCode}")
     public ResponseEntity<ResponseDTO> deleteProviderDetailInfo(@PathVariable int providerCode) {
 
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "회원 탈퇴 성공",  memberService.deleteProviderDetailInfo(providerCode)));
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "제공자 삭제 성공",  memberService.deleteProviderDetailInfo(providerCode)));
     }
 
 }
