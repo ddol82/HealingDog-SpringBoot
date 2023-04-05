@@ -9,6 +9,7 @@ import com.healing.healingdog.community.model.dto.*;
 import com.healing.healingdog.community.model.service.CommunityService;
 import com.healing.healingdog.community.model.type.BoardType;
 import com.healing.healingdog.login.model.dto.UserDTO;
+import com.healing.healingdog.membermanagement.model.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -32,6 +33,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommunityController {
     private final CommunityService communityService;
+    private final MemberService memberService;
 
     /**
      * 커뮤니티 내의 카테고리 목록을 조회합니다.<br>
@@ -65,9 +67,12 @@ public class CommunityController {
         List<BoardTableDTO> boardTableList = communityService.selectBoardHeadline();
         log.debug("상단 고정의 게시글 " + boardTableList.size() + "개 조회 완료");
 
-        List<SimpleBoardDTO> boardList = boardDataConverter(boardTableList, false);
-        for(SimpleBoardDTO board : boardList) {
-            log.info(board.toString());
+        List<ResultBoardDTO> boardList = communityService.boardDataConverter(boardTableList);
+        for(int i = 0; i < boardList.size(); i++) {
+            log.info(boardList.get(i).toString());
+            UserDTO user = memberService.selectUserDetailInfo(boardList.get(i).getUserCode());
+            boardList.get(i).setProfileName(user.getNickname());
+            boardList.get(i).setProfileImageUrl(null); //사진 구현 필요!!! @김선중
         }
 
         String outputMessage = "상단 고정의 게시글 " + boardList.size() + "개 반환";
@@ -117,7 +122,13 @@ public class CommunityController {
         }
         log.debug("boardTableList 조회 결과 : " + boardTableList.size());
 
-        List<SimpleBoardDTO> boardList = boardDataConverter(boardTableList, true);
+        List<ResultBoardDTO> boardList = communityService.boardDataConverter(boardTableList);
+        for(int i = 0; i < boardList.size(); i++) {
+            log.info(boardList.get(i).toString());
+            UserDTO user = memberService.selectUserDetailInfo(boardList.get(i).getUserCode());
+            boardList.get(i).setProfileName(user.getNickname());
+            boardList.get(i).setProfileImageUrl(null); //사진 구현 필요!!! @김선중
+        }
 
         ItemWithPaging boardItem = new ItemWithPaging(pageData, boardList);
         String outputMessage = "카테고리 {" + boardType.getType() + "}의 " + pageData.getCurrPage() + "페이지 게시글 " + boardList.size() + "개 반환";
@@ -127,53 +138,17 @@ public class CommunityController {
                 .body(new ResponseDTO(HttpStatus.OK, outputMessage, boardItem));
     }
 
-    /**
-     * 내부적으로 사용하는 클래스로서, {@link BoardTableDTO} 형태로 조회한 데이터를<br>
-     * {@link SimpleBoardDTO} 형태로 변환하고, {@link UserDTO User} 데이터를 덧붙입니다.
-     * 2번째 인자값이 {@code true}인 경우 {@code image} 정보도 추가합니다.
-     *
-     * @param boardTableList {@link List}<{@link SimpleBoardDTO}> 타입으로 변환할 {@link List}<{@link BoardTableDTO}>입니다.
-     * @param containsImage {@link Boolean boolean} 타입으로, {@code true}일 시 이미지 정보를 가져옵니다.
-     * @return {@link BoardTableDTO}의 자료와 {@link UserDTO User}정보,
-     * 선택적으로 {@code image} 정보를 {@link SimpleBoardDTO}타입으로 가공해 반환합니다.
-     */
-    private List<SimpleBoardDTO> boardDataConverter(List<BoardTableDTO> boardTableList, boolean containsImage) {
-        log.info("[CommunityController] boardDataConverter 호출");
-        List<SimpleBoardDTO> result = new ArrayList<>();
-        for(BoardTableDTO boardTableItem : boardTableList) {
-            log.debug("게시글 번호 " + boardTableItem.getBoardCode() + " 변환 시작");
-            SimpleBoardDTO board = new SimpleBoardDTO();
-            board.setBoard(boardTableItem);
-            //content 미리보기 형으로 변환
-            String contentPreview = board.getContent()
-                    .replaceAll("(\r\n|\n\r|\n|\r|\t)", " ");
-            board.setContent(contentPreview);
-            //User - 더미데이터(수정필요)
-            board.setUserNickname("test");
-            board.setUserProfileImage(null);
-            board.setUserProfileImageUrl(null);
-
-            //Thumbnail
-            if(containsImage) {
-                board.setThumbnailImageUrl(communityService.selectBoardThumbnailUrl(board.getBoardCode()));
-                board.setImageCount(communityService.selectBoardImageCount(board.getBoardCode()));
-            }
-            result.add(board);
-            log.debug("게시글 번호 " + boardTableItem.getBoardCode() + " 변환 종료");
-        }
-        log.info("[CommunityController] boardDataConverter 종료");
-        return result;
-    }
-
-    @PostMapping("/articles/write/confirm")
+    @PostMapping("/boards/write/confirm")
     public ResponseEntity<ResponseDTO> insertBoard(
             @RequestPart(value = "boardData") BoardCreateDTO boardCreateDTO,
             @RequestPart(value = "fileItems", required = false) List<ImageFormDTO> fileItems,
             @RequestPart(value = "Images", required = false) List<MultipartFile> images) {
         log.info("[CommunityController] insertBoard 호출");
 
-        for(int i = 0; i < fileItems.size(); i++) {
-            fileItems.get(i).setImageFile(images.get(i));
+        if(fileItems != null) {
+            for(int i = 0; i < fileItems.size(); i++) {
+                fileItems.get(i).setImageFile(images.get(i));
+            }
         }
         boardCreateDTO.setFileItems(fileItems);
 
