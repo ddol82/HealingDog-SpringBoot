@@ -7,11 +7,13 @@
     <!--  마이펫 목록 조회  -->
     <select id="selectMyPetList" resultType="MypetDTO">
         SELECT
-            name
-             ,  gender
-             ,  birthday
+            mypet_code
+            ,  user_code
+            ,  name
+            ,  gender
+            ,  birthday
         FROM mypets
-        WHERE userCode = #{userCode}
+        WHERE user_code = #{userCode}
     </select>
 
     <!-- 마이펫 상세정보 조회   -->
@@ -28,7 +30,7 @@
              ,  animal_hospital
              ,  reference_info
         FROM mypets
-        WHERE user_code = #{userCode}
+        WHERE mypet_code = #{mypetCode}
     </select>
 
     <!-- 마이펫 추가   -->
@@ -52,7 +54,7 @@
                    #{name},
                    #{gender},
                    #{variety},
-                   DATE,
+                   #{birthday},
                    #{weight},
                    #{neutered},
                    #{animalHospital},
@@ -91,8 +93,6 @@
              ,  walk_line_reaction
              ,  walk_attention
              ,  walk_foot
-             ,  required _accinations
-             ,  parasite_prevention
              ,  health_precautions
              ,  rabies
              ,  synthesis_vaccine
@@ -101,7 +101,6 @@
              ,  unvaccinated
              ,  heartworm
              ,  ectoparasite
-
         FROM checklists
         WHERE mypet_code = #{mypetCode}
     </select>
@@ -165,4 +164,20 @@
         WHERE mypet_code = #{mypetCode}
     </update>
 
+    <!-- 마이펫 정보 조회   -->
+    <select id="selectMyPetInfo" resultType="MypetDTO">
+        SELECT
+            mypet_code
+             ,  user_code
+             ,  name
+             ,  gender
+             ,  variety
+             ,  birthday
+             ,  weight
+             ,  neutered
+             ,  animal_hospital
+             ,  reference_info
+        FROM mypets
+        WHERE mypet_code = #{mypetCode}
+    </select>
 </mapper>
