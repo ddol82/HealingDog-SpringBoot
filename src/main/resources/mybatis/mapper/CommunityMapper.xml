@@ -6,16 +6,23 @@
 
     <select id="selectBoardHeadline" resultType="BoardTableDTO">
         SELECT
-               B.board_code
-             , B.user_code
-             , B.board_category_code
-             , B.title
-             , B.content
-             , B.uptime
-             , B.view
-             , B.share
-        FROM boards B
-        WHERE B.important = 'O'
+            bd.board_code
+             , bd.user_code
+             , bd.board_category_code
+             , bd.title
+             , bd.content
+             , bd.uptime
+             , bd.view
+             , bd.share
+             , COUNT(cj.user_code) AS commentCount
+          FROM boards AS bd
+          LEFT JOIN (
+            SELECT cm.user_code
+              FROM comments AS cm
+          ) AS cj
+            ON cj.user_code = bd.user_code
+         WHERE bd.important = 'O'
+         GROUP BY bd.board_code
     </select>
 
     <select id="selectBoardCountAll" parameterType="_int" resultType="_int">
@@ -30,33 +37,34 @@
 
     <select id="selectBoardList" parameterType="CatAndPageDataForBoard" resultType="BoardTableDTO">
         SELECT
-               B.board_code
-             , B.user_code
-             , B.board_category_code
-             , B.title
-             , B.content
-             , B.uptime
-             , B.view
-             , B.share
+               bs.board_code
+             , bs.user_code
+             , bs.board_category_code
+             , bs.title
+             , bs.content
+             , bs.uptime
+             , bs.view
+             , bs.share
           FROM(
                 SELECT
                        @rownum := @rownum+1 RN
-                     , BD.board_code
-                     , BD.user_code
-                     , BD.board_category_code
-                     , BD.title
-                     , BD.content
-                     , BD.uptime
-                     , BD.view
-                     , BD.share
-                FROM boards BD
+                     , bd.board_code
+                     , bd.user_code
+                     , bd.board_category_code
+                     , bd.title
+                     , bd.content
+                     , bd.uptime
+                     , bd.view
+                     , bd.share
+                FROM boards bd
                 WHERE(@rownum := 0) = 0
                 <if test="categoryCode != 5">
-                  AND BD.board_category_code = #{ categoryCode }
+                  AND bd.board_category_code = #{ categoryCode }
                 </if>
-              ) B
-         WHERE B.RN <![CDATA[>=]]> #{ start }
-           AND B.RN <![CDATA[<=]]> #{ end }
+                ORDER BY bd.board_code DESC
+              ) bs
+         WHERE bs.RN <![CDATA[>=]]> #{ start }
+           AND bs.RN <![CDATA[<=]]> #{ end }
     </select>
 
     <select id="selectBoardThumbnailUrl" parameterType="_int" resultType="string">
@@ -91,6 +99,6 @@
              , #{ title }
              , #{ content }
              , NOW()
-        );
+        )
     </insert>
 </mapper>

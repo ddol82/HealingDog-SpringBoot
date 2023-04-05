@@ -6,11 +6,9 @@ import com.healing.healingdog.common.file.model.dto.ImageType;
 import com.healing.healingdog.common.paging.PageData;
 import com.healing.healingdog.common.util.ImageUtils;
 import com.healing.healingdog.community.model.dao.CommunityMapper;
-import com.healing.healingdog.community.model.dto.BoardCreateDTO;
-import com.healing.healingdog.community.model.dto.BoardTableDTO;
-import com.healing.healingdog.community.model.dto.CatAndPageDataForBoard;
-import com.healing.healingdog.community.model.dto.CategotyDTO;
+import com.healing.healingdog.community.model.dto.*;
 import com.healing.healingdog.community.model.type.BoardType;
+import com.healing.healingdog.login.model.dto.UserDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -32,6 +30,8 @@ import java.util.List;
 public class CommunityService {
     @Value("${image.add-resource-locations}")
     private String IMAGE_DIR_PREFIX;
+    @Value("${image.image-url-prefix}")
+    private String IMAGE_URL_PREFIX;
     @Value("${image.type.board}")
     private String IMAGE_TYPE;
     private final CommunityMapper communityMapper;
@@ -104,12 +104,46 @@ public class CommunityService {
     }
 
     /**
+     * {@link BoardTableDTO} 형태로 조회한 데이터를<br>
+     * {@link ResultBoardDTO} 형태로 변환하고, {@link UserDTO User} 데이터를 덧붙입니다.
+     * 2번째 인자값이 {@code true}인 경우 {@code image} 정보도 추가합니다.
+     *
+     * @param boardTableList {@link List}<{@link ResultBoardDTO}> 타입으로 변환할 {@link List}<{@link BoardTableDTO}>입니다.
+     * @return {@link BoardTableDTO}의 자료와 {@link UserDTO User}정보,
+     * 선택적으로 {@code image} 정보를 {@link ResultBoardDTO}타입으로 가공해 반환합니다.
+     */
+    public List<ResultBoardDTO> boardDataConverter(List<BoardTableDTO> boardTableList) {
+        log.info("[CommunityController] boardDataConverter 호출");
+        List<ResultBoardDTO> result = new ArrayList<>();
+        for(BoardTableDTO boardTableItem : boardTableList) {
+            log.debug("게시글 번호 " + boardTableItem.getBoardCode() + " 변환 시작");
+            ResultBoardDTO board = new ResultBoardDTO();
+            board.setBoard(boardTableItem);
+            //content 미리보기 형으로 변환
+            String contentPreview = board.getContent()
+                    .replaceAll("(\r\n|\n\r|\n|\r|\t)", " ");
+            if(contentPreview.length() > 300) {
+                contentPreview = contentPreview.substring(0, 300);
+            }
+            board.setContent(contentPreview);
+            board.setUserCode(boardTableItem.getUserCode());
+            board.setThumbnailImageUrl(selectBoardThumbnailUrl(board.getBoardCode()));
+            board.setImageCount(selectBoardImageCount(board.getBoardCode()));
+
+            result.add(board);
+            log.debug("게시글 번호 " + boardTableItem.getBoardCode() + " 변환 종료");
+        }
+        log.info("[CommunityController] boardDataConverter 종료");
+        return result;
+    }
+
+    /**
      * 대상 게시글의 썸네일 경로를 조회합니다.
      *
      * @param boardCode 대상 게시글의 PK입니다.
      * @return 썸네일의 경로가 {@link String}타입으로 반환됩니다.
      */
-    public String selectBoardThumbnailUrl(int boardCode) {
+    private String selectBoardThumbnailUrl(int boardCode) {
         log.info("[CommunityService] selectBoardThumbnailUrl 호출");
 
         String thumbnailUrl = communityMapper.selectBoardThumbnailUrl(boardCode);
@@ -125,7 +159,7 @@ public class CommunityService {
      * @param boardCode 대상 게시글의 PK입니다.
      * @return 게시글 내 모든 이미지 수를 반환됩니다.
      */
-    public int selectBoardImageCount(int boardCode) {
+    private int selectBoardImageCount(int boardCode) {
         log.info("[CommunityService] selectBoardImageCount 호출");
 
         int count = communityMapper.selectBoardImageCount(boardCode);
@@ -181,8 +215,8 @@ public class CommunityService {
                 String thumbnail = null;
                 if(imageFile.getHasThumbnail().equals("O")) {
                     log.info("[CommunityService] 썸네일을 포함해서요!");
-                    int resizeWidth = 100;
-                    int resizeHeight = 100;
+                    int resizeWidth = 140;
+                    int resizeHeight = 140;
                     thumbnail = ImageUtils.saveThumbnail(direction, imageFile.getImageFile(), resizeWidth, resizeHeight);
                 }
 

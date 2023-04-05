@@ -77,8 +77,7 @@ public class ImageUtils {
             );
         } catch (IOException e) {
             log.error("이미지 resize 과정에 오류가 발생했습니다.", e);
-
-
+            throw new IOException(e);
         }
 
         log.info("saveThumbnail 종료");
@@ -135,17 +134,37 @@ public class ImageUtils {
         }
     }
 
+    /**
+     * 파일을 리사이즈합니다.<br>사진이 작을 경우 원본을 반환하고,
+     * 사진이 클 경우 지정한 사이즈로 리사이즈합니다.<br>
+     * 파일의 원본 비율은 유지됩니다.
+     *
+     * @param bufferedImage 리사이즈 대상 이미지입니다.
+     * @param width 리사이즈가 될 폭입니다.
+     * @param height 리사이즈가 될 높이입니다.
+     * @return 리사이즈 된 {@link BufferedImage}를 출력합니다.
+     */
     private static BufferedImage resizeImage(BufferedImage bufferedImage, int width, int height) {
         int getWidth = bufferedImage.getWidth();
         int getHeight = bufferedImage.getHeight();
+        //사이즈 조절이 필요없으면 가공 없이 반환
         if(getWidth < width) width = getWidth;
         if(getHeight < height) height = getHeight;
         if(width == getWidth && height == getHeight) return bufferedImage;
+
+        //비율에 맞춰 사이즈 조절
+        double ratio = 1.0;
+        ratio = Math.min(ratio, (double) width/getWidth);
+        ratio = Math.min(ratio, (double) height/getHeight);
+
+        int resizeWidth = (int) Math.floor((double) getWidth * ratio);
+        int resizeHeight = (int) Math.floor((double) getHeight * ratio);
+
         return Scalr.resize(
                 bufferedImage,
                 Scalr.Method.AUTOMATIC,
-                width,
-                height,
+                resizeWidth,
+                resizeHeight,
                 Scalr.OP_ANTIALIAS
         );
     }

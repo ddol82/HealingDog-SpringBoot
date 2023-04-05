@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -23,21 +22,20 @@ import java.text.SimpleDateFormat;
 @Getter
 @Setter
 @ToString
-public class SimpleBoardDTO {
+public class ResultBoardDTO {
     private int boardCode;
+    private int userCode;
     private int boardCategoryCode;
     private String boardCategoryName;
     private String title;
     private String content;
-    private MultipartFile userProfileImage;
-    private String userProfileImageUrl;
-    private String userNickname;
+    private String profileImageUrl;
+    private String profileName;
     private Timestamp uptimestamp;
     private String uptime;
     private int view;
     private int share;
     private int like;
-    private MultipartFile thumbnailImage;
     private String thumbnailImageUrl;
     private int imageCount;
     private int commentCount;
@@ -47,12 +45,11 @@ public class SimpleBoardDTO {
      * 테이블과 관련된 정보를 채울 수 있습니다.
      * 다음의 내용은 포함되지 않습니다.
      * <ui>
-     *     <li>{@link SimpleBoardDTO#userProfileImage}</li>
-     *     <li>{@link SimpleBoardDTO#userProfileImageUrl}</li>
-     *     <li>{@link SimpleBoardDTO#userNickname}</li>
-     *     <li>{@link SimpleBoardDTO#thumbnailImage}</li>
-     *     <li>{@link SimpleBoardDTO#thumbnailImageUrl}</li>
-     *     <li>{@link SimpleBoardDTO#imageCount}</li>
+     *     <li>{@link ResultBoardDTO#userCode}</li>
+     *     <li>{@link ResultBoardDTO#profileImageUrl}</li>
+     *     <li>{@link ResultBoardDTO#profileName}</li>
+     *     <li>{@link ResultBoardDTO#thumbnailImageUrl}</li>
+     *     <li>{@link ResultBoardDTO#imageCount}</li>
      * </ui>
      *
      * @param boardTableItem {@link BoardTableDTO}타입의 정보입니다.

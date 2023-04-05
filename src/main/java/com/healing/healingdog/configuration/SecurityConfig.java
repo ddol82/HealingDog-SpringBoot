@@ -54,7 +54,7 @@ public class SecurityConfig  {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring()
-                .antMatchers("/static/itemsImg/**");
+                .antMatchers("/static/itemsImg/**", "/healingimgs/**");
     }
 
     @Bean
@@ -111,7 +111,7 @@ public class SecurityConfig  {
 
      즉 서로 같은 출처란 이 셋이 동일한 출처를 말하고, 여기서 하나라도 다르다면 Cross Origin, 즉 교차출처가 되는 것이다.
 
-     http://localhost:8080 : Spring Boot
+     http://localhost:8090 : Spring Boot
      http://localhost:3000 : React
      보안상의 이유로, 브라우저는 스크립트에서 시작한 Cross Origin HTTP Request를 제한한다. 즉, SOP(Same Origin Policy)를 따른다.
 
