@@ -62,5 +62,11 @@ public class BoardingManageController {
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "위탁돌봄예약 조회 성공", boardingManageService.selectBoardingBooking(provider.getProviderCode())));
     }
 
+    @PostMapping("/booking/mypet")
+    public ResponseEntity<ResponseDTO> callSelectBoardingBookingMypetAPI(@RequestBody HashMap<String, Integer> input) {
+        log.info("REQUEST API callSelectBoardingBookingMypetAPI ={}",input);
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "유저&펫 조회 성공", boardingManageService.callSelectBoardingBookingMypetAPI(input.get("userCode"), input.get("mypetCode"))));
+    }
+
 
 }
