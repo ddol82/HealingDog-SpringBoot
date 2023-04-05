@@ -42,7 +42,7 @@
     </update>
 
     <!--  사용자 삭제  -->
-    <delete id="deleteMyUserDetailInfo" parameterType="_int">
+    <delete id="deleteUserDetailInfo" parameterType="_int">
         DELETE
         FROM users
         WHERE user_code = #{userCode}
@@ -70,20 +70,22 @@
              ,  trainers_approval
              ,  kindergarden_approval
              ,  boarding_approval
+             ,  blacklist
              ,  role
-        FROM users
-        WHERE user_code = #{userCode}
+        FROM providers
+        WHERE provider_code = #{providerCode}
     </select>
 
     <!-- 제공자 정보 수정   -->
     <update id="updateProviderDetailInfo" parameterType="ProviderDTO">
         UPDATE providers
         SET
-            beauty_approval = #{blacklist},
-            petsitter_approval = #{role},
-            trainers_approval = #{role},
-            kindergarden_approval = #{role},
-            boarding_approval = #{role},
+            beauty_approval = #{beautyApproval},
+            petsitter_approval = #{petsitterApproval},
+            trainers_approval = #{trainersApproval},
+            kindergarden_approval = #{kindergardenApproval},
+            boarding_approval = #{boardingApproval},
+            blacklist = #{blacklist},
             role = #{role}
         WHERE provider_code = #{providerCode}
     </update>

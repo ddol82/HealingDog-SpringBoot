@@ -28,7 +28,7 @@ public interface MemberMapper {
      * @param userDTO,userCode 사용자DTO, 사용자코드
      * @return xml 파일로 보낸다
      */
-    int updateUserDetailInfo(UserDTO userDTO, int userCode);
+    int updateUserDetailInfo(UserDTO userDTO);
 
     /**
      * User 사용자의 정보를 삭제 delete 합니다.
@@ -56,7 +56,7 @@ public interface MemberMapper {
      * @param providerDTO,providerCode 제공자DTO, 제공자코드
      * @return xml 파일로 보낸다
      */
-    int updateProviderDetailInfo(ProviderDTO providerDTO, int providerCode);
+    int updateProviderDetailInfo(ProviderDTO providerDTO);
 
     /**
      * Provider 제공자의 정보를 삭제 합니다.

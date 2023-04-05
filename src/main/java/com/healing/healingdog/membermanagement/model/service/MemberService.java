@@ -55,15 +55,12 @@ public class MemberService {
      * @param userDTO,userCode 사용자DTO,사용자코드
      * @return result 반환한다
      */
-    public int updateUserDetailInfo(UserDTO userDTO, int userCode) {
+    public int updateUserDetailInfo(UserDTO userDTO) {
         log.info("[MemberService] updateMyUserDetailInfo Start ==============================");
         log.info("[MemberService] {}", userDTO);
-        log.info("[MemberService] {}", userCode);
-
-
         int result = 0 ;
         log.info("[MemberService] {}", userDTO);
-        result = memberMapper.updateUserDetailInfo(userDTO,userCode);
+        result = memberMapper.updateUserDetailInfo(userDTO);
         log.info("[MemberService] updateMyUserDetailInfo End ==============================");
 
         return result;
@@ -117,15 +114,12 @@ public class MemberService {
      * @param providerDTO,providerCode 제공자DTO,제공자코드
      * @return result 반환한다
      */
-    public int updateProviderDetailInfo(ProviderDTO providerDTO, int providerCode) {
+    public int updateProviderDetailInfo(ProviderDTO providerDTO) {
         log.info("[MemberService] updateProviderDetailInfo Start ==============================");
         log.info("[MemberService] {}", providerDTO);
-        log.info("[MemberService] {}", providerCode);
-
-
         int result = 0 ;
         log.info("[MemberService] {}", providerDTO);
-        result = memberMapper.updateProviderDetailInfo(providerDTO,providerCode);
+        result = memberMapper.updateProviderDetailInfo(providerDTO);
         log.info("[MemberService] updateProviderDetailInfo End ==============================");
 
         return result;
