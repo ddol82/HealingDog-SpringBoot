@@ -17,6 +17,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 
+;
+
 /**
  * 이미지 파일을 관리합니다.
  * 파일 이름은 UUID를 이용하여 랜덤 생성합니다.<br>
@@ -41,7 +43,7 @@ public class ImageUtils {
      * @param uploadDir 업로드 할 경로입니다.
      * @param multipartFile 업로드 할 이미지 파일입니다.
      * @return 파일 저장 후 저장된 이름의 파일명을 반환합니다.
-     * @throws IOException 입출력 과정에서 오류 발생 시 IOException이 발생합니다.
+     * @throws IOException 입출력 과정에서 오류 발생 시 오류를 출력합니다.
      */
     public static String saveImage(String uploadDir, MultipartFile multipartFile) throws IOException {
         log.info("saveFile 호출");
@@ -54,7 +56,7 @@ public class ImageUtils {
         fileCopy(uploadPath, multipartFile, saveName);
 
         log.info("saveFile 종료");
-        return "original : " + saveName;
+        return saveName;
     }
 
     public static String saveThumbnail(String uploadDir, MultipartFile multipartFile, int width, int height) throws IOException {
@@ -69,6 +71,7 @@ public class ImageUtils {
         String uploadFullDir = uploadDir + saveName;
         try {
             BufferedImage bufferedImage = ImageIO.read(multipartFile.getInputStream());
+            //BufferedImage bufferedImage = getFileOrientation(multipartFile);
             bufferedImage = resizeImage(bufferedImage, width, height);
             ImageIO.write(
                     bufferedImage,
@@ -168,6 +171,40 @@ public class ImageUtils {
                 Scalr.OP_ANTIALIAS
         );
     }
+
+//    /**
+//     * 이미지 회전을 막기 위해 내부적으로 사용하는 메소드.
+//     *
+//     * @param multipartFile 회전 값 정보를 얻기 위한 파일입니다.
+//     * @return 파일의 회전 값 정보를 반환합니다.
+//     * @throws IOException 파일 입출력 과정에서 오류 발생 시 오류를 반환합니다.
+//     */
+//    private static BufferedImage getFileOrientation(MultipartFile multipartFile) throws IOException {
+//        int orientation = 1;
+//        JpegDirectory jpegDirectory;
+//        try {
+//            Metadata metadata = ImageMetadataReader.readMetadata(multipartFile.getResource());
+//            Directory directory = metadata.getFirstDirectoryOfType(ExifIFD0Directory.class);
+//            jpegDirectory = metadata.getFirstDirectoryOfType(JpegDirectory.class);
+//            if(directory != null) {
+//                orientation = directory.getInt(ExifIFD0Directory.TAG_ORIENTATION);
+//            }
+//        } catch (ImageProcessingException e) {
+//            log.warn("이미지 처리 중 문제가 발생했습니다 : ", e);
+//        } catch (MetadataException e) {
+//            log.warn("orientation 값을 불러올 수 없었습니다 : ", e);
+//        }
+//
+//        BufferedImage bufferedImage = ImageIO.read(multipartFile.getInputStream());
+//        switch (orientation) {
+//            case 1: break;
+//            case 3: bufferedImage = Scalr.rotate(bufferedImage, Scalr.Rotation.CW_180, null); break;
+//            case 6: bufferedImage = Scalr.rotate(bufferedImage, Scalr.Rotation.CW_90, null); break;
+//            case 8: bufferedImage = Scalr.rotate(bufferedImage, Scalr.Rotation.CW_270, null); break;
+//        }
+//
+//        return bufferedImage;
+//    }
 
     /**
      * 이미지를 삭제합니다.

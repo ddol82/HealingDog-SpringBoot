@@ -14,7 +14,7 @@
              , bd.uptime
              , bd.view
              , bd.share
-             , COUNT(cj.user_code) AS commentCount
+             , COUNT(cj.user_code) AS comment_count
           FROM boards AS bd
           LEFT JOIN (
             SELECT cm.user_code
@@ -45,6 +45,7 @@
              , bs.uptime
              , bs.view
              , bs.share
+             , COUNT(cj.user_code) AS comment_count
           FROM(
                 SELECT
                        @rownum := @rownum+1 RN
@@ -63,16 +64,14 @@
                 </if>
                 ORDER BY bd.board_code DESC
               ) bs
+          LEFT JOIN (
+              SELECT cm.user_code
+              FROM comments AS cm
+          ) AS cj
+            ON cj.user_code = bs.user_code
          WHERE bs.RN <![CDATA[>=]]> #{ start }
            AND bs.RN <![CDATA[<=]]> #{ end }
-    </select>
-
-    <select id="selectBoardThumbnailUrl" parameterType="_int" resultType="string">
-        SELECT
-               I.thumbnail
-          FROM board_images I
-         WHERE I.board_code = #{ code }
-           AND I.thumbnail IS NOT NULL
+         GROUP BY bs.board_code
     </select>
 
     <select id="selectBoardImageCount" parameterType="_int" resultType="_int">
@@ -82,6 +81,39 @@
          WHERE I.board_code = #{ code }
     </select>
     
+    <select id="selectBoardDetail" parameterType="_int" resultType="BoardTableDTO">
+        SELECT bs.board_code
+             , bs.user_code
+             , ud.profile_name
+             , bs.board_category_code
+             , bs.title
+             , bs.content
+             , bs.uptime
+             , bs.view
+             , bs.share
+             , COUNT(cj.user_code) AS comment_count
+        FROM boards AS bs
+        LEFT JOIN (
+            SELECT us.user_code
+                 , us.name AS profile_name
+              FROM users AS us
+            ) AS ud
+          ON ud.user_code = bs.user_code
+        LEFT JOIN (
+            SELECT cm.user_code
+            FROM comments AS cm
+        ) AS cj
+          ON cj.user_code = bs.user_code
+       WHERE bs.board_code = #{ boardCode }
+    </select>
+
+    <select id="checkLikeState" parameterType="_int" resultType="java.util.Map">
+        SELECT COUNT(*)
+          FROM board_likes
+         WHERE board_code = #{ boardCode }
+           AND user_code = #{ userCode }
+    </select>
+
     <insert id="insertBoard" parameterType="BoardCreateDTO" useGeneratedKeys="true" keyProperty="id">
         INSERT
           INTO boards (
@@ -101,4 +133,10 @@
              , NOW()
         )
     </insert>
+
+    <update id="viewIncrement" parameterType="_int">
+        UPDATE boards
+           SET view = boards.view + 1
+         WHERE board_code = #{ boardCode }
+    </update>
 </mapper>

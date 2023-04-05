@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 커뮤니티의 서비스. {@link Slf4j @Slf4j}를 사용하여 {@code log}를 통한 logging 사용이 가능합니다.
@@ -107,6 +108,7 @@ public class CommunityService {
      * {@link BoardTableDTO} 형태로 조회한 데이터를<br>
      * {@link ResultBoardDTO} 형태로 변환하고, {@link UserDTO User} 데이터를 덧붙입니다.
      * 2번째 인자값이 {@code true}인 경우 {@code image} 정보도 추가합니다.
+     * 리스트로 표시할 간략한 버전입니다.
      *
      * @param boardTableList {@link List}<{@link ResultBoardDTO}> 타입으로 변환할 {@link List}<{@link BoardTableDTO}>입니다.
      * @return {@link BoardTableDTO}의 자료와 {@link UserDTO User}정보,
@@ -138,6 +140,42 @@ public class CommunityService {
     }
 
     /**
+     * 단일 {@link BoardTableDTO}를 단일 {@link ResultBoardDTO} 타입으로 변환합니다.
+     *
+     * @param boardTableData {@code boards} 테이블에서 받아온 정보입니다.
+     * @return 사진을 포함한 게시글의 정보가 반환됩니다.
+     */
+    public ResultBoardDTO boardDataDetailConverter(BoardTableDTO boardTableData) {
+        log.debug("게시글 번호 " + boardTableData.getBoardCode() + " 변환 시작");
+
+        ResultBoardDTO result = new ResultBoardDTO();
+        result.setBoard(boardTableData);
+        result.setUserCode(boardTableData.getUserCode());
+        result.setOriginalImageUrl(selectBoardOriginalUrl(boardTableData.getBoardCode()));
+        result.setPreviewImageUrl(selectBoardPreviewUrl(boardTableData.getBoardCode()));
+        result.setImageCount(selectBoardImageCount(boardTableData.getBoardCode()));
+
+        log.debug("게시글 번호 " + boardTableData.getBoardCode() + " 변환 종료");
+        return result;
+    }
+
+    /**
+     * 대상 게시글의 원본 이미지들을 불러옵니다.
+     *
+     * @param boardCode 게시글 번호를 입력받습니다.
+     * @return 이미지 {@link List}를 불러옵니다.
+     */
+    private List<String> selectBoardOriginalUrl(int boardCode) {
+        log.info("[CommunityService] selectBoardOriginalUrl 호출");
+
+        List<String> originalUrl = communityMapper.selectBoardOriginalUrl(boardCode);
+        log.debug("(selectBoardOriginalUrl) 조회 결과 : " + originalUrl.size() + "건");
+
+        log.info("[CommunityService] selectBoardOriginalUrl 종료");
+        return originalUrl;
+    }
+
+    /**
      * 대상 게시글의 썸네일 경로를 조회합니다.
      *
      * @param boardCode 대상 게시글의 PK입니다.
@@ -154,6 +192,22 @@ public class CommunityService {
     }
 
     /**
+     * 대상 게시글의 미리보기(64 x 64) 이미지들을 불러옵니다.
+     *
+     * @param boardCode 게시글 번호를 입력받습니다.
+     * @return 이미지 {@link List}를 불러옵니다.
+     */
+    private List<String> selectBoardPreviewUrl(int boardCode) {
+        log.info("[CommunityService] selectBoardPreviewUrl 호출");
+
+        List<String> previewUrl = communityMapper.selectBoardPreviewUrl(boardCode);
+        log.debug("(selectBoardOriginalUrl) 조회 결과 : " + previewUrl.size() + "건");
+
+        log.info("[CommunityService] selectBoardPreviewUrl 종료");
+        return previewUrl;
+    }
+
+    /**
      * 대상 게시글의 이미지 개수를 조회합니다.
      *
      * @param boardCode 대상 게시글의 PK입니다.
@@ -167,6 +221,13 @@ public class CommunityService {
 
         log.info("[CommunityService] selectBoardImageCount 종료");
         return count;
+    }
+
+    public BoardTableDTO selectBoardDetail(int boardCode) {
+        log.info("[CommunityService] selectBoardDetail 호출");
+        BoardTableDTO boardTableData = communityMapper.selectBoardDetail(boardCode);
+        log.info("[CommunityService] selectBoardDetail 종료");
+        return boardTableData;
     }
 
     /**
@@ -219,6 +280,10 @@ public class CommunityService {
                     int resizeHeight = 140;
                     thumbnail = ImageUtils.saveThumbnail(direction, imageFile.getImageFile(), resizeWidth, resizeHeight);
                 }
+                log.info("[CommunityService] 미리보기(64 x 64)를 생성합니다.");
+                int resizeWidth = 64;
+                int resizeHeight = 64;
+                String preview = ImageUtils.saveThumbnail(direction, imageFile.getImageFile(), resizeWidth, resizeHeight);
 
                 ImageTableDTO imageTableDTO = new ImageTableDTO();
                 imageTableDTO.setImageType(ImageType.BOARD);
@@ -226,12 +291,14 @@ public class CommunityService {
                 imageTableDTO.setUsage(imageFile.getUsage());
                 imageTableDTO.setOriginal(original);
                 imageTableDTO.setThumbnail(thumbnail);
+                imageTableDTO.setPreview(preview);
                 communityMapper.insertBoardImage(imageTableDTO);
 
                 result.add("original - " + original);
                 if(thumbnail != null) {
                     result.add("thumbnail - " + thumbnail);
                 }
+                result.add("preview - " + preview);
                 log.info("[CommunityService] 이미지 1건의 저장이 끝났습니다.");
             } catch (IOException e) {
                 log.error("이미지 저장 중 오류가 발생했습니다.");
@@ -253,6 +320,7 @@ public class CommunityService {
      * @return 합쳐진 {@link String}들의 {@link List}를 반환합니다.
      */
     public List<String> insertBoardResult(String resultBoard, List<String> resultImage) {
+        log.info("[CommunityService] insertBoardResult 호출");
         List<String> result = new ArrayList<>();
 
         if(resultBoard == null) {
@@ -262,6 +330,33 @@ public class CommunityService {
         result.add(resultBoard);
         result.addAll(resultImage);
 
+        log.info("[CommunityService] insertBoardResult 종료");
+        return result;
+    }
+
+    /**
+     * 게시글의 조회 수를 1 올립니다.
+     *
+     * @param boardCode 대상 게시글입니다.
+     * @return 성공 시 1이 반환됩니다.
+     */
+    public int viewIncrement(int boardCode) {
+        log.info("[CommunityService] insertBoardResult 호출");
+        int result = communityMapper.viewIncrement(boardCode);
+        log.info("[CommunityService] insertBoardResult 종료");
+        return result;
+    }
+
+    /**
+     * 게시글 좋아요 여부를 확인합니다.
+     *
+     * @param likeParamMap 현재 로그인한 유저 코드, 게시글 코드
+     * @return 기본 0, 좋아요가 되어있으면 1이 반환됩니다.
+     */
+    public int checkLikeState(Map<String, Integer> likeParamMap) {
+        log.info("[CommunityService] checkLikeState 호출");
+        int result = communityMapper.checkLikeState(likeParamMap);
+        log.info("[CommunityService] checkLikeState 종료");
         return result;
     }
 }

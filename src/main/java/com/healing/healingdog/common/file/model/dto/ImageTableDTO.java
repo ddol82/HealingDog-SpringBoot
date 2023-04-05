@@ -17,11 +17,12 @@ public class ImageTableDTO {
     private String usage; // 첨부 위치
     private String thumbnail; // 썸네일 이름
     private String original; // 원본 이름
+    private String preview; // 게시글 내 미리보기
 
     public ImageTableDTO() {
     }
 
-    public ImageTableDTO(int code, ImageType imageType, int category, String refCode, String usage, String thumbnail, String original) {
+    public ImageTableDTO(int code, ImageType imageType, int category, String refCode, String usage, String thumbnail, String original, String preview) {
         this.code = code;
         this.imageType = imageType.getType();
         this.category = category;
@@ -29,6 +30,7 @@ public class ImageTableDTO {
         this.usage = usage;
         this.thumbnail = thumbnail;
         this.original = original;
+        this.preview = preview;
     }
 
     public int getCode() {
@@ -85,5 +87,13 @@ public class ImageTableDTO {
 
     public void setOriginal(String original) {
         this.original = original;
+    }
+
+    public String getPreview() {
+        return preview;
+    }
+
+    public void setPreview(String preview) {
+        this.preview = preview;
     }
 }
