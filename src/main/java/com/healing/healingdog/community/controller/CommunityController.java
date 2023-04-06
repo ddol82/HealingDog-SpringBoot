@@ -170,24 +170,32 @@ public class CommunityController {
 
     @PostMapping("/boards/write/confirm")
     public ResponseEntity<ResponseDTO> insertBoard(
-            @RequestPart(value = "boardData") BoardCreateDTO boardCreateDTO,
-            @RequestPart(value = "fileItems", required = false) List<ImageFormDTO> fileItems,
-            @RequestPart(value = "Images", required = false) List<MultipartFile> images) {
+            @AuthenticationPrincipal UserDTO user,
+            @RequestPart BoardCreateDTO boardData,
+            @RequestPart(required = false) List<MultipartFile> images) {
         log.info("[CommunityController] insertBoard 호출");
 
-        if(fileItems != null) {
-            for(int i = 0; i < fileItems.size(); i++) {
-                fileItems.get(i).setImageFile(images.get(i));
+        List<ImageFormDTO> imageDetail = new ArrayList<>();
+        if(images != null && images.size() > 0) {
+            for(int i = 0; i < images.size(); i++) {
+                imageDetail.add(new ImageFormDTO());
+                imageDetail.get(i).setUsage(i+"");
             }
+            for(int i = 0; i < imageDetail.size(); i++) {
+                imageDetail.get(i).setImageFile(images.get(i));
+                imageDetail.get(i).setHasThumbnail("X");
+            }
+            imageDetail.get(0).setHasThumbnail("O");
         }
-        boardCreateDTO.setFileItems(fileItems);
+        boardData.setUserCode(user.getUserCode());
+        boardData.setFileItems(imageDetail);
 
-        boardCreateDTO = communityService.insertBoard(boardCreateDTO);
-        String resultBoard = boardCreateDTO.getId() + "번 게시글이 등록되었습니다.";
+        boardData = communityService.insertBoard(boardData);
+        String resultBoard = boardData.getId() + "번 게시글이 등록되었습니다.";
         log.debug("[CommunityController] resultBoard 결과 출력 : {}", resultBoard);
         List<String> resultImage = new ArrayList<>();
-        if(boardCreateDTO.getFileItems() != null && boardCreateDTO.getFileItems().size() > 0) {
-            resultImage = communityService.insertBoardImage(boardCreateDTO);
+        if(boardData.getFileItems() != null && boardData.getFileItems().size() > 0) {
+            resultImage = communityService.insertBoardImage(boardData);
             log.debug("[CommunityController] resultImage 결과 출력 : {}건", resultImage.size());
         }
         String outputMessage = "반환 결과는 다음과 같습니다.";

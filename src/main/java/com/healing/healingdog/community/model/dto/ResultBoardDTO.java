@@ -53,6 +53,8 @@ public class ResultBoardDTO {
      *     <li>{@link ResultBoardDTO#profileImageUrl}</li>
      *     <li>{@link ResultBoardDTO#profileName}</li>
      *     <li>{@link ResultBoardDTO#thumbnailImageUrl}</li>
+     *     <li>{@link ResultBoardDTO#originalImageUrl}</li>
+     *     <li>{@link ResultBoardDTO#previewImageUrl}</li>
      *     <li>{@link ResultBoardDTO#imageCount}</li>
      *     <li>{@link ResultBoardDTO#likeState}</li>
      * </ui>

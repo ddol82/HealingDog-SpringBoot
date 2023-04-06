@@ -78,6 +78,8 @@ public class ImageFormDTO {
         this.hasThumbnail = hasThumbnail;
     }
 
+    public ImageFormDTO() {}
+
     public String getUsage() {
         return usage;
     }
