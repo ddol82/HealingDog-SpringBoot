@@ -9,6 +9,7 @@ import com.healing.healingdog.community.model.type.BoardType;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 커뮤니티의 매퍼 인터페이스.
@@ -41,14 +42,6 @@ public interface CommunityMapper {
     List<BoardTableDTO> selectBoardHeadline();
 
     /**
-     * 대상 게시글의 썸네일 경로를 조회합니다.
-     *
-     * @param boardCode 대상 게시글의 PK입니다.
-     * @return 썸네일의 경로가 {@link String}타입으로 반환됩니다.
-     */
-    String selectBoardThumbnailUrl(int boardCode);
-
-    /**
      * 대상 게시글의 이미지 개수를 조회합니다.
      *
      * @param boardCode 대상 게시글의 PK입니다.
@@ -73,7 +66,52 @@ public interface CommunityMapper {
     /**
      * 게시글 사진을 등록합니다.<br>
      * insert된 사진의 id(PK)값을 반환할 것입니다.
-     * @param imageTableDTO
+     * @param imageTableDTO 이미지 정보입니다.
      */
     void insertBoardImage(ImageTableDTO imageTableDTO);
+
+    /**
+     * 게시글 번호를 입력받아 상세조회합니다.
+     * @param boardCode 게시글 번호입니다.
+     * @return 게시글 정보를 반환합니다.
+     */
+    BoardTableDTO selectBoardDetail(int boardCode);
+
+    /**
+     * 게시글 번호를 입력받아 모든 이미지 URL을 조회합니다.
+     * @param boardCode 게시글 번호입니다.
+     * @return URL 정보를 {@link List}<{@link String}> 타입으로 반환합니다.
+     */
+    List<String> selectBoardOriginalUrl(int boardCode);
+
+    /**
+     * 대상 게시글의 썸네일 경로를 조회합니다.
+     *
+     * @param boardCode 대상 게시글의 PK입니다.
+     * @return 썸네일의 경로가 {@link String}타입으로 반환됩니다.
+     */
+    String selectBoardThumbnailUrl(int boardCode);
+
+    /**
+     * 게시글 번호를 입력받아 모든 미리보기 URL을 조회합니다.
+     * @param boardCode 게시글 번호입니다.
+     * @return URL 정보를 {@link List}<{@link String}> 타입으로 반환합니다.
+     */
+    List<String> selectBoardPreviewUrl(int boardCode);
+
+    /**
+     * 게시글의 조회 수를 1 올립니다.
+     *
+     * @param boardCode 대상 게시글입니다.
+     * @return 성공 시 1이 반환됩니다.
+     */
+    int viewIncrement(int boardCode);
+
+    /**
+     * 게시글 좋아요 상태를 확인합니다.
+     *
+     * @param userCode 현재 로그인한 유저 코드 및 게시글 코드입니다.
+     * @return 기본 0, 좋아요가 이미 되어있을 시 1이 반환됩니다.
+     */
+    int checkLikeState(Map<String, Integer> userCode);
 }

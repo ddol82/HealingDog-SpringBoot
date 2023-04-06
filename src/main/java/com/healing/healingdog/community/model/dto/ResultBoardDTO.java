@@ -8,6 +8,7 @@ import lombok.ToString;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 /**
  * 게시글 리스트 출력에 필요한 정보가 들어있습니다.<br>
@@ -36,9 +37,12 @@ public class ResultBoardDTO {
     private int view;
     private int share;
     private int like;
+    private List<String> originalImageUrl;
     private String thumbnailImageUrl;
+    private List<String> previewImageUrl;
     private int imageCount;
     private int commentCount;
+    private int likeState;
 
     /**
      * 테이블의 정보만을 가지고 있는 {@link BoardTableDTO}를 사용해
@@ -50,6 +54,7 @@ public class ResultBoardDTO {
      *     <li>{@link ResultBoardDTO#profileName}</li>
      *     <li>{@link ResultBoardDTO#thumbnailImageUrl}</li>
      *     <li>{@link ResultBoardDTO#imageCount}</li>
+     *     <li>{@link ResultBoardDTO#likeState}</li>
      * </ui>
      *
      * @param boardTableItem {@link BoardTableDTO}타입의 정보입니다.

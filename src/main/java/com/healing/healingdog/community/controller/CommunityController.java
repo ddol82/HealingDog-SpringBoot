@@ -14,11 +14,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 커뮤니티의 컨트롤러. {@link Slf4j @Slf4j}를 사용하여 {@code log}를 통한 logging 사용이 가능합니다.
@@ -138,6 +141,33 @@ public class CommunityController {
                 .body(new ResponseDTO(HttpStatus.OK, outputMessage, boardItem));
     }
 
+    @GetMapping("/boards/detail/get/{boardCode}")
+    public ResponseEntity<ResponseDTO> selectBoardDetail(@AuthenticationPrincipal UserDTO currUser,
+                                                         @PathVariable int boardCode) {
+        log.info("[CommunityController] selectBoardDetail 호출");
+
+        BoardTableDTO boardTableData = communityService.selectBoardDetail(boardCode);
+        log.info(boardTableData.toString());
+        ResultBoardDTO resultBoard = communityService.boardDataDetailConverter(boardTableData);
+        log.info(resultBoard.toString());
+        UserDTO user = memberService.selectUserDetailInfo(resultBoard.getUserCode());
+        resultBoard.setProfileName(user.getNickname());
+        resultBoard.setProfileImageUrl(null); //사진 구현 필요!!! @김선중
+        Map<String, Integer> likeParamMap = new HashMap<>();
+        if(currUser != null) {
+            likeParamMap.put("userCode", currUser.getUserCode());
+            likeParamMap.put("boardCode", boardCode);
+            resultBoard.setLikeState(communityService.checkLikeState(likeParamMap));
+        } else {
+            resultBoard.setLikeState(0);
+        }
+
+        String outputMessage = "게시글 반환";
+        log.info("[CommunityController] selectBoardDetail 종료");
+        return ResponseEntity.ok()
+                .body(new ResponseDTO(HttpStatus.OK, outputMessage, resultBoard));
+    }
+
     @PostMapping("/boards/write/confirm")
     public ResponseEntity<ResponseDTO> insertBoard(
             @RequestPart(value = "boardData") BoardCreateDTO boardCreateDTO,
@@ -166,5 +196,24 @@ public class CommunityController {
         log.info("[CommunityController] insertBoard 종료");
         return ResponseEntity.ok()
                 .body(new ResponseDTO(HttpStatus.OK, outputMessage, outputData));
+    }
+
+    /**
+     * 게시글 조회 시 조회 수를 1 올립니다.
+     *
+     * @param boardCode 조회 수가 올라갈 대상 게시글입니다.
+     * @return 성공 시 1이 출력됩니다.
+     */
+    @PostMapping("/boards/details/view/{boardCode}")
+    public ResponseEntity<ResponseDTO> viewIncrement(@PathVariable int boardCode) {
+        log.info("[CommunityController] viewIncrement 호출");
+
+        int result = communityService.viewIncrement(boardCode);
+
+        String outputMessage = "반환 결과는 다음과 같습니다.";
+        log.info("[CommunityController] viewIncrement 종료");
+        return ResponseEntity.ok()
+                .body(new ResponseDTO(HttpStatus.OK, outputMessage, result));
+
     }
 }

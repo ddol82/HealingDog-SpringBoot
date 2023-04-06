@@ -54,7 +54,7 @@ public class SecurityConfig  {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring()
-                .antMatchers("/static/itemsImg/**", "/healingimgs/**");
+                .antMatchers("/healingimgs/**");
     }
 
     @Bean

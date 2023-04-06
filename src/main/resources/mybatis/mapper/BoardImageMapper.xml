@@ -11,12 +11,36 @@
              , `usage`
              , thumbnail
              , original
+             , preview
         ) VALUES (
                NULL
              , #{ refCode }
              , #{ usage }
              , #{ thumbnail }
              , #{ original }
+             , #{ preview }
         )
     </insert>
+
+    <select id="selectBoardOriginalUrl" parameterType="_int" resultType="string">
+        SELECT
+            I.original
+        FROM board_images AS I
+        WHERE I.board_code = #{ boardCode }
+    </select>
+
+    <select id="selectBoardThumbnailUrl" parameterType="_int" resultType="string">
+        SELECT
+            I.thumbnail
+        FROM board_images AS I
+        WHERE I.board_code = #{ code }
+          AND I.thumbnail IS NOT NULL
+    </select>
+
+    <select id="selectBoardPreviewUrl" parameterType="_int" resultType="string">
+        SELECT
+            I.preview
+        FROM board_images AS I
+        WHERE I.board_code = #{ boardCode }
+    </select>
 </mapper>
