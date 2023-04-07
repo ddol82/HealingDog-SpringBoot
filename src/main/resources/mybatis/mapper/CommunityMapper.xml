@@ -139,4 +139,10 @@
            SET view = boards.view + 1
          WHERE board_code = #{ boardCode }
     </update>
+
+    <update id="shareIncrement" parameterType="_int">
+        UPDATE boards
+        SET share = boards.share + 1
+        WHERE board_code = #{ boardCode }
+    </update>
 </mapper>

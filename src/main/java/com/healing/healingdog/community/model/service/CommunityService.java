@@ -341,9 +341,22 @@ public class CommunityService {
      * @return 성공 시 1이 반환됩니다.
      */
     public int viewIncrement(int boardCode) {
-        log.info("[CommunityService] insertBoardResult 호출");
+        log.info("[CommunityService] viewIncrement 호출");
         int result = communityMapper.viewIncrement(boardCode);
-        log.info("[CommunityService] insertBoardResult 종료");
+        log.info("[CommunityService] viewIncrement 종료");
+        return result;
+    }
+
+    /**
+     * 게시글의 공유 수를 1 올립니다.
+     *
+     * @param boardCode 대상 게시글입니다.
+     * @return 성공 시 1이 반환됩니다.
+     */
+    public int shareIncrement(int boardCode) {
+        log.info("[CommunityService] shareIncrement 호출");
+        int result = communityMapper.shareIncrement(boardCode);
+        log.info("[CommunityService] shareIncrement 종료");
         return result;
     }
 
