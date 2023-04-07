@@ -222,6 +222,23 @@ public class CommunityController {
         log.info("[CommunityController] viewIncrement 종료");
         return ResponseEntity.ok()
                 .body(new ResponseDTO(HttpStatus.OK, outputMessage, result));
+    }
 
+    /**
+     * 게시글 조회 시 공유 수를 1 올립니다.
+     *
+     * @param boardCode 공유 수가 올라갈 대상 게시글입니다.
+     * @return 성공 시 1이 출력됩니다.
+     */
+    @PostMapping("/boards/details/share/{boardCode}")
+    public ResponseEntity<ResponseDTO> shareIncrement(@PathVariable int boardCode) {
+        log.info("[CommunityController] shareIncrement 호출");
+
+        int result = communityService.shareIncrement(boardCode);
+
+        String outputMessage = "반환 결과는 다음과 같습니다.";
+        log.info("[CommunityController] shareIncrement 종료");
+        return ResponseEntity.ok()
+                .body(new ResponseDTO(HttpStatus.OK, outputMessage, result));
     }
 }

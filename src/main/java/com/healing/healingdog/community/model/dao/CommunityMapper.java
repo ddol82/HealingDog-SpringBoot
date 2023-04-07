@@ -100,6 +100,14 @@ public interface CommunityMapper {
     List<String> selectBoardPreviewUrl(int boardCode);
 
     /**
+     * 게시글 좋아요 상태를 확인합니다.
+     *
+     * @param userCode 현재 로그인한 유저 코드 및 게시글 코드입니다.
+     * @return 기본 0, 좋아요가 이미 되어있을 시 1이 반환됩니다.
+     */
+    int checkLikeState(Map<String, Integer> userCode);
+
+    /**
      * 게시글의 조회 수를 1 올립니다.
      *
      * @param boardCode 대상 게시글입니다.
@@ -108,10 +116,10 @@ public interface CommunityMapper {
     int viewIncrement(int boardCode);
 
     /**
-     * 게시글 좋아요 상태를 확인합니다.
+     * 게시글의 공유 수를 1 올립니다.
      *
-     * @param userCode 현재 로그인한 유저 코드 및 게시글 코드입니다.
-     * @return 기본 0, 좋아요가 이미 되어있을 시 1이 반환됩니다.
+     * @param boardCode 대상 게시글입니다.
+     * @return 성공 시 1이 반환됩니다.
      */
-    int checkLikeState(Map<String, Integer> userCode);
+    int shareIncrement(int boardCode);
 }
