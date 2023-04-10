@@ -107,7 +107,25 @@
        WHERE bs.board_code = #{ boardCode }
     </select>
 
-    <select id="checkLikeState" parameterType="_int" resultType="java.util.Map">
+    <select id="selectAllLikeActivityDetail" parameterType="_int" resultType="_int">
+        SELECT COUNT(*)
+        FROM board_likes
+        WHERE board_code = #{ boardCode }
+    </select>
+
+    <select id="selectAllShareActivityDetail" parameterType="_int" resultType="_int">
+        SELECT bd.share
+        FROM boards bd
+        WHERE board_code = #{ boardCode }
+    </select>
+
+    <select id="selectAllCommentActivityDetail" parameterType="_int" resultType="_int">
+        SELECT COUNT(*)
+        FROM comments
+        WHERE board_code = #{ boardCode }
+    </select>
+
+    <select id="checkLikeState" parameterType="java.util.Map" resultType="_int">
         SELECT COUNT(*)
           FROM board_likes
          WHERE board_code = #{ boardCode }
@@ -134,6 +152,22 @@
         )
     </insert>
 
+    <insert id="insertLikeChange" parameterType="java.util.Map">
+        INSERT
+          INTO board_likes (
+               like_code
+             , board_code
+             , user_code
+             , `time`
+        )
+        VALUES (
+               NULL
+             , #{ boardCode }
+             , #{ userCode }
+             , NOW()
+        )
+    </insert>
+
     <update id="viewIncrement" parameterType="_int">
         UPDATE boards
            SET view = boards.view + 1
@@ -145,4 +179,17 @@
         SET share = boards.share + 1
         WHERE board_code = #{ boardCode }
     </update>
+
+    <delete id="deleteLikeChange" parameterType="java.util.Map">
+        DELETE
+          FROM board_likes
+         WHERE board_code = #{ boardCode }
+           AND user_code = #{ userCode }
+    </delete>
+
+    <delete id="deleteBoard" parameterType="_int">
+        DELETE
+          FROM boards
+         WHERE board_code = #{ boardCode }
+    </delete>
 </mapper>

@@ -43,6 +43,7 @@ public class ResultBoardDTO {
     private int imageCount;
     private int commentCount;
     private int likeState;
+    private int isAuthor;
 
     /**
      * 테이블의 정보만을 가지고 있는 {@link BoardTableDTO}를 사용해
@@ -57,6 +58,7 @@ public class ResultBoardDTO {
      *     <li>{@link ResultBoardDTO#previewImageUrl}</li>
      *     <li>{@link ResultBoardDTO#imageCount}</li>
      *     <li>{@link ResultBoardDTO#likeState}</li>
+     *     <li>{@link ResultBoardDTO#isAuthor}</li>
      * </ui>
      *
      * @param boardTableItem {@link BoardTableDTO}타입의 정보입니다.

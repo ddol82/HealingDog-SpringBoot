@@ -3,16 +3,51 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.healing.healingdog.community.model.dao.CommunityMapper">
+    <select id="getFileItems" parameterType="_int" resultType="ImageTableDTO">
+        SELECT
+               bi.board_image_code
+             , bi.board_code
+             , bi.usage
+             , bi.thumbnail
+             , bi.original
+             , bi.preview
+          FROM board_images bi
+         WHERE bi.board_code = #{ boardCode }
+    </select>
+
+    <select id="selectBoardOriginalUrl" parameterType="_int" resultType="string">
+        SELECT
+               I.original
+          FROM board_images AS I
+         WHERE I.board_code = #{ boardCode }
+    </select>
+
+    <select id="selectBoardThumbnailUrl" parameterType="_int" resultType="string">
+        SELECT
+               I.thumbnail
+          FROM board_images AS I
+         WHERE I.board_code = #{ code }
+           AND I.thumbnail IS NOT NULL
+    </select>
+
+    <select id="selectBoardPreviewUrl" parameterType="_int" resultType="string">
+        SELECT
+               I.preview
+          FROM board_images AS I
+         WHERE I.board_code = #{ boardCode }
+    </select>
+
     <insert id="insertBoardImage" parameterType="ImageTableDTO">
         INSERT
           INTO board_images (
-               board_image_code
-             , board_code
-             , `usage`
-             , thumbnail
-             , original
-             , preview
-        ) VALUES (
+                            board_image_code
+                          , board_code
+                          , `usage`
+                          , thumbnail
+                          , original
+                          , preview
+        )
+        VALUES (
                NULL
              , #{ refCode }
              , #{ usage }
@@ -22,25 +57,9 @@
         )
     </insert>
 
-    <select id="selectBoardOriginalUrl" parameterType="_int" resultType="string">
-        SELECT
-            I.original
-        FROM board_images AS I
-        WHERE I.board_code = #{ boardCode }
-    </select>
-
-    <select id="selectBoardThumbnailUrl" parameterType="_int" resultType="string">
-        SELECT
-            I.thumbnail
-        FROM board_images AS I
-        WHERE I.board_code = #{ code }
-          AND I.thumbnail IS NOT NULL
-    </select>
-
-    <select id="selectBoardPreviewUrl" parameterType="_int" resultType="string">
-        SELECT
-            I.preview
-        FROM board_images AS I
-        WHERE I.board_code = #{ boardCode }
-    </select>
+    <delete id="deleteBoardTable" parameterType="_int">
+        DELETE
+          FROM board_images
+         WHERE board_code = #{ boardCode }
+    </delete>
 </mapper>

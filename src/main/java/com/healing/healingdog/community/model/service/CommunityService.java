@@ -231,6 +231,45 @@ public class CommunityService {
     }
 
     /**
+     * 게시글의 좋아요 수를 조회합니다.
+     *
+     * @param boardCode 대상 게시글의 코드입니다.
+     * @return 게시글의 좋아요 수가 반환됩니다.
+     */
+    public int selectAllLikeActivityDetail(int boardCode) {
+        log.info("[CommunityService] selectAllLikeActivityDetail 호출");
+        int result = communityMapper.selectAllLikeActivityDetail(boardCode);
+        log.info("[CommunityService] selectAllLikeActivityDetail 종료");
+        return result;
+    }
+
+    /**
+     * 게시글의 공유 수를 조회합니다.
+     *
+     * @param boardCode 대상 게시글의 코드입니다.
+     * @return 게시글의 공유 수가 반환됩니다.
+     */
+    public int selectAllShareActivityDetail(int boardCode) {
+        log.info("[CommunityService] selectAllShareActivityDetail 호출");
+        int result = communityMapper.selectAllShareActivityDetail(boardCode);
+        log.info("[CommunityService] selectAllShareActivityDetail 종료");
+        return result;
+    }
+
+    /**
+     * 게시글의 댓글 수를 조회합니다.
+     *
+     * @param boardCode 대상 게시글의 코드입니다.
+     * @return 게시글의 댓글 수가 반환됩니다.
+     */
+    public int selectAllCommentActivityDetail(int boardCode) {
+        log.info("[CommunityService] selectAllCommentActivityDetail 호출");
+        int result = communityMapper.selectAllCommentActivityDetail(boardCode);
+        log.info("[CommunityService] selectAllCommentActivityDetail 종료");
+        return result;
+    }
+
+    /**
      * 작성된 게시글을 등록합니다.
      *
      * @param boardCreateDTO 게시글의 정보가 담긴 DTO입니다.
@@ -368,8 +407,87 @@ public class CommunityService {
      */
     public int checkLikeState(Map<String, Integer> likeParamMap) {
         log.info("[CommunityService] checkLikeState 호출");
+        log.info("userCode : " + likeParamMap.get("userCode"));
+        log.info("boardCode : " + likeParamMap.get("boardCode"));
         int result = communityMapper.checkLikeState(likeParamMap);
         log.info("[CommunityService] checkLikeState 종료");
+        return result;
+    }
+
+    /**
+     * 좋아요를 등록 상태로 변환합니다.
+     *
+     * @param likeParams {@link UserDTO#getUserCode() userCode}와
+     * {@link Integer boardCode}의 정보가 담겨있습니다.
+     * @return 등록 성공 시 1을 반환, 최종적으로 1의 값을 가집니다.
+     */
+    public int insertLikeChange(Map<String, Integer> likeParams) {
+        log.info("[CommunityService] insertLikeChange 호출");
+        int result = communityMapper.insertLikeChange(likeParams);
+        log.info("[CommunityService] insertLikeChange 종료");
+        return result;
+    }
+
+    /**
+     * 좋아요를 삭제 상태로 변환합니다.
+     *
+     * @param likeParams {@link UserDTO#getUserCode() userCode}와
+     * {@link Integer boardCode}의 정보가 담겨있습니다.
+     * @return 등록 성공 시 1을 반환, 최종적으로 -1의 값을 가집니다.
+     */
+    public int deleteLikeChange(Map<String, Integer> likeParams) {
+        log.info("[CommunityService] deleteLikeChange 호출");
+        int result = communityMapper.deleteLikeChange(likeParams);
+        log.info("[CommunityService] deleteLikeChange 종료");
+        return result;
+    }
+
+    /**
+     * 게시글을 삭제합니다.
+     *
+     * @param boardCode 대상 게시글 코드입니다.
+     * @return 삭제 성공 시 1을 반환합니다.
+     */
+    public int deleteBoard(int boardCode) {
+        log.info("[CommunityService] deleteBoard 호출");
+        int result = communityMapper.deleteBoard(boardCode);
+        log.info("[CommunityService] deleteBoard 종료");
+        return result;
+    }
+
+    /**
+     * 저장된 게시글의 사진 파일을 삭제합니다.
+     *
+     * @param boardCode 대상 게시글 코드입니다.
+     * @return 삭제에 성공한 사진 개수를 반환합니다.
+     */
+    public int deleteBoardImage(int boardCode) {
+        log.info("[CommunityService] deleteBoardImage 호출");
+        String direction = IMAGE_DIR_PREFIX + IMAGE_TYPE;
+        int result = 0;
+        List<ImageTableDTO> files = communityMapper.getFileItems(boardCode);
+        if(files == null || files.size() == 0) {
+            log.info("[CommunityService] 조회된 이미지가 없습니다!");
+            return 0;
+        }
+        for(ImageTableDTO image : files) {
+            log.info("[CommunityService] 파일 삭제를 진행합니다.");
+            result += ImageUtils.deleteImage(direction, image);
+        }
+        log.info("[CommunityService] deleteBoardImage 종료");
+        return 0;
+    }
+
+    /**
+     * 저장된 게시글의 사진 테이블 정보를 삭제합니다.
+     *
+     * @param boardCode 대상 게시글 코드입니다.
+     * @return 삭제에 성공한 데이터 수를 반환합니다.
+     */
+    public int deleteBoardImageTable(int boardCode) {
+        log.info("[CommunityService] deleteBoardImageTable 호출");
+        int result = communityMapper.deleteBoardTable(boardCode);
+        log.info("[CommunityService] deleteBoardImageTable 종료");
         return result;
     }
 }
