@@ -19,7 +19,7 @@
                 #{mypetCode},
                 #{beautyCode},
                 #{userCode},
-                NOW(),
+                #{date},
                 NOW()
                )
     </insert>

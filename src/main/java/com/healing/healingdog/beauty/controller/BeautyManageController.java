@@ -6,6 +6,7 @@ import com.healing.healingdog.beauty.model.service.BeautyManageService;
 import com.healing.healingdog.common.ResponseDTO;
 import com.healing.healingdog.common.file.model.dto.CertificatesDTO;
 import com.healing.healingdog.login.model.dto.ProviderDTO;
+import com.healing.healingdog.review.dto.ReviewDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -61,6 +62,22 @@ public class BeautyManageController {
     public ResponseEntity<ResponseDTO> selectBeautyReservation(@AuthenticationPrincipal ProviderDTO provider){
         log.info("REQUEST API selectBeautyReservation ={}", provider);
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK,"미용실 신청내역 조회 성공",beautyManageService.selectBeautyReservation(provider.getProviderCode())));
+    }
+    /**
+     * 미용실 리뷰 전체 조회
+     */
+    @GetMapping("/review")
+    public ResponseEntity<ResponseDTO> selectReviewList(@AuthenticationPrincipal ProviderDTO provider) {
+        log.info("REQUEST API selectReview ={}", provider);
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "리뷰조회 성공", beautyManageService.selectReviewList(provider.getProviderCode())) );
+    }
+    /**
+     * 미용실 최신 리뷰 조회
+     */
+    @GetMapping("/last-review/{num}")
+    public ResponseEntity<ResponseDTO> selectLastReview(@AuthenticationPrincipal ProviderDTO provider,@PathVariable int num) {
+        log.info("REQUEST API selectReview ={}", provider);
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "리뷰조회 성공", beautyManageService.selectLastReview(provider.getProviderCode(), num)) );
     }
 
     /**

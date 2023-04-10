@@ -72,7 +72,7 @@ public class BeautyDTO {
     /**
      * 날짜
      * */
-    private Date date;
+    private Timestamp date;
     /**
      * 시간
      * */
@@ -138,4 +138,12 @@ public class BeautyDTO {
      * 카테고리 와이파이
      * */
     private String wiFi;
+
+    private String gender;
+    private String variety;
+    private Date birthday;
+    private String weight;
+    private String neutered;
+    private String animalHospital;
+    private String referenceInfo;
 }
