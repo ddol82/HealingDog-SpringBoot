@@ -78,6 +78,30 @@ public interface CommunityMapper {
     BoardTableDTO selectBoardDetail(int boardCode);
 
     /**
+     * 게시글의 좋아요 수를 조회합니다.
+     *
+     * @param boardCode 대상 게시글입니다.
+     * @return 좋아요 수를 반환합니다.
+     */
+    int selectAllLikeActivityDetail(int boardCode);
+
+    /**
+     * 게시글의 공유 수를 조회합니다.
+     *
+     * @param boardCode 대상 게시글입니다.
+     * @return 공유 수를 반환합니다.
+     */
+    int selectAllShareActivityDetail(int boardCode);
+
+    /**
+     * 게시글의 댓글 수를 조회합니다.
+     *
+     * @param boardCode 대상 게시글입니다.
+     * @return 댓글 수를 반환합니다.
+     */
+    int selectAllCommentActivityDetail(int boardCode);
+
+    /**
      * 게시글 번호를 입력받아 모든 이미지 URL을 조회합니다.
      * @param boardCode 게시글 번호입니다.
      * @return URL 정보를 {@link List}<{@link String}> 타입으로 반환합니다.
@@ -122,4 +146,46 @@ public interface CommunityMapper {
      * @return 성공 시 1이 반환됩니다.
      */
     int shareIncrement(int boardCode);
+
+    /**
+     * 게시글의 좋아요를 등록합니다.
+     *
+     * @param likeParams 현재 유저 코드와 대상 게시글 코드입니다.
+     * @return 성공 시 1이 반환됩니다.
+     */
+    int insertLikeChange(Map<String, Integer> likeParams);
+
+    /**
+     * 게시글의 좋아요를 삭제합니다.
+     *
+     * @param likeParams 현재 유저 코드와 대상 게시글 코드입니다.
+     * @return 성공 시 1이 반환됩니다.
+     * {@link com.healing.healingdog.community.controller.CommunityController controller}
+     * 에서 최종적으로 -1값을 가집니다.
+     */
+    int deleteLikeChange(Map<String, Integer> likeParams);
+
+    /**
+     * 게시글을 삭제합니다.
+     *
+     * @param boardCode 대상 게시글 코드입니다.
+     * @return 삭제 성공 시 1을 반환합니다.
+     */
+    int deleteBoard(int boardCode);
+
+    /**
+     * 삭제할 이미지 정보들을 가져옵니다.
+     *
+     * @param boardCode 대상 게시글 코드입니다.
+     * @return 이미지 리스트를 가져옵니다.
+     */
+    List<ImageTableDTO> getFileItems(int boardCode);
+
+    /**
+     * 삭제할 이미지 파일의 DB 정보들을 가져옵니다.
+     *
+     * @param boardCode 대상 게시글 코드입니다.
+     * @return 삭제에 성공한 DB 개수를 반환합니다.
+     */
+    int deleteBoardTable(int boardCode);
 }
