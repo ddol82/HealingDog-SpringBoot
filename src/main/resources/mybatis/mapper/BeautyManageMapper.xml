@@ -23,23 +23,62 @@
     </select>
 <!--  미용실 신청내역 조회  -->
     <select id="selectBeautyReservation"  resultType="BeautyDTO">
+        SELECT B.beauty_reservation_list_code
+             , B.mypet_code
+             , B.beauty_code
+             , B.user_code
+             , B.date
+             , B.time
+             , B.reservation
+             , M.user_code
+             , M.name
+             , M.gender
+             , M.variety
+             , M.birthday
+             , M.weight
+             , M.neutered
+             , M.animal_hospital
+             , M.reference_info
+        FROM beauty_reservation_lists B
+                 JOIN mypets M
+                      ON B.mypet_code = M.mypet_code
+        WHERE beauty_code = (SELECT beauty_code
+                             FROM (SELECT beauty_code
+                                   FROM beauties
+                                   WHERE provider_code = #{providerCode}) tmp)
+    </select>
+    <select id="selectReviewList" resultType="ReviewDTO">
         SELECT
-            beauty_reservation_list_code,
-            mypet_code,
-            beauty_code,
-            user_code,
-            date,
-            time,
-            reservation
-        FROM beauty_reservation_lists
-        WHERE beauty_code=(
-            SELECT beauty_code
-            FROM(
-                    SELECT beauty_code
-                    FROM beauties
-                    WHERE provider_code=#{providerCode}
-                )tmp
-        )
+            R.reviews_code,
+            R.service_category_code,
+            R.provider_code,
+            R.user_code,
+            R.regist_date,
+            R.content,
+            R.score,
+            U.nickname
+        FROM reviews R
+        JOIN users U
+        ON R.user_code = U.user_code
+
+        WHERE provider_code = #{providerCode}
+    </select>
+
+    <select id="selectLastReview" resultType="ReviewDTO">
+        SELECT R.reviews_code,
+               R.service_category_code,
+               R.provider_code,
+               R.user_code,
+               R.regist_date,
+               R.content,
+               R.score,
+               U.nickname
+        FROM reviews R
+                 JOIN users U
+                      ON R.user_code = U.user_code
+        WHERE provider_code = #{providerCode}
+        ORDER BY R.regist_date
+                DESC limit #{num},1
     </select>
 
 <!--  미용실 정보등록  -->

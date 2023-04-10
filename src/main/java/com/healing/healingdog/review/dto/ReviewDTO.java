@@ -18,5 +18,5 @@ public class ReviewDTO {
     private Timestamp registDate;
     private String content;
     private int score;
-
+    private String nickname;
 }
