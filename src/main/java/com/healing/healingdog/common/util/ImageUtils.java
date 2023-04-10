@@ -217,6 +217,7 @@ public class ImageUtils {
     public static int deleteImage(String fileDir, ImageTableDTO image) {
         log.info("deleteFile 호출");
         Path imagePath = Paths.get(fileDir);
+        log.info("getting imagePath : {}", imagePath);
         //경로 존재 확인
         if(!pathExistCheckForDelete(imagePath)) {
             return 0;
@@ -224,15 +225,18 @@ public class ImageUtils {
         //경로가 없으면 패스
         int result = 0;
         //썸네일이 존재할 때, 썸네일 삭제 시도.
-        if(image.getThumbnail() != null || fileDelete(imagePath, image.getThumbnail())) {
+        log.info("getting Thumbnail() : {}", image.getThumbnail());
+        if(image.getThumbnail() != null && fileDelete(imagePath, image.getThumbnail())) {
             result += 1;
         }
         //미리보기 이미지 삭제 시도.
-        if(!fileDelete(imagePath, image.getPreview())) {
+        log.info("getting Preview() : {}", image.getPreview());
+        if(fileDelete(imagePath, image.getPreview())) {
             result += 1;
         }
         //원본 이미지 삭제 시도.
-        if(!fileDelete(imagePath, image.getOriginal())) {
+        log.info("getting Original() : {}", image.getOriginal());
+        if(fileDelete(imagePath, image.getOriginal())) {
             result += 1;
         }
 
@@ -263,7 +267,10 @@ public class ImageUtils {
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     private static boolean fileDelete(Path filePath, String fileName) {
         try {
+            log.debug("filePath : {}", filePath);
+            log.info("fileName : {}", fileName);
             Path imagePath = filePath.resolve(fileName);
+            log.debug("imagePath : {}", imagePath);
             Files.delete(imagePath);
         } catch (IOException e) {
             log.warn("파일을 삭제할 수 없었습니다. : " + fileName, e);

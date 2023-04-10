@@ -490,4 +490,44 @@ public class CommunityService {
         log.info("[CommunityService] deleteBoardImageTable 종료");
         return result;
     }
+
+    /**
+     * 삭제되는 게시글의 좋아요 정보를 모두 지웁니다.
+     *
+     * @param boardCode 대상 게시글 코드입니다.
+     * @return 삭제된 수량을 반환합니다.
+     */
+    public int deleteAllLikeChange(int boardCode) {
+        log.info("[CommunityService] deleteBoardImageTable 호출");
+        int result = communityMapper.deleteAllLikeChange(boardCode);
+        log.info("[CommunityService] deleteBoardImageTable 종료");
+        return result;
+    }
+
+    /**
+     * 게시글 조건에 맞는 모든 댓글들을 불러옵니다.
+     *
+     * @param boardCode 대상 게시글 코드입니다.
+     * @return 조회된 {@link List}를 반환합니다.
+     */
+    public List<CommentDTO> selectAllComments(int boardCode) {
+        log.info("[CommunityService] selectAllComments 호출");
+        List<CommentDTO> result = communityMapper.selectAllComments(boardCode);
+        log.info("[CommunityService] selectAllComments 종료");
+        return result;
+    }
+
+    /**
+     * 댓글을 작성합니다.
+     *
+     * @param commentParams {@code boardCode}, {@code userCode}, {@code ref}
+     * 값이 담겨있습니다.
+     * @return 성공 시 1을 반환합니다.
+     */
+    public int registComment(Map<String, String> commentParams) {
+        log.info("[CommunityService] selectAllComments 호출");
+        int result = communityMapper.registComment(commentParams);
+        log.info("[CommunityService] selectAllComments 종료");
+        return result;
+    }
 }
