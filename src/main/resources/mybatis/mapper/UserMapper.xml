@@ -33,9 +33,8 @@
     <update id="updateMyUserDetailInfo" parameterType="UserDTO">
         UPDATE users
         SET
-            name = #{name},
+            `name` = #{name},
             email = #{email},
-            user_password = #{userPassword},
             phone = #{phone},
             nickname = #{nickname},
             address = #{address},
