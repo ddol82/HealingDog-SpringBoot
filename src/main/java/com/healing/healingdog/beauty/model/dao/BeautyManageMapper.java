@@ -3,6 +3,7 @@ package com.healing.healingdog.beauty.model.dao;
 import com.healing.healingdog.beauty.model.dto.BeautyDTO;
 import com.healing.healingdog.beauty.model.dto.CommonDTO;
 import com.healing.healingdog.common.file.model.dto.CertificatesDTO;
+import com.healing.healingdog.review.dto.ReviewDTO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.HashMap;
@@ -16,6 +17,10 @@ public interface BeautyManageMapper {
     CommonDTO selectBeautyTimes(int providerCode);
 
     List<BeautyDTO> selectBeautyReservation(int providerCode);
+
+    List<ReviewDTO> selectReviewList(int providerCode);
+
+    ReviewDTO selectLastReview(int providerCode, int num);
 
     int registerBeautyInfo(BeautyDTO beautyDTO);
 

@@ -8,6 +8,7 @@ import com.healing.healingdog.common.paging.PageDataAutoFill;
 import com.healing.healingdog.community.model.dto.*;
 import com.healing.healingdog.community.model.service.CommunityService;
 import com.healing.healingdog.community.model.type.BoardType;
+import com.healing.healingdog.exception.UserNotFoundException;
 import com.healing.healingdog.login.model.dto.UserDTO;
 import com.healing.healingdog.membermanagement.model.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -141,6 +142,20 @@ public class CommunityController {
                 .body(new ResponseDTO(HttpStatus.OK, outputMessage, boardItem));
     }
 
+    /**
+     * 다음 프로세스를 통해 게시글의 상세 정보를 불러옵니다
+     * <ul>
+     *     <li>{@link CommunityService#selectBoardDetail}<br>게시글 번호에 맞는 게시글 정보를 불러옵니다.</li>
+     *     <li>{@link CommunityService#boardDataDetailConverter}<br>다른 정보가 포함된 DTO로 데이터를 옮깁니다.</li>
+     *     <li>{@link MemberService#selectUserDetailInfo}<br>유저 코드를 통해 유저 정보를 얻습니다.</li>
+     *     <li>{@link CommunityService#checkLikeState}<br>유저가 이미 좋아요를 한 글인지 확인합니다.</li>
+     * </ul>
+     * * 좋아요 수와 공유 수 조회는 포함되어있지 않습니다.
+     *
+     * @param currUser 현재 접속 중인 유저 정보를 토큰 기반으로 호출합니다.
+     * @param boardCode 상세보기 게시글의 번호입니다.
+     * @return 게시글 정보, 유저 정보, 좋아요 정보, 공유 정보가 반환됩니다.
+     */
     @GetMapping("/boards/detail/get/{boardCode}")
     public ResponseEntity<ResponseDTO> selectBoardDetail(@AuthenticationPrincipal UserDTO currUser,
                                                          @PathVariable int boardCode) {
@@ -153,8 +168,10 @@ public class CommunityController {
         UserDTO user = memberService.selectUserDetailInfo(resultBoard.getUserCode());
         resultBoard.setProfileName(user.getNickname());
         resultBoard.setProfileImageUrl(null); //사진 구현 필요!!! @김선중
+
         Map<String, Integer> likeParamMap = new HashMap<>();
         if(currUser != null) {
+            resultBoard.setIsAuthor(user.getUserCode() == currUser.getUserCode() ? 1 : 0);
             likeParamMap.put("userCode", currUser.getUserCode());
             likeParamMap.put("boardCode", boardCode);
             resultBoard.setLikeState(communityService.checkLikeState(likeParamMap));
@@ -166,6 +183,47 @@ public class CommunityController {
         log.info("[CommunityController] selectBoardDetail 종료");
         return ResponseEntity.ok()
                 .body(new ResponseDTO(HttpStatus.OK, outputMessage, resultBoard));
+    }
+
+    /**
+     * 게시글의 좋아요 수, 공유 수, 댓글 수를 모두 조회합니다.
+     *
+     * @param boardCode 대상 게시글 코드입니다.
+     * @return 좋아요 수, 공유 수, 댓글 수를 담은 {@link Map}을 반환합니다.
+     */
+    @GetMapping("/boards/details/activities/{boardCode}")
+    public ResponseEntity<ResponseDTO> selectAllActivityDetail(@PathVariable int boardCode){
+        log.info("[CommunityController] selectAllActivityDetail 호출");
+
+        Map<String, Integer> resultMap = new HashMap<>();
+        resultMap.put("like", communityService.selectAllLikeActivityDetail(boardCode));
+        log.debug("selectAllActivityDetail: 좋아요 수 조회 완료");
+        resultMap.put("share", communityService.selectAllShareActivityDetail(boardCode));
+        log.debug("selectAllActivityDetail: 공유 수 조회 완료");
+        resultMap.put("comment", communityService.selectAllCommentActivityDetail(boardCode));
+        log.debug("selectAllActivityDetail: 댓글 수 조회 완료");
+        String outputMessage = "좋아요/공유/댓글 수 반환";
+        log.info("[CommunityController] selectAllActivityDetail 종료");
+        return ResponseEntity.ok()
+                .body(new ResponseDTO(HttpStatus.OK, outputMessage, resultMap));
+    }
+
+    /**
+     * 게시글에 맞는 댓글을 모두 조회합니다.
+     *
+     * @param boardCode 대상 게시글 코드입니다.
+     * @return 댓글 목록을 {@link List}<{@link CommentDTO}>타입으로 반환합니다.
+     */
+    @GetMapping("/lists/comments/{boardCode}")
+    public ResponseEntity<ResponseDTO> selectAllComments(@PathVariable int boardCode){
+        log.info("[CommunityController] selectAllComments 호출");
+
+        List<CommentDTO> commentList = communityService.selectAllComments(boardCode);
+
+        String outputMessage = "댓글 반환";
+        log.info("[CommunityController] selectAllComments 종료");
+        return ResponseEntity.ok()
+                .body(new ResponseDTO(HttpStatus.OK, outputMessage, commentList));
     }
 
     @PostMapping("/boards/write/confirm")
@@ -207,6 +265,32 @@ public class CommunityController {
     }
 
     /**
+     * 댓글을 작성합니다.
+     *
+     * @param boardCode 댓글을 작성할 대상 게시글입니다.
+     * @return 성공 시 1이 출력됩니다.
+     */
+    @PostMapping("/write/comments/{boardCode}/{refCode}")
+    public ResponseEntity<ResponseDTO> registComment(@AuthenticationPrincipal UserDTO user,
+                                                     @PathVariable int boardCode,
+                                                     @PathVariable int refCode,
+                                                     @RequestPart String content) {
+        log.info("[CommunityController] registComment 호출");
+
+        Map<String, String> commentParams = new HashMap<>();
+        commentParams.put("boardCode", boardCode+"");
+        commentParams.put("userCode", user.getUserCode()+"");
+        commentParams.put("ref", refCode+"");
+        commentParams.put("content", content);
+        int result = communityService.registComment(commentParams);
+
+        String outputMessage = "등록 결과는 다음과 같습니다.";
+        log.info("[CommunityController] registComment 종료");
+        return ResponseEntity.ok()
+                .body(new ResponseDTO(HttpStatus.OK, outputMessage, result));
+    }
+
+    /**
      * 게시글 조회 시 조회 수를 1 올립니다.
      *
      * @param boardCode 조회 수가 올라갈 대상 게시글입니다.
@@ -225,7 +309,36 @@ public class CommunityController {
     }
 
     /**
-     * 게시글 조회 시 공유 수를 1 올립니다.
+     * 게시글의 좋아요 수가 +1 또는 -1되는 것을 반영합니다.
+     *
+     * @param boardCode 공유 수가 올라갈 대상 게시글입니다.
+     * @return 성공 시 1이 출력됩니다.
+     */
+    @PostMapping("/boards/details/like/{boardCode}/{likeStatus}")
+    public ResponseEntity<ResponseDTO> likeChange(@AuthenticationPrincipal UserDTO user,
+                                                  @PathVariable int boardCode,
+                                                  @PathVariable String likeStatus) {
+        log.info("[CommunityController] likeChange 호출");
+        log.info(String.valueOf(user));
+        Map<String, Integer> likeParams = new HashMap<>();
+        likeParams.put("userCode", user.getUserCode());
+        likeParams.put("boardCode", boardCode);
+
+        int result = 0;
+        if(likeStatus.equals("up")) {
+            result += communityService.insertLikeChange(likeParams);
+        } else if(likeStatus.equals("down")) {
+            result += communityService.deleteLikeChange(likeParams) * -1;
+        }
+
+        String outputMessage = "반환 결과는 다음과 같습니다.";
+        log.info("[CommunityController] likeChange 종료");
+        return ResponseEntity.ok()
+                .body(new ResponseDTO(HttpStatus.OK, outputMessage, result));
+    }
+
+    /**
+     * 게시글의 공유 수를 1 올립니다.
      *
      * @param boardCode 공유 수가 올라갈 대상 게시글입니다.
      * @return 성공 시 1이 출력됩니다.
@@ -238,6 +351,35 @@ public class CommunityController {
 
         String outputMessage = "반환 결과는 다음과 같습니다.";
         log.info("[CommunityController] shareIncrement 종료");
+        return ResponseEntity.ok()
+                .body(new ResponseDTO(HttpStatus.OK, outputMessage, result));
+    }
+
+    /**
+     * 게시글 상세보기에서 게시글을 삭제하는 과정입니다.
+     *
+     * @param user 현재 유저의 토큰이 유효한지 검증하는 용도입니다.
+     * @param boardCode 대상 게시글의 코드입니다.
+     * @return 삭제 완료 시 1이 출력됩니다.
+     */
+    @DeleteMapping("boards/delete/{boardCode}")
+    public ResponseEntity<ResponseDTO> deleteBoard(@AuthenticationPrincipal UserDTO user,
+                                                   @PathVariable int boardCode) {
+        log.info("[CommunityController] deleteBoard 호출");
+
+        if(user == null) throw new UserNotFoundException("현재 사용자 정보를 찾을 수 없습니다.");
+        int[] result = new int[4];
+        result[0] = communityService.deleteBoard(boardCode);
+        log.info("[CommunityController] board 종료 완료, 사진 삭제 진행");
+        result[1] = communityService.deleteBoardImage(boardCode);
+        log.info("[CommunityController] board images 삭제 완료, 사진 DB 삭제 진행");
+        result[2] = communityService.deleteBoardImageTable(boardCode);
+        log.info("[CommunityController] 사진 DB 삭제 완료, 좋아요 관계 삭제 진행");
+        result[3] = communityService.deleteAllLikeChange(boardCode);
+        log.info("[CommunityController] 좋아요 관계 삭제 완료");
+
+        String outputMessage = "삭제 완료된 결과는 다음과 같습니다.";
+        log.info("[CommunityController] deleteBoard 종료");
         return ResponseEntity.ok()
                 .body(new ResponseDTO(HttpStatus.OK, outputMessage, result));
     }

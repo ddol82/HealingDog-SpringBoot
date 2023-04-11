@@ -22,6 +22,11 @@ spring:
       - classpath:/application-security.yml
       - classpath:/application-sms.yml
 
+  mvc:
+    async:
+      request-timeout: 6000
+
+
 # 이미지 저장할 위치와 응답할 때 이미지 주소 세팅
 image:
   # configuration/WebConfig.java

@@ -214,24 +214,30 @@ public class ImageUtils {
      * @return 삭제 성공 시 {@code true}가 반환되고,
      * 오류가 발생할 시 {@code false}가 반환됩니다.
      */
-    public static boolean deleteImage(String fileDir, ImageTableDTO image) {
-        boolean result = true;
+    public static int deleteImage(String fileDir, ImageTableDTO image) {
         log.info("deleteFile 호출");
         Path imagePath = Paths.get(fileDir);
+        log.info("getting imagePath : {}", imagePath);
         //경로 존재 확인
         if(!pathExistCheckForDelete(imagePath)) {
-            result = false;
+            return 0;
         }
         //경로가 없으면 패스
-        if(result) {
-            //썸네일이 존재할 때, 썸네일 삭제 시도. 실패 시 false
-            if(image.getThumbnail() != null && !fileDelete(imagePath, image.getThumbnail())) {
-                result = false;
-            }
-            //원본 이미지 삭제 시도. 실패 시 false
-            if(!fileDelete(imagePath, image.getOriginal())) {
-                result = false;
-            }
+        int result = 0;
+        //썸네일이 존재할 때, 썸네일 삭제 시도.
+        log.info("getting Thumbnail() : {}", image.getThumbnail());
+        if(image.getThumbnail() != null && fileDelete(imagePath, image.getThumbnail())) {
+            result += 1;
+        }
+        //미리보기 이미지 삭제 시도.
+        log.info("getting Preview() : {}", image.getPreview());
+        if(fileDelete(imagePath, image.getPreview())) {
+            result += 1;
+        }
+        //원본 이미지 삭제 시도.
+        log.info("getting Original() : {}", image.getOriginal());
+        if(fileDelete(imagePath, image.getOriginal())) {
+            result += 1;
         }
 
         log.info("deleteFile 종료");
@@ -261,7 +267,10 @@ public class ImageUtils {
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     private static boolean fileDelete(Path filePath, String fileName) {
         try {
+            log.debug("filePath : {}", filePath);
+            log.info("fileName : {}", fileName);
             Path imagePath = filePath.resolve(fileName);
+            log.debug("imagePath : {}", imagePath);
             Files.delete(imagePath);
         } catch (IOException e) {
             log.warn("파일을 삭제할 수 없었습니다. : " + fileName, e);
