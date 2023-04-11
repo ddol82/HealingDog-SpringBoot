@@ -185,6 +185,12 @@ public class CommunityController {
                 .body(new ResponseDTO(HttpStatus.OK, outputMessage, resultBoard));
     }
 
+    /**
+     * 게시글의 좋아요 수, 공유 수, 댓글 수를 모두 조회합니다.
+     *
+     * @param boardCode 대상 게시글 코드입니다.
+     * @return 좋아요 수, 공유 수, 댓글 수를 담은 {@link Map}을 반환합니다.
+     */
     @GetMapping("/boards/details/activities/{boardCode}")
     public ResponseEntity<ResponseDTO> selectAllActivityDetail(@PathVariable int boardCode){
         log.info("[CommunityController] selectAllActivityDetail 호출");
@@ -200,6 +206,24 @@ public class CommunityController {
         log.info("[CommunityController] selectAllActivityDetail 종료");
         return ResponseEntity.ok()
                 .body(new ResponseDTO(HttpStatus.OK, outputMessage, resultMap));
+    }
+
+    /**
+     * 게시글에 맞는 댓글을 모두 조회합니다.
+     *
+     * @param boardCode 대상 게시글 코드입니다.
+     * @return 댓글 목록을 {@link List}<{@link CommentDTO}>타입으로 반환합니다.
+     */
+    @GetMapping("/lists/comments/{boardCode}")
+    public ResponseEntity<ResponseDTO> selectAllComments(@PathVariable int boardCode){
+        log.info("[CommunityController] selectAllComments 호출");
+
+        List<CommentDTO> commentList = communityService.selectAllComments(boardCode);
+
+        String outputMessage = "댓글 반환";
+        log.info("[CommunityController] selectAllComments 종료");
+        return ResponseEntity.ok()
+                .body(new ResponseDTO(HttpStatus.OK, outputMessage, commentList));
     }
 
     @PostMapping("/boards/write/confirm")
@@ -238,6 +262,32 @@ public class CommunityController {
         log.info("[CommunityController] insertBoard 종료");
         return ResponseEntity.ok()
                 .body(new ResponseDTO(HttpStatus.OK, outputMessage, outputData));
+    }
+
+    /**
+     * 댓글을 작성합니다.
+     *
+     * @param boardCode 댓글을 작성할 대상 게시글입니다.
+     * @return 성공 시 1이 출력됩니다.
+     */
+    @PostMapping("/write/comments/{boardCode}/{refCode}")
+    public ResponseEntity<ResponseDTO> registComment(@AuthenticationPrincipal UserDTO user,
+                                                     @PathVariable int boardCode,
+                                                     @PathVariable int refCode,
+                                                     @RequestPart String content) {
+        log.info("[CommunityController] registComment 호출");
+
+        Map<String, String> commentParams = new HashMap<>();
+        commentParams.put("boardCode", boardCode+"");
+        commentParams.put("userCode", user.getUserCode()+"");
+        commentParams.put("ref", refCode+"");
+        commentParams.put("content", content);
+        int result = communityService.registComment(commentParams);
+
+        String outputMessage = "등록 결과는 다음과 같습니다.";
+        log.info("[CommunityController] registComment 종료");
+        return ResponseEntity.ok()
+                .body(new ResponseDTO(HttpStatus.OK, outputMessage, result));
     }
 
     /**
@@ -318,12 +368,15 @@ public class CommunityController {
         log.info("[CommunityController] deleteBoard 호출");
 
         if(user == null) throw new UserNotFoundException("현재 사용자 정보를 찾을 수 없습니다.");
-        int[] result = new int[3];
+        int[] result = new int[4];
         result[0] = communityService.deleteBoard(boardCode);
         log.info("[CommunityController] board 종료 완료, 사진 삭제 진행");
         result[1] = communityService.deleteBoardImage(boardCode);
         log.info("[CommunityController] board images 삭제 완료, 사진 DB 삭제 진행");
         result[2] = communityService.deleteBoardImageTable(boardCode);
+        log.info("[CommunityController] 사진 DB 삭제 완료, 좋아요 관계 삭제 진행");
+        result[3] = communityService.deleteAllLikeChange(boardCode);
+        log.info("[CommunityController] 좋아요 관계 삭제 완료");
 
         String outputMessage = "삭제 완료된 결과는 다음과 같습니다.";
         log.info("[CommunityController] deleteBoard 종료");

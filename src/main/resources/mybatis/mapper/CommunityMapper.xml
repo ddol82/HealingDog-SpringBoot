@@ -132,6 +132,17 @@
            AND user_code = #{ userCode }
     </select>
 
+    <select id="selectAllComments" parameterType="_int" resultType="CommentDTO">
+        SELECT cm.comment_code
+             , cm.board_code
+             , cm.user_code
+             , cm.ref
+             , cm.uptime
+             , cm.content
+          FROM comments AS cm
+         WHERE cm.board_code = #{ boardCode }
+    </select>
+
     <insert id="insertBoard" parameterType="BoardCreateDTO" useGeneratedKeys="true" keyProperty="id">
         INSERT
           INTO boards (
@@ -168,6 +179,33 @@
         )
     </insert>
 
+    <insert id="registComment" parameterType="java.util.Map">
+        INSERT
+          INTO comments (
+               comment_code
+             , board_code
+             , user_code
+             , `ref`
+             , uptime
+             , content
+          )
+        VALUES (
+               NULL
+             , #{ boardCode }
+             , #{ userCode }
+        <choose>
+            <when test="ref == 0">
+             , NULL
+            </when>
+            <otherwise>
+             , #{ ref }
+            </otherwise>
+        </choose>
+             , NOW()
+             , #{ content }
+        )
+    </insert>
+
     <update id="viewIncrement" parameterType="_int">
         UPDATE boards
            SET view = boards.view + 1
@@ -185,6 +223,12 @@
           FROM board_likes
          WHERE board_code = #{ boardCode }
            AND user_code = #{ userCode }
+    </delete>
+
+    <delete id="deleteAllLikeChange" parameterType="_int">
+        DELETE
+        FROM board_likes
+        WHERE board_code = #{ boardCode }
     </delete>
 
     <delete id="deleteBoard" parameterType="_int">
