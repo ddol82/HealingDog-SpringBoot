@@ -66,5 +66,29 @@
     </delete>
 
 
+<!--  borading-manage/booking CRUD  -->
+
+    <select id="selectBoardingBooking" resultType="BoardingBookingDTO">
+        SELECT
+            boarding_booking_code,
+            boarding_service_code,
+            user_code,
+            mypet_code,
+            booking_date,
+            boarding_category,
+            check_in,
+            check_out,
+            payment
+        FROM healingdog.boarding_bookings
+        WHERE boarding_service_code IN (
+            SELECT
+                boarding_service_code
+            FROM boarding_services
+            WHERE
+                provider_code=#{providerCode}
+        )
+    </select>
+
+
 
 </mapper>

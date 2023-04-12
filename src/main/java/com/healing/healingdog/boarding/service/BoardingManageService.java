@@ -1,10 +1,18 @@
 package com.healing.healingdog.boarding.service;
 
 import com.healing.healingdog.boarding.dao.BoardingManageMapper;
+import com.healing.healingdog.boarding.dto.BoardingBookingDTO;
 import com.healing.healingdog.boarding.dto.BoardingServiceDTO;
+import com.healing.healingdog.login.model.dto.UserDTO;
+import com.healing.healingdog.mypage.model.dao.MypetMapper;
+import com.healing.healingdog.mypage.model.dao.UserMapper;
+import com.healing.healingdog.mypage.model.dto.MypetDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -12,6 +20,8 @@ import org.springframework.stereotype.Service;
 public class BoardingManageService {
 
     private final BoardingManageMapper boardingManageMapper;
+    private final MypetMapper mypetMapper;
+    private final UserMapper userMapper;
 
     public Object selectBoarding(int providerCode) {
 
@@ -43,6 +53,24 @@ public class BoardingManageService {
         log.info("REQUEST SERVICE selectBoardingInfo ={}",providerCode);
         int result = boardingManageMapper.deleteBoardingInfo(providerCode);
         log.info("result.toString() ={}", result + "개 삭제 완료.");
+        return result;
+    }
+
+    public Object selectBoardingBooking(int providerCode) {
+        log.info("REQUEST SERVICE selectBoardingBooking ={}",providerCode);
+        List<BoardingBookingDTO> result = boardingManageMapper.selectBoardingBooking(providerCode);
+        log.info("result.toString() ={}", result);
+        return result;
+    }
+
+    public Object callSelectBoardingBookingMypetAPI(int userCode, int mypetCode) {
+        log.info("REQUEST SERVICE callSelectBoardingBookingMypetAPI ={}","userCode="+userCode+", mypetCode="+mypetCode);
+        HashMap<String, Object> result = new HashMap<>();
+        MypetDTO mypet = mypetMapper.selectMyPetDetailInfo(userCode, mypetCode);
+        UserDTO user = userMapper.selectMyUserInfo(userCode);
+        result.put("mypet",mypet);
+        result.put("user",user);
+        log.info("result.toString() ={}", result);
         return result;
     }
 }

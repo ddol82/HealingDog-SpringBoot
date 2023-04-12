@@ -22,7 +22,7 @@ public class BoardingController {
     public ResponseEntity<ResponseDTO> selectBoardingBooking(@RequestBody BoardingBookingDTO boardingBookingDTO) {
         log.info("REQUEST API selectBoardingBooking ={}", boardingBookingDTO);
 
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "위탁돌봄예약 삭제 성공", boardingService.selectBoardingBooking(boardingBookingDTO)) );
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "위탁돌봄예약 조회 성공", boardingService.selectBoardingBooking(boardingBookingDTO)) );
     }
 
     @PostMapping("/{boarding_service_code}/bookings")
