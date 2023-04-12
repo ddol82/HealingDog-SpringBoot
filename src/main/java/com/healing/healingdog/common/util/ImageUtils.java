@@ -59,6 +59,15 @@ public class ImageUtils {
         return saveName;
     }
 
+    /**
+     * 파일의 썸네일을 저장합니다.<br>
+     * 썸네일의 이름은 {@link UUID}를 이용하여 랜덤으로 생성됩니다.
+     *
+     * @param uploadDir 업로드 할 경로입니다.
+     * @param multipartFile 업로드 할 이미지 파일입니다.
+     * @return 파일 저장 후 저장된 이름의 파일명을 반환합니다.
+     * @throws IOException 입출력 과정에서 오류 발생 시 오류를 출력합니다.
+     */
     public static String saveThumbnail(String uploadDir, MultipartFile multipartFile, int width, int height) throws IOException {
         log.info("saveThumbnail 호출");
         Path uploadPath = Paths.get(uploadDir);

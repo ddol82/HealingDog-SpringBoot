@@ -25,7 +25,6 @@
 		<typeAlias alias="MypetDTO" type="com.healing.healingdog.mypage.model.dto.MypetDTO"/>
 		<typeAlias alias="ChecklistDTO" type="com.healing.healingdog.mypage.model.dto.ChecklistDTO"/>
 		<!-- community -->
-		<typeAlias alias="DetailForGettingBoard" type="com.healing.healingdog.community.model.dto.CatAndPageDataForBoard"/>
 		<typeAlias alias="BoardTableDTO" type="com.healing.healingdog.community.model.dto.BoardTableDTO"/>
 		<typeAlias alias="BoardCreateDTO" type="com.healing.healingdog.community.model.dto.BoardCreateDTO"/>
 		<typeAlias alias="CommentDTO" type="com.healing.healingdog.community.model.dto.CommentDTO"/>

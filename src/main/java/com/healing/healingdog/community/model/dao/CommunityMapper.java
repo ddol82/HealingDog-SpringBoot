@@ -4,7 +4,6 @@ import com.healing.healingdog.common.file.model.dto.ImageTableDTO;
 import com.healing.healingdog.common.paging.PageData;
 import com.healing.healingdog.community.model.dto.BoardCreateDTO;
 import com.healing.healingdog.community.model.dto.BoardTableDTO;
-import com.healing.healingdog.community.model.dto.CatAndPageDataForBoard;
 import com.healing.healingdog.community.model.dto.CommentDTO;
 import com.healing.healingdog.community.model.type.BoardType;
 import org.apache.ibatis.annotations.Mapper;
@@ -30,11 +29,11 @@ public interface CommunityMapper {
 
     /**
      * 현재 카테고리에 해당하는 전체 게시글들을 조회합니다.
-     * @param detailData {@link CatAndPageDataForBoard}<br>({@link PageData 페이지 정보} + {@link BoardType 카테고리 정보})를 입력받습니다.
+     * @param boardListParams {@link PageData 페이지 정보}, {@link BoardType 카테고리 정보}를 입력받습니다.
      * @return 현재 카테고리에 해당하는 전체 게시글의 수를 반환합니다,<br>
      * 카테고리가 {@link BoardType#ALL 전체 글}일 경우 모든 게시글의 수를 반환합니다.
      */
-    List<BoardTableDTO> selectBoardList(CatAndPageDataForBoard detailData);
+    List<BoardTableDTO> selectBoardList(Map<String, Integer> boardListParams);
 
     /**
      * 커뮤니티 상단에 고정되어야 하는 게시글들을 조회합니다.
@@ -214,4 +213,12 @@ public interface CommunityMapper {
      * @return 성공 시 1을 반환합니다.
      */
     int registComment(Map<String, String> commentParams);
+
+    /**
+     * 게시글의 사진 용량 정보를 불러옵니다.
+     *
+     * @param boardCode 대상 게시글의 코드입니다.
+     * @return 사진 용량 정보를 반환합니다.
+     */
+    List<Integer> selectBoardSizeCount(int boardCode);
 }

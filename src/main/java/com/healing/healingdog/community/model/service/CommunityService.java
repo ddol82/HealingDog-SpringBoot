@@ -90,14 +90,14 @@ public class CommunityService {
 
     /**
      * 조건에 맞는 게시글을 {@link List}로 조회합니다.
-     * @param detailData {@link CatAndPageDataForBoard} 타입을 사용하며, 게시글의 인덱스 정보와 카테고리 코드 정보를 가지고 있습니다.
+     * @param boardListParams {@link PageData 페이지 정보}, {@link BoardType 카테고리 정보}를 입력받습니다.
      * @return 카테고리 타입이 일치하고, {@link PageData#getStartCursor 시작 인덱스}와 {@link PageData#getEndCursor() 끝 인덱스}
      * 사이에 있는 게시글들을<br> {@link List}<{@link BoardTableDTO}>타입으로 반환합니다.
      */
-    public List<BoardTableDTO> selectBoardList(CatAndPageDataForBoard detailData) {
+    public List<BoardTableDTO> selectBoardList(Map<String, Integer> boardListParams) {
         log.info("[CommunityService] selectBoardList 호출");
 
-        List<BoardTableDTO> boardList= communityMapper.selectBoardList(detailData);
+        List<BoardTableDTO> boardList= communityMapper.selectBoardList(boardListParams);
         log.debug("(selectBoardCount) 조회 결과 : " + boardList.size() + "건");
 
         log.info("[CommunityService] selectBoardList 종료");
@@ -154,6 +154,7 @@ public class CommunityService {
         result.setOriginalImageUrl(selectBoardOriginalUrl(boardTableData.getBoardCode()));
         result.setPreviewImageUrl(selectBoardPreviewUrl(boardTableData.getBoardCode()));
         result.setImageCount(selectBoardImageCount(boardTableData.getBoardCode()));
+        result.setSize(selectBoardImageSize(boardTableData.getBoardCode()));
 
         log.debug("게시글 번호 " + boardTableData.getBoardCode() + " 변환 종료");
         return result;
@@ -223,6 +224,27 @@ public class CommunityService {
         return count;
     }
 
+    /**
+     * 게시글의 용량 정보를 조회합니다.
+     *
+     * @param boardCode 대상 게시글의 코드입니다.
+     * @return 게시글의 용량 {@link List}를 불러옵니다.
+     */
+    private List<Integer> selectBoardImageSize(int boardCode) {
+        log.info("[CommunityService] selectBoardImageCount 호출");
+
+        List<Integer> result = communityMapper.selectBoardSizeCount(boardCode);
+
+        log.info("[CommunityService] selectBoardImageCount 종료");
+        return result;
+    }
+
+    /**
+     * 게시글의 상세 정보를 조회합니다.
+     *
+     * @param boardCode 대상 게시글 코드입니다.
+     * @return 대상 게시글의 {@link BoardTableDTO 정보}를 반환합니다.
+     */
     public BoardTableDTO selectBoardDetail(int boardCode) {
         log.info("[CommunityService] selectBoardDetail 호출");
         BoardTableDTO boardTableData = communityMapper.selectBoardDetail(boardCode);
@@ -308,8 +330,9 @@ public class CommunityService {
         String direction = IMAGE_DIR_PREFIX + IMAGE_TYPE;
         List<String> result = new ArrayList<>();
         List<ImageFormDTO> files = boardCreateDTO.getFileItems();
-        for(ImageFormDTO imageFile : files) {
+        for(int i = 0; i < files.size(); i++) {
             try {
+                ImageFormDTO imageFile = files.get(i);
                 log.info("[CommunityService] 이미지 1건의 저장을 시도합니다.");
                 String original = ImageUtils.saveImage(direction, imageFile.getImageFile());
                 String thumbnail = null;
@@ -331,6 +354,7 @@ public class CommunityService {
                 imageTableDTO.setOriginal(original);
                 imageTableDTO.setThumbnail(thumbnail);
                 imageTableDTO.setPreview(preview);
+                imageTableDTO.setSize(boardCreateDTO.getSize().get(i));
                 communityMapper.insertBoardImage(imageTableDTO);
 
                 result.add("original - " + original);
@@ -510,9 +534,12 @@ public class CommunityService {
      * @param boardCode 대상 게시글 코드입니다.
      * @return 조회된 {@link List}를 반환합니다.
      */
-    public List<CommentDTO> selectAllComments(int boardCode) {
+    public List<CommentDTO> selectAllComments(int userCode, int boardCode) {
         log.info("[CommunityService] selectAllComments 호출");
         List<CommentDTO> result = communityMapper.selectAllComments(boardCode);
+        for(int i = 0; i < result.size(); i++) {
+            result.get(i).setIsMine(userCode == result.get(i).getUserCode());
+        }
         log.info("[CommunityService] selectAllComments 종료");
         return result;
     }

@@ -21,10 +21,11 @@ spring:
     import:
       - classpath:/application-security.yml
       - classpath:/application-sms.yml
-
-  mvc:
-    async:
-      request-timeout: 6000
+  #Timestamp의 TimeZone을 +09:00으로 설정
+  jackson:
+    deserialization:
+      adjust-dates-to-context-time-zone: false
+    time-zone: Asia/Seoul
 
 
 # 이미지 저장할 위치와 응답할 때 이미지 주소 세팅
