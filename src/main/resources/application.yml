@@ -61,7 +61,7 @@ mybatis:
 
 logging:
   level:
-    root: info
+    root: debug
 #어느 로그 단계 이상부터 출력할 것인지 설정, 예)info 기입 시 trace를 제외한 모든 로그 출력.
 #(가장 낮음) trace, info, debug, warn, error (가장 높음)
 

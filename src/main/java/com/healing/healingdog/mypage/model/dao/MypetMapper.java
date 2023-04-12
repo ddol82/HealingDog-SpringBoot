@@ -1,5 +1,6 @@
 package com.healing.healingdog.mypage.model.dao;
 
+import com.healing.healingdog.boarding.dto.ReviewSummaryDTO;
 import com.healing.healingdog.mypage.model.dto.ChecklistDTO;
 import com.healing.healingdog.mypage.model.dto.MypetDTO;
 import org.apache.ibatis.annotations.Mapper;

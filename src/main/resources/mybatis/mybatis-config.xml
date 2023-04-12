@@ -15,6 +15,8 @@
 		<!-- boarding -->
 		<typeAlias alias="BoardingServiceDTO" type="com.healing.healingdog.boarding.dto.BoardingServiceDTO"/>
 		<typeAlias alias="BoardingBookingDTO" type="com.healing.healingdog.boarding.dto.BoardingBookingDTO"/>
+		<typeAlias alias="ReviewSummaryDTO" type="com.healing.healingdog.boarding.dto.ReviewSummaryDTO"/>
+
 		<!-- review -->
 		<typeAlias alias="ReviewDTO" type="com.healing.healingdog.review.dto.ReviewDTO" />
 

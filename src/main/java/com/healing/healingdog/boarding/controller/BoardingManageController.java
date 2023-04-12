@@ -21,11 +21,11 @@ public class BoardingManageController {
     private final BoardingManageService boardingManageService;
 
 //  위탁돌봄 관리페이지 접속 시 모든 정보 불러옴
-    @GetMapping("/")
-    public ResponseEntity<ResponseDTO> selectBoarding(int providerCode) {
-        log.info("REQUEST API selectBoardingInfo ={}",providerCode);
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "갤러리 조회 성공", boardingManageService.selectBoarding(providerCode)));
-    }
+//    @GetMapping("/")
+//    public ResponseEntity<ResponseDTO> selectBoarding(int providerCode) {
+//        log.info("REQUEST API selectBoardingInfo ={}",providerCode);
+//        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "갤러리 조회 성공", boardingManageService.selectBoarding(providerCode)));
+//    }
 
 
 //  위탁돌봄 정보 관리 CRUD
@@ -68,5 +68,11 @@ public class BoardingManageController {
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "유저&펫 조회 성공", boardingManageService.callSelectBoardingBookingMypetAPI(input.get("userCode"), input.get("mypetCode"))));
     }
 
+//   위탁돌봄리뷰 조회
+    @GetMapping("/review")
+    public ResponseEntity<ResponseDTO> selectBoardingReviewSummary(@AuthenticationPrincipal ProviderDTO provider) {
+        log.info("REQUEST API selectBoardingBooking ={}",provider);
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "위탁돌봄리뷰요약 조회 성공", boardingManageService.selectBoardingReviewSummary(provider.getProviderCode())));
+    }
 
 }

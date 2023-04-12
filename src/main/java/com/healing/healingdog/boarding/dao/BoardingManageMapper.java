@@ -2,6 +2,7 @@ package com.healing.healingdog.boarding.dao;
 
 import com.healing.healingdog.boarding.dto.BoardingBookingDTO;
 import com.healing.healingdog.boarding.dto.BoardingServiceDTO;
+import com.healing.healingdog.boarding.dto.ReviewSummaryDTO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -19,4 +20,6 @@ public interface BoardingManageMapper {
     int deleteBoardingInfo(int providerCode);
 
     List<BoardingBookingDTO> selectBoardingBooking(int providerCode);
+
+    ReviewSummaryDTO selectBoardingReviewSummary(int providerCode);
 }

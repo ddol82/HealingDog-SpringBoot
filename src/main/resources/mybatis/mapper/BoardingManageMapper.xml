@@ -89,6 +89,15 @@
         )
     </select>
 
+<!--  borading-manage/review  -->
+    <select id="selectBoardingReviewSummary" resultType="ReviewSummaryDTO">
+        SELECT
+            COUNT(reviews_code) as review_count,
+            ROUND(AVG(score) , 1) as score_average
+        FROM healingdog.reviews
+        WHERE provider_code = #{providerCode}
+    </select>
+
 
 
 </mapper>

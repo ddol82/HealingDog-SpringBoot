@@ -3,6 +3,7 @@ package com.healing.healingdog.boarding.service;
 import com.healing.healingdog.boarding.dao.BoardingManageMapper;
 import com.healing.healingdog.boarding.dto.BoardingBookingDTO;
 import com.healing.healingdog.boarding.dto.BoardingServiceDTO;
+import com.healing.healingdog.boarding.dto.ReviewSummaryDTO;
 import com.healing.healingdog.login.model.dto.UserDTO;
 import com.healing.healingdog.mypage.model.dao.MypetMapper;
 import com.healing.healingdog.mypage.model.dao.UserMapper;
@@ -66,11 +67,18 @@ public class BoardingManageService {
     public Object callSelectBoardingBookingMypetAPI(int userCode, int mypetCode) {
         log.info("REQUEST SERVICE callSelectBoardingBookingMypetAPI ={}","userCode="+userCode+", mypetCode="+mypetCode);
         HashMap<String, Object> result = new HashMap<>();
-        MypetDTO mypet = mypetMapper.selectMyPetDetailInfo(userCode, mypetCode);
+        MypetDTO mypet = mypetMapper.selectMyPetDetailInfo(mypetCode);
         UserDTO user = userMapper.selectMyUserInfo(userCode);
         result.put("mypet",mypet);
         result.put("user",user);
         log.info("result.toString() ={}", result);
         return result;
+    }
+
+    public Object selectBoardingReviewSummary(int providerCode) {
+        log.info("REQUEST SERVICE selectBoardingReviewSummary ={}",providerCode);
+        ReviewSummaryDTO result = boardingManageMapper.selectBoardingReviewSummary(providerCode);
+        return result;
+
     }
 }
