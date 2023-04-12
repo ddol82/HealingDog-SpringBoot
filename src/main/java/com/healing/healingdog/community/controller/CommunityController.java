@@ -69,6 +69,14 @@ public class CommunityController {
         log.info("[CommunityController] selectBoardHeadline 호출");
 
         List<BoardTableDTO> boardTableList = communityService.selectBoardHeadline();
+        for(int i = 0; i < boardTableList.size(); i++) {
+            boardTableList.get(i).setLike(
+                    communityService.selectAllLikeActivityDetail(
+                            boardTableList.get(i).getBoardCode()));
+            boardTableList.get(i).setCommentCount(
+                    communityService.selectAllCommentActivityDetail(
+                            boardTableList.get(i).getBoardCode()));
+        }
         log.debug("상단 고정의 게시글 " + boardTableList.size() + "개 조회 완료");
 
         List<ResultBoardDTO> boardList = communityService.boardDataConverter(boardTableList);
@@ -119,10 +127,21 @@ public class CommunityController {
             pageData = PageDataAutoFill.get(1, boardCountAll);
         }
 
-        CatAndPageDataForBoard detailData = new CatAndPageDataForBoard(pageData, boardType);
+        Map<String, Integer> boardListParams = new HashMap<>();
+        boardListParams.put("categoryCode", BoardType.getBoardType(categoryType).getCode());
+        boardListParams.put("limitParam", Math.min(pageData.getEndCursor() - pageData.getStartCursor() + 1, 10));
+        boardListParams.put("offsetParam", pageData.getStartCursor() - 1);
         List<BoardTableDTO> boardTableList = new ArrayList<>();
         if(boardCountAll > 0) {
-            boardTableList = communityService.selectBoardList(detailData);
+            boardTableList = communityService.selectBoardList(boardListParams);
+            for(int i = 0; i < boardTableList.size(); i++) {
+                boardTableList.get(i).setLike(
+                        communityService.selectAllLikeActivityDetail(
+                                boardTableList.get(i).getBoardCode()));
+                boardTableList.get(i).setCommentCount(
+                        communityService.selectAllCommentActivityDetail(
+                                boardTableList.get(i).getBoardCode()));
+            }
         }
         log.debug("boardTableList 조회 결과 : " + boardTableList.size());
 
@@ -162,6 +181,12 @@ public class CommunityController {
         log.info("[CommunityController] selectBoardDetail 호출");
 
         BoardTableDTO boardTableData = communityService.selectBoardDetail(boardCode);
+        boardTableData.setLike(
+                communityService.selectAllLikeActivityDetail(
+                        boardTableData.getBoardCode()));
+        boardTableData.setCommentCount(
+                communityService.selectAllCommentActivityDetail(
+                        boardTableData.getBoardCode()));
         log.info(boardTableData.toString());
         ResultBoardDTO resultBoard = communityService.boardDataDetailConverter(boardTableData);
         log.info(resultBoard.toString());
@@ -215,10 +240,11 @@ public class CommunityController {
      * @return 댓글 목록을 {@link List}<{@link CommentDTO}>타입으로 반환합니다.
      */
     @GetMapping("/lists/comments/{boardCode}")
-    public ResponseEntity<ResponseDTO> selectAllComments(@PathVariable int boardCode){
+    public ResponseEntity<ResponseDTO> selectAllComments(@AuthenticationPrincipal UserDTO user,
+                                                         @PathVariable int boardCode){
         log.info("[CommunityController] selectAllComments 호출");
 
-        List<CommentDTO> commentList = communityService.selectAllComments(boardCode);
+        List<CommentDTO> commentList = communityService.selectAllComments(user.getUserCode(), boardCode);
 
         String outputMessage = "댓글 반환";
         log.info("[CommunityController] selectAllComments 종료");
@@ -251,6 +277,7 @@ public class CommunityController {
         boardData = communityService.insertBoard(boardData);
         String resultBoard = boardData.getId() + "번 게시글이 등록되었습니다.";
         log.debug("[CommunityController] resultBoard 결과 출력 : {}", resultBoard);
+        log.info("[CommunityController] 이미지 작업 시작");
         List<String> resultImage = new ArrayList<>();
         if(boardData.getFileItems() != null && boardData.getFileItems().size() > 0) {
             resultImage = communityService.insertBoardImage(boardData);
@@ -274,7 +301,7 @@ public class CommunityController {
     public ResponseEntity<ResponseDTO> registComment(@AuthenticationPrincipal UserDTO user,
                                                      @PathVariable int boardCode,
                                                      @PathVariable int refCode,
-                                                     @RequestPart String content) {
+                                                     @RequestBody String content) {
         log.info("[CommunityController] registComment 호출");
 
         Map<String, String> commentParams = new HashMap<>();

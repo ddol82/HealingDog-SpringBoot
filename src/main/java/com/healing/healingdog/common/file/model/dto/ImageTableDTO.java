@@ -18,6 +18,7 @@ public class ImageTableDTO {
     private String thumbnail; // 썸네일 이름
     private String original; // 원본 이름
     private String preview; // 게시글 내 미리보기
+    private int size; // 사진 크기
 
     public ImageTableDTO() {
     }
@@ -95,5 +96,13 @@ public class ImageTableDTO {
 
     public void setPreview(String preview) {
         this.preview = preview;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
     }
 }

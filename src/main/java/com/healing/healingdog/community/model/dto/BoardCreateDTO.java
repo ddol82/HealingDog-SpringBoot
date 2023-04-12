@@ -16,5 +16,6 @@ public class BoardCreateDTO {
     private int boardCategoryCode;
     private String title;
     private String content;
+    private List<Integer> size;
     private List<ImageFormDTO> fileItems;
 }

@@ -14,15 +14,8 @@
              , bd.uptime
              , bd.view
              , bd.share
-             , COUNT(cj.user_code) AS comment_count
           FROM boards AS bd
-          LEFT JOIN (
-            SELECT cm.user_code
-              FROM comments AS cm
-          ) AS cj
-            ON cj.user_code = bd.user_code
          WHERE bd.important = 'O'
-         GROUP BY bd.board_code
     </select>
 
     <select id="selectBoardCountAll" parameterType="_int" resultType="_int">
@@ -35,7 +28,7 @@
         </if>
     </select>
 
-    <select id="selectBoardList" parameterType="CatAndPageDataForBoard" resultType="BoardTableDTO">
+    <select id="selectBoardList" parameterType="java.util.Map" resultType="BoardTableDTO">
         SELECT
                bs.board_code
              , bs.user_code
@@ -45,33 +38,13 @@
              , bs.uptime
              , bs.view
              , bs.share
-             , COUNT(cj.user_code) AS comment_count
-          FROM(
-                SELECT
-                       @rownum := @rownum+1 RN
-                     , bd.board_code
-                     , bd.user_code
-                     , bd.board_category_code
-                     , bd.title
-                     , bd.content
-                     , bd.uptime
-                     , bd.view
-                     , bd.share
-                FROM boards bd
-                WHERE(@rownum := 0) = 0
-                <if test="categoryCode != 5">
-                  AND bd.board_category_code = #{ categoryCode }
-                </if>
-                ORDER BY bd.board_code DESC
-              ) bs
-          LEFT JOIN (
-              SELECT cm.user_code
-              FROM comments AS cm
-          ) AS cj
-            ON cj.user_code = bs.user_code
-         WHERE bs.RN <![CDATA[>=]]> #{ start }
-           AND bs.RN <![CDATA[<=]]> #{ end }
-         GROUP BY bs.board_code
+          FROM boards bs
+         WHERE 1=1
+        <if test="categoryCode != 5">
+           AND bs.board_category_code = #{ categoryCode }
+        </if>
+         ORDER BY bs.uptime DESC
+         LIMIT #{ limitParam } OFFSET #{ offsetParam }
     </select>
 
     <select id="selectBoardImageCount" parameterType="_int" resultType="_int">
@@ -136,10 +109,12 @@
         SELECT cm.comment_code
              , cm.board_code
              , cm.user_code
+             , us.nickname AS user_name
              , cm.ref
              , cm.uptime
              , cm.content
           FROM comments AS cm
+          JOIN users AS us ON us.user_code = cm.user_code
          WHERE cm.board_code = #{ boardCode }
     </select>
 
