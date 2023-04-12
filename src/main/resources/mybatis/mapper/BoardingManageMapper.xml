@@ -95,7 +95,9 @@
             COUNT(reviews_code) as review_count,
             ROUND(AVG(score) , 1) as score_average
         FROM healingdog.reviews
-        WHERE provider_code = #{providerCode}
+        WHERE
+            provider_code = #{providerCode}
+            AND service_category_code = 5
     </select>
 
 <!--  borading-manage/income  -->
