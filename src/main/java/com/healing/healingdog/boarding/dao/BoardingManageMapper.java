@@ -5,6 +5,7 @@ import com.healing.healingdog.boarding.dto.BoardingServiceDTO;
 import com.healing.healingdog.boarding.dto.ReviewSummaryDTO;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Mapper
@@ -22,4 +23,8 @@ public interface BoardingManageMapper {
     List<BoardingBookingDTO> selectBoardingBooking(int providerCode);
 
     ReviewSummaryDTO selectBoardingReviewSummary(int providerCode);
+
+    String selectBoardingIncomeByMonth(int providerCode, Timestamp selectedDate);
+
+    String selectBoardingIncomeByYear(int providerCode, Timestamp selectedDate);
 }

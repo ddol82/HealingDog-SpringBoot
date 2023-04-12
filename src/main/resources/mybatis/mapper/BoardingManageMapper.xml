@@ -98,6 +98,26 @@
         WHERE provider_code = #{providerCode}
     </select>
 
+<!--  borading-manage/income  -->
+    <select id="selectBoardingIncomeByMonth" resultType="String">
+        SELECT
+            SUM(payment) AS monthIncome
+        FROM healingdog.boarding_bookings
+        WHERE
+            MONTH(check_in) = MONTH(#{selectedDate})
+            AND YEAR(check_in) = YEAR(#{selectedDate})
+            AND boarding_service_code = (SELECT boarding_service_code FROM boarding_services WHERE provider_code = #{providerCode})
+    </select>
+
+    <select id="selectBoardingIncomeByYear"  resultType="String">
+        SELECT
+            SUM(payment) AS yearIncome
+        FROM healingdog.boarding_bookings
+        WHERE
+            YEAR(check_in) = YEAR(#{selectedDate})
+            AND boarding_service_code = (SELECT boarding_service_code FROM boarding_services WHERE provider_code = #{providerCode})
+    </select>
+
 
 
 </mapper>

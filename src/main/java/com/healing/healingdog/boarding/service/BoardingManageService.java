@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 
@@ -80,5 +81,19 @@ public class BoardingManageService {
         ReviewSummaryDTO result = boardingManageMapper.selectBoardingReviewSummary(providerCode);
         return result;
 
+    }
+
+    public Object selectBoardingIncome(int providerCode, Timestamp selectedDate) {
+        log.info("REQUEST SERVICE selectBoardingIncome providerCode={}",providerCode);
+        log.info("REQUEST SERVICE selectBoardingIncome selectedDate={}",selectedDate);
+        HashMap<String, Object> result = new HashMap<>();
+        String monthIncome = boardingManageMapper.selectBoardingIncomeByMonth(providerCode, selectedDate);
+        if (monthIncome == null) monthIncome = "0";
+        String yearIncome = boardingManageMapper.selectBoardingIncomeByYear(providerCode, selectedDate);
+        if (yearIncome == null) yearIncome = "0";
+
+        result.put("monthIncome",monthIncome);
+        result.put("yearIncome",yearIncome);
+        return result;
     }
 }

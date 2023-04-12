@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 
 @Slf4j
@@ -73,6 +74,13 @@ public class BoardingManageController {
     public ResponseEntity<ResponseDTO> selectBoardingReviewSummary(@AuthenticationPrincipal ProviderDTO provider) {
         log.info("REQUEST API selectBoardingBooking ={}",provider);
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "위탁돌봄리뷰요약 조회 성공", boardingManageService.selectBoardingReviewSummary(provider.getProviderCode())));
+    }
+
+    @PostMapping("/income")
+    public ResponseEntity<ResponseDTO> selectBoardingIncome(@AuthenticationPrincipal ProviderDTO provider, @RequestBody HashMap<String, String> input) {
+        log.info("REQUEST API selectBoardingIncome provider={}",provider);
+        log.info("REQUEST API selectBoardingIncome input={}",input);
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "위탁돌봄수익 조회 성공", boardingManageService.selectBoardingIncome(provider.getProviderCode(), Timestamp.valueOf(input.get("selectedDate")) ) ) );
     }
 
 }
