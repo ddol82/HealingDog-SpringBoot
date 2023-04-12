@@ -16,12 +16,13 @@ public class ProviderDTO implements UserDetails {
     private String trainersApproval;
     private String kindergardenApproval;
     private String boardingApproval;
+    private String blacklist;
     private String role;
 
     public ProviderDTO() {
     }
 
-    public ProviderDTO(int providerCode, String name, String email, String providerPassword, String phone, String beautyApproval, String petsitterApproval, String trainersApproval, String kindergardenApproval, String boardingApproval, String role, Collection<? extends GrantedAuthority> authorities) {
+    public ProviderDTO(int providerCode, String name, String email, String providerPassword, String phone, String beautyApproval, String petsitterApproval, String trainersApproval, String kindergardenApproval, String boardingApproval,String blacklist, String role, Collection<? extends GrantedAuthority> authorities) {
         this.providerCode = providerCode;
         this.name = name;
         this.email = email;
@@ -32,6 +33,7 @@ public class ProviderDTO implements UserDetails {
         this.trainersApproval = trainersApproval;
         this.kindergardenApproval = kindergardenApproval;
         this.boardingApproval = boardingApproval;
+        this.blacklist = blacklist;
         this.role = role;
         this.authorities = authorities;
     }
@@ -116,6 +118,14 @@ public class ProviderDTO implements UserDetails {
         this.boardingApproval = boardingApproval;
     }
 
+    public String getBlacklist() {
+        return blacklist;
+    }
+
+    public void setBlacklist(String blacklist) {
+        this.blacklist = blacklist;
+    }
+
     public String getRole() {
         return role;
     }
@@ -167,7 +177,6 @@ public class ProviderDTO implements UserDetails {
         return true;
     }
 
-
     @Override
     public String toString() {
         return "ProviderDTO{" +
@@ -176,11 +185,12 @@ public class ProviderDTO implements UserDetails {
                 ", email='" + email + '\'' +
                 ", providerPassword='" + providerPassword + '\'' +
                 ", phone='" + phone + '\'' +
-                ", beautyApproval=" + beautyApproval +
-                ", petsitterApproval=" + petsitterApproval +
-                ", trainersApproval=" + trainersApproval +
-                ", kindergardenApproval=" + kindergardenApproval +
-                ", boardingApproval=" + boardingApproval +
+                ", beautyApproval='" + beautyApproval + '\'' +
+                ", petsitterApproval='" + petsitterApproval + '\'' +
+                ", trainersApproval='" + trainersApproval + '\'' +
+                ", kindergardenApproval='" + kindergardenApproval + '\'' +
+                ", boardingApproval='" + boardingApproval + '\'' +
+                ", blacklist='" + blacklist + '\'' +
                 ", role='" + role + '\'' +
                 ", authorities=" + authorities +
                 '}';

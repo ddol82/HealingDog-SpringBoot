@@ -36,13 +36,13 @@ public class MypetService {
     /**
      *Service
      * MyPet 사용자의 마이펫을 상세 조회 합니다
-     * @param userCode,mypetCode 사용자코드, 마이펫코드
+     * @param mypetCode 마이펫코드
      * @return myPet 마이펫리스트를 반환한다
      */
-    public MypetDTO selectMyPetDetailInfo(int userCode, int mypetCode) {
+    public MypetDTO selectMyPetDetailInfo(int mypetCode) {
         log.info("[MypetService] selectMyPetDetailInfo Start ==============================");
 
-        MypetDTO myPet = mypetMapper.selectMyPetDetailInfo(userCode,mypetCode);
+        MypetDTO myPet = mypetMapper.selectMyPetDetailInfo(mypetCode);
         log.info("[MypetService] {}", myPet);
         log.info("[MypetService] selectMyPetDetailInfo End ==============================");
 
@@ -55,12 +55,11 @@ public class MypetService {
      * @param mypetDTO,userCode 마이펫DTO,사용자코드
      * @return result 를 반환한다
      */
-    public int insertMyPetInfo(MypetDTO mypetDTO, int userCode) {
+    public int insertMyPetInfo(MypetDTO mypetDTO) {
         log.info("[MypetService] insertMyPetInfo Start ==============================");
         log.info("[MypetService] {}", mypetDTO);
-        log.info("[MypetService] {}", userCode);
         int result = 0 ;
-        result = mypetMapper.insertMyPetInfo(mypetDTO,userCode);
+        result = mypetMapper.insertMyPetInfo(mypetDTO);
         log.info("[MypetService] insertMyPetInfo End ==============================");
 
         return result;
@@ -72,12 +71,11 @@ public class MypetService {
      * @param mypetDTO,mypetCode 마이펫DTO, 마이펫코드
      * @return mypetList 마이펫리스트를 반환한다
      */
-    public int updateMyPetInfo(MypetDTO mypetDTO, int mypetCode) {
+    public int updateMyPetInfo(MypetDTO mypetDTO) {
         log.info("[MypetService] updateMyPetInfo Start ==============================");
         log.info("[MypetService] {}", mypetDTO);
-        log.info("[MypetService] {}", mypetCode);
         int result = 0 ;
-        result = mypetMapper.updateMyPetInfo(mypetDTO,mypetCode);
+        result = mypetMapper.updateMyPetInfo(mypetDTO);
         log.info("[MypetService] updateMyPetInfo End ==============================");
 
         return result;
@@ -86,12 +84,12 @@ public class MypetService {
     /**
      *Service
      * MyPet 사용자의 마이펫을 삭제 합니다
-     * @param mypetCode,userCode 마이펫코드, 사용자코드
+     * @param myPet 마이펫
      * @return mypetList 마이펫리스트를 반환한다
      */
-    public int deleteMyPetInfo(int mypetCode, int userCode) {
+    public int deleteMyPetInfo(MypetDTO myPet) {
 
-        return mypetMapper.deleteMyPetInfo(mypetCode,userCode);
+        return mypetMapper.deleteMyPetInfo(myPet);
     }
 
     /**
@@ -116,12 +114,12 @@ public class MypetService {
      * @param checklistDTO,mypetCode  체크리스트DTO, 마이펫코드
      * @return  result 를 반환한다
      */
-    public int insertMyPetCheckList(ChecklistDTO checklistDTO, int mypetCode) {
+    public int insertMyPetCheckList(ChecklistDTO checklistDTO) {
         log.info("[MypetService] insertMyPetCheckList Start ==============================");
         log.info("[MypetService] {}", checklistDTO);
-        log.info("[MypetService] {}", mypetCode);
+
         int result = 0 ;
-        result = mypetMapper.insertMyPetCheckList(checklistDTO,mypetCode);
+        result = mypetMapper.insertMyPetCheckList(checklistDTO);
         log.info("[MypetService] insertMyPetCheckList End ==============================");
 
         return result;
@@ -133,14 +131,30 @@ public class MypetService {
      * @param checklistDTO,mypetCode 체크리스트DTO, 마이펫코드
      * @return result 를 반환한다
      */
-    public int updateMyPetCheckList(ChecklistDTO checklistDTO, int mypetCode) {
+    public int updateMyPetCheckList(ChecklistDTO checklistDTO) {
         log.info("[MypetService] updateMyPetCheckList Start ==============================");
         log.info("[MypetService] {}", checklistDTO);
-        log.info("[MypetService] {}", mypetCode);
+
         int result = 0 ;
-        result = mypetMapper.updateMyPetCheckList(checklistDTO,mypetCode);
+        result = mypetMapper.updateMyPetCheckList(checklistDTO);
         log.info("[MypetService] updateMyPetCheckList End ==============================");
 
         return result;
+    }
+
+    /**
+     *Service
+     * MyPet 사용자의 마이펫을 조회 합니다
+     * @param mypetCode 마이펫코드
+     * @return myPet 마이펫리스트를 반환한다
+     */
+    public MypetDTO selectMyPetInfo(int mypetCode) {
+        log.info("[MypetService] selectMyPetInfo Start ==============================");
+
+        MypetDTO myPet = mypetMapper.selectMyPetInfo(mypetCode);
+        log.info("[MypetService] {}", myPet);
+        log.info("[MypetService] selectMyPetInfo End ==============================");
+
+        return myPet;
     }
 }

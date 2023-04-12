@@ -8,6 +8,7 @@
         INSERT INTO beauty_reservation_lists
         (
             beauty_reservation_list_code,
+            mypet_code,
             beauty_code,
             user_code,
             date,
@@ -15,9 +16,10 @@
         )
         VALUES (
                 null,
+                #{mypetCode},
                 #{beautyCode},
                 #{userCode},
-                NOW(),
+                #{date},
                 NOW()
                )
     </insert>

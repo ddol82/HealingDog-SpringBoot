@@ -5,19 +5,68 @@ import org.springframework.web.multipart.MultipartFile;
 /**
  * {@code image}를 <b>POST</b>방식의 Form-data로 받기 위한 DTO입니다.<br>
  * usages 추적을 위해 {@link lombok.Lombok @lombok}을 사용하지 않았습니다.
- * 한 장의 경우 {@link ImageForm}로 사용하고,<br>
- * 여러 장의 경우 {@link java.util.List List}<{@link ImageForm}> 형태로 사용합니다.<br>
- * form-data의 형식을 맞춰주세요.<br>
- * <ul>
- *     <li>usage : 구분을 위한 1글자의 {@link String}입니다.</li>
- *     <li>imageFile : {@link MultipartFile}타입의 이미지 파일입니다.</li>
- *     <li>hasThumbnail : {@link String},
- *     썸네일 포함 시 "O", 미포함 시 "X"입니다.</li>
- * </ul>
- * <hr>
+ * 한 장의 경우 {@link ImageFormDTO}로 사용하고,<br>
+ * 여러 장의 경우 {@link java.util.List List}<{@link ImageFormDTO}> 형태로 사용합니다.<br>
+ *
+ * @author 이진녕
+ * @since 1.0
+ * @version 1.0
+ */
+public class ImageFormDTO {
+    private String usage; //첨부 위치
+    private MultipartFile imageFile; // 파일
+    private String hasThumbnail; // 썸네일
+
+    public ImageFormDTO(String usage, MultipartFile imageFile, String hasThumbnail) {
+        this.usage = usage;
+        this.imageFile = imageFile;
+        this.hasThumbnail = hasThumbnail;
+    }
+
+    public ImageFormDTO() {}
+
+    public String getUsage() {
+        return usage;
+    }
+
+    public void setUsage(String usage) {
+        this.usage = usage;
+    }
+
+    public MultipartFile getImageFile() {
+        return imageFile;
+    }
+
+    public void setImageFile(MultipartFile imageFile) {
+        this.imageFile = imageFile;
+    }
+
+    public String getHasThumbnail() {
+        return hasThumbnail;
+    }
+
+    public void setHasThumbnail(String hasThumbnail) {
+        this.hasThumbnail = hasThumbnail;
+    }
+
+    @Override
+    public String toString() {
+        return "ImageFormDTO{" +
+                "usage='" + usage + '\'' +
+                ", imageFile=" + imageFile +
+                ", hasThumbnail='" + hasThumbnail + '\'' +
+                '}';
+    }
+}
+
+/*
+ * Postman의 한계로 작성법이 달라져
+ * 이전 작성법에 대한 저장 주석입니다...
+ *
+
  * <table border="1">
  *     <tr>
- *         <td rowspan="4">{@link ImageForm 단일} 사용 - </td>
+ *         <td rowspan="4">{@link ImageFormDTO 단일} 사용 - </td>
  *         <td>Key</td>
  *         <td>Value</td>
  *     </tr>
@@ -74,7 +123,7 @@ import org.springframework.web.multipart.MultipartFile;
  * {@code public class 이미지_쓰는_DTO { //예시 코드
  *     private String content;
  *     ...
- *     private List<ImageForm> files;
+ *     private List<ImageFormDTO> files;
  * }}
  * </pre>
  * <table>
@@ -115,52 +164,4 @@ import org.springframework.web.multipart.MultipartFile;
  *         <td>X</td>
  *     </tr>
  * </table>
- *
- * @author 이진녕
- * @since 1.0
- * @version 1.0
  */
-public class ImageForm {
-    private String usage; //첨부 위치
-    private MultipartFile imageFile; // 파일
-    private String hasThumbnail; // 썸네일
-
-    public ImageForm(String usage, MultipartFile imageFile, String hasThumbnail) {
-        this.usage = usage;
-        this.imageFile = imageFile;
-        this.hasThumbnail = hasThumbnail;
-    }
-
-    public String getUsage() {
-        return usage;
-    }
-
-    public void setUsage(String usage) {
-        this.usage = usage;
-    }
-
-    public MultipartFile getImageFile() {
-        return imageFile;
-    }
-
-    public void setImageFile(MultipartFile imageFile) {
-        this.imageFile = imageFile;
-    }
-
-    public String getHasThumbnail() {
-        return hasThumbnail;
-    }
-
-    public void setHasThumbnail(String hasThumbnail) {
-        this.hasThumbnail = hasThumbnail;
-    }
-
-    @Override
-    public String toString() {
-        return "ImageForm{" +
-                "usage='" + usage + '\'' +
-                ", imageFile=" + imageFile +
-                ", hasThumbnail='" + hasThumbnail + '\'' +
-                '}';
-    }
-}

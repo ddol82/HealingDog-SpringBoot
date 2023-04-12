@@ -4,11 +4,15 @@ import com.healing.healingdog.beauty.model.dao.BeautyManageMapper;
 import com.healing.healingdog.beauty.model.dto.BeautyDTO;
 import com.healing.healingdog.beauty.model.dto.CommonDTO;
 import com.healing.healingdog.common.file.model.dto.CertificatesDTO;
+import com.healing.healingdog.login.model.dto.ProviderDTO;
+import com.healing.healingdog.review.dto.ReviewDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -23,12 +27,13 @@ public class BeautyManageService {
     /**
      *  미용실 정보조회
      * */
-    public Object selectBeautyInfo(String providerCode){
+    public Object selectBeautyInfo(int providerCode){
         log.info("REQUEST SERVICE selectBeautyInfo = {}", providerCode);
         BeautyDTO result = beautyManageMapper.selectBeautyInfo(providerCode);
         log.info("result = {}", result.toString());
         return result;
     }
+
 
     /**
      * 미용실 운영시간 조회
@@ -43,10 +48,31 @@ public class BeautyManageService {
     /**
      * 미용실 신청내역 조회
      */
-    public BeautyDTO selectBeautyReservation(HashMap<String, String> input) {
-        log.info("REQUEST SERVICE selectBeautyReservation = {}", input);
-        BeautyDTO result = beautyManageMapper.selectBeautyReservation(input);
+    public List<BeautyDTO> selectBeautyReservation(int providerCode) {
+        log.info("REQUEST SERVICE selectBeautyReservation = {}", providerCode);
+        List<BeautyDTO> result = beautyManageMapper.selectBeautyReservation(providerCode);
         log.info("result = {}", result.toString());
+        return result;
+    }
+
+    /**
+     * 미용실 리뷰 전체 조회
+     */
+    public List<ReviewDTO> selectReviewList(int providerCode) {
+        log.info("REQUEST SERVICE selectReviewList ={}",providerCode);
+        List<ReviewDTO> resultList = beautyManageMapper.selectReviewList(providerCode);
+        log.info("result.toString() ={}", resultList);
+        return resultList;
+    }
+
+
+    /**
+     * 미용실 최신 리뷰 조회
+     */
+    public ReviewDTO selectLastReview(int providerCode , int num) {
+        log.info("REQUEST SERVICE selectLastReview = {} & {}", providerCode, num);
+        ReviewDTO result = beautyManageMapper.selectLastReview(providerCode, num);
+        log.info("result.toString() ={}", result);
         return result;
     }
 
@@ -148,6 +174,5 @@ public class BeautyManageService {
         log.info("result.toString() ={}", result +"개 삭제 완료.");
         return result;
     }
-
 
 }

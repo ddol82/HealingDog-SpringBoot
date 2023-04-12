@@ -40,3 +40,4 @@ out/
 application-security.yml
 elk-spring.log
 application-oauth2.yml
+application-sms.yml
