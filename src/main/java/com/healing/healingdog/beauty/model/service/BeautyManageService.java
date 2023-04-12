@@ -31,6 +31,10 @@ public class BeautyManageService {
         log.info("REQUEST SERVICE selectBeautyInfo = {}", providerCode);
         BeautyDTO result = beautyManageMapper.selectBeautyInfo(providerCode);
         log.info("result = {}", result.toString());
+        String[] splitAddress = result.getAddress().split("\\^");
+        result.setZoneCode(splitAddress[0]);
+        result.setAddress(splitAddress[1]);
+        result.setAddressDetail(splitAddress[2]);
         return result;
     }
 
@@ -40,7 +44,16 @@ public class BeautyManageService {
      */
     public Object selectBeautyTimes(int providerCode) {
         log.info("REQUEST SERVICE selectBeautyTimes = {}", providerCode);
-        CommonDTO result = beautyManageMapper.selectBeautyTimes(providerCode);
+        BeautyDTO result = beautyManageMapper.selectBeautyTimes(providerCode);
+        log.info("result = {}", result.toString());
+        return result;
+    }
+    /**
+     * 미용실 가격 조회
+     */
+    public List<BeautyDTO> selectBeautyPrice(int providerCode) {
+        log.info("REQUEST SERVICE selectBeautyPrice = {}", providerCode);
+        List<BeautyDTO> result = beautyManageMapper.selectBeautyPrice(providerCode);
         log.info("result = {}", result.toString());
         return result;
     }
@@ -52,6 +65,15 @@ public class BeautyManageService {
         log.info("REQUEST SERVICE selectBeautyReservation = {}", providerCode);
         List<BeautyDTO> result = beautyManageMapper.selectBeautyReservation(providerCode);
         log.info("result = {}", result.toString());
+        return result;
+    }
+    /**
+     * 미용실 신청내역 상세조회
+     */
+    public BeautyDTO selectBeautyReservationOne(int beautyReservationListCode) {
+        log.info("REQUEST SERVICE selectBeautyReservationOne = {}", beautyReservationListCode);
+        BeautyDTO result = beautyManageMapper.selectBeautyReservationOne(beautyReservationListCode);
+        log.info("result = {}", result);
         return result;
     }
 
@@ -108,8 +130,8 @@ public class BeautyManageService {
     /**
      *  미용실 정보 수정
      * */
-    public int updateBeautyInfo(BeautyDTO beautyDTO) {
-        log.info("REQUEST SERVICE updateBeautyInfo = {}",beautyDTO);
+    public int updateBeautyInfo( BeautyDTO beautyDTO) {
+        log.info("REQUEST SERVICE updateBeautyInfo = {}", beautyDTO);
         int result = beautyManageMapper.updateBeautyInfo(beautyDTO);
         log.info("result,toString() ={}", result +"개 수정 완료");
         return result;
@@ -174,5 +196,14 @@ public class BeautyManageService {
         log.info("result.toString() ={}", result +"개 삭제 완료.");
         return result;
     }
+
+
+    public int deleteBeautyReservationOne(int mypetCode) {
+        log.info("REQUEST SERVICE deleteBeautyReservationOne = {}", mypetCode);
+        int result = beautyManageMapper.deleteBeautyReservationOne(mypetCode);
+        log.info("result.toString() ={}", result +"개 삭제 완료.");
+        return result;
+    }
+
 
 }

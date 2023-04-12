@@ -58,9 +58,17 @@ public class BeautyDTO {
      * */
     private String web;
     /**
+     * 우편번호
+     * */
+    private String zoneCode;
+    /**
      * 주소
      * */
     private String address;
+    /**
+     * 상세주소
+     * */
+    private String addressDetail;
     /**
      * 소개
      * */
@@ -84,11 +92,11 @@ public class BeautyDTO {
     /**
      * 분류
      * */
-    private String category;
+    private String size;
     /**
      * 컷트명
      * */
-    private String cutName;
+    private String cut;
     /**
      * 가격
      * */
@@ -146,4 +154,36 @@ public class BeautyDTO {
     private String neutered;
     private String animalHospital;
     private String referenceInfo;
+
+    /**
+     * 서비스 카테고리 코드
+     * */
+    private int serviceCategoryCode;
+
+    /**
+     * 일정 제목
+     * */
+    private String title;
+    /**
+     * 일정 본문
+     * */
+    private String text;
+    /**
+     * 시작시간
+     * */
+    private String startTime;
+    /**
+     * 종료시간
+     * */
+    private String endTime;
+
+    /**
+     * 운영시간 요일
+     * */
+    private String day;
+
+    /**
+     * 자격명
+     * */
+    private String certificateName;
 }

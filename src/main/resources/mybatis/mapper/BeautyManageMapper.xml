@@ -9,17 +9,56 @@
 <!--  미용실 정보조회  -->
     <select id="selectBeautyInfo" resultType="BeautyDTO">
         SELECT
-            *
-        FROM beauties
+            B.beauty_code,
+            B.provider_code,
+            B.name,
+            B.phone,
+            B.web,
+            B.address,
+            B.intro,
+            B.blacklist,
+            B.large,
+            B.medium,
+            B.small,
+            B.open_beauty,
+            B.spa,
+            B.massage,
+            B.self_beauty,
+            B.hoteling,
+            B.playground,
+            B.free_parking,
+            B.wi_fi,
+            T.time_code,
+            T.service_category_code,
+            T.day,
+            T.start_time,
+            T.end_time,
+            C.name AS certificate_name,
+            C.text
+        FROM beauties B
+        JOIN times T
+        ON B.provider_code=T.provider_code
+        JOIN certificates C
+             ON B.provider_code=C.provider_code
+
         WHERE
-            provider_code=#{providerCode}
+            B.provider_code=#{providerCode}
     </select>
 <!--  미용실 운영시간 조회  -->
-    <select id="selectBeautyTimes" resultType="CommonDTO">
+    <select id="selectBeautyTimes" resultType="BeautyDTO">
         SELECT *
         FROM times
         WHERE provider_code = #{providerCode}
           AND service_category_code = 4
+    </select>
+<!--  미용실 가격조회 성공  -->
+    <select id="selectBeautyPrice" resultType="BeautyDTO">
+        SELECT *
+        FROM beauty_prices
+        WHERE beauty_code = (SELECT beauty_code
+                             FROM (SELECT beauty_code
+                                   FROM beauties
+                                   WHERE provider_code = #{providerCode}) tmp)
     </select>
 <!--  미용실 신청내역 조회  -->
     <select id="selectBeautyReservation"  resultType="BeautyDTO">
@@ -30,6 +69,7 @@
              , B.date
              , B.time
              , B.reservation
+             , B.beauty_prices_code
              , M.user_code
              , M.name
              , M.gender
@@ -47,6 +87,35 @@
                                    FROM beauties
                                    WHERE provider_code = #{providerCode}) tmp)
     </select>
+    <select id="selectBeautyReservationOne" resultType="BeautyDTO">
+        SELECT B.beauty_reservation_list_code
+             , B.mypet_code
+             , B.beauty_code
+             , B.user_code
+             , B.date
+             , B.time
+             , B.reservation
+             , B.beauty_prices_code
+             , M.user_code
+             , M.name
+             , M.gender
+             , M.variety
+             , M.birthday
+             , M.weight
+             , M.neutered
+             , M.animal_hospital
+             , M.reference_info
+             , P.size
+             , P.cut
+             , P.price
+        FROM beauty_reservation_lists B
+                 JOIN mypets M
+                      ON B.mypet_code = M.mypet_code
+                 JOIN beauty_prices P
+                      ON B.beauty_prices_code = P.beauty_price_code
+        WHERE B.beauty_reservation_list_code = #{beautyReservationListCode}
+    </select>
+
     <select id="selectReviewList" resultType="ReviewDTO">
         SELECT
             R.reviews_code,
@@ -219,7 +288,10 @@
         AND time_code = #{timeCode}
     </delete>
 
-
+    <delete id="deleteBeautyReservationOne">
+        DELETE FROM beauty_reservation_lists
+        WHERE mypet_code = #{mypetCode}
+    </delete>
 
 
 </mapper>
