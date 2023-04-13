@@ -198,6 +198,14 @@ public interface CommunityMapper {
     int deleteAllLikeChange(int boardCode);
 
     /**
+     * 게시글의 사진 일부를 삭제합니다.
+     *
+     * @param unusedParams 대상 게시글 코드와 삭제 대상입니다.
+     * @return 삭제된 수량을 반환합니다.
+     */
+    int deleteBoardTableWithUsage(Map<String, String> unusedParams);
+
+    /**
      * 게시글 조건에 맞는 댓글들을 모두 조회합니다.
      *
      * @param boardCode 대상 게시글 코드입니다.
@@ -221,4 +229,19 @@ public interface CommunityMapper {
      * @return 사진 용량 정보를 반환합니다.
      */
     List<Integer> selectBoardSizeCount(int boardCode);
+
+    /**
+     * 사진의 위치를 변경합니다.
+     *
+     * @param moveParams 변경 전 정보와 변경 후 정보가 담겨있습니다.
+     * @return 성공 시 1을 반환합니다.
+     */
+    int updateBoardImageUsage(Map<String, String> moveParams);
+
+    /**
+     * 게시글을 수정합니다.
+     *
+     * @param boardUpdate 대상 게시글 코드입니다.
+     */
+    void updateBoard(BoardCreateDTO boardUpdate);
 }

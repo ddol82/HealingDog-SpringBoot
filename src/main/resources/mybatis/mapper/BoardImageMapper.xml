@@ -20,6 +20,7 @@
                I.original
           FROM board_images AS I
          WHERE I.board_code = #{ boardCode }
+         ORDER BY I.usage ASC
     </select>
 
     <select id="selectBoardThumbnailUrl" parameterType="_int" resultType="string">
@@ -27,7 +28,7 @@
                I.thumbnail
           FROM board_images AS I
          WHERE I.board_code = #{ code }
-           AND I.thumbnail IS NOT NULL
+           AND I.usage = 0
     </select>
 
     <select id="selectBoardPreviewUrl" parameterType="_int" resultType="string">
@@ -35,6 +36,7 @@
                I.preview
           FROM board_images AS I
          WHERE I.board_code = #{ boardCode }
+         ORDER BY I.usage ASC
     </select>
 
     <select id="selectBoardSizeCount" parameterType="_int" resultType="_int">
@@ -66,9 +68,30 @@
         )
     </insert>
 
+    <update id="updateBoardImageUsage" parameterType="java.util.Map">
+        UPDATE board_images
+           SET `usage` = #{ afterIdx }
+         WHERE board_image_code = (
+            SELECT board_image_code
+            FROM (
+                     SELECT board_image_code
+                     FROM board_images
+                     WHERE board_code = #{ boardCode }
+                       AND `usage` = #{ beforeIdx }
+                 )tmp
+        );
+    </update>
+
     <delete id="deleteBoardTable" parameterType="_int">
         DELETE
           FROM board_images
          WHERE board_code = #{ boardCode }
+    </delete>
+
+    <delete id="deleteBoardTableWithUsage" parameterType="java.util.Map">
+        DELETE
+          FROM board_images
+         WHERE board_code = #{ boardCode }
+           AND `usage` = #{ usage }
     </delete>
 </mapper>
