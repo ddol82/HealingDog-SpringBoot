@@ -69,7 +69,7 @@ public class UserService {
         int result = 0 ;
         userDTO.setUserCode(userCode);
 
-        userDTO.setUserPassword(passwordEncoder.encode(userDTO.getUserPassword()));
+//        userDTO.setUserPassword(passwordEncoder.encode(userDTO.getUserPassword()));
 
         log.info("[UserService] {}", userDTO);
 
