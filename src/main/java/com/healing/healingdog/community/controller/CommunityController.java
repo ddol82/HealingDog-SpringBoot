@@ -252,6 +252,14 @@ public class CommunityController {
                 .body(new ResponseDTO(HttpStatus.OK, outputMessage, commentList));
     }
 
+    /**
+     * 게시글을 작성합니다.
+     *
+     * @param user 현재 접속한 사용자 정보입니다.
+     * @param boardData 게시글의 정보가 일부 담겨있습니다.
+     * @param images 폼 데이터로 받은 사진 파일의 {@link List}입니다.
+     * @return 삽입 결과를 반환합니다.
+     */
     @PostMapping("/boards/write/confirm")
     public ResponseEntity<ResponseDTO> insertBoard(
             @AuthenticationPrincipal UserDTO user,
@@ -267,9 +275,9 @@ public class CommunityController {
             }
             for(int i = 0; i < imageDetail.size(); i++) {
                 imageDetail.get(i).setImageFile(images.get(i));
-                imageDetail.get(i).setHasThumbnail("X");
+                //imageDetail.get(i).setHasThumbnail("X");
             }
-            imageDetail.get(0).setHasThumbnail("O");
+            //imageDetail.get(0).setHasThumbnail("O");
         }
         boardData.setUserCode(user.getUserCode());
         boardData.setFileItems(imageDetail);
@@ -380,6 +388,130 @@ public class CommunityController {
         log.info("[CommunityController] shareIncrement 종료");
         return ResponseEntity.ok()
                 .body(new ResponseDTO(HttpStatus.OK, outputMessage, result));
+    }
+
+    /**
+     * 게시글의 정보를 수정합니다.<br>
+     * 사진의 경우, 다음 절차를 수행하여 파일과 DB를 저장합니다.<br>
+     * <ul>
+     *     <li>변경 사항이 없는 경우 건너뜁니다.</li>
+     *     <li>새로 첨부된 경우 사진 파일 및 DB의 추가를 진행합니다.</li>
+     *     <li>위치가 변경된 경우 DB의 수정이 진행됩니다.</li>
+     *     <li>기존 사진이 삭제된 경우 파일을 삭제합니다.</li>
+     * </ul>
+     *
+     * @param user 현재 접속한 유저 정보입니다.
+     * @param boardData 카테고리, 제목, 본문, 게시글id, 사진(용량/위지/기존여부)정보
+     *                  {@link List}를 입력받습니다.
+     * @param images 파일 정보를 입력받습니다.
+     * @return 게시글 수정 수행 결과를 반환합니다.
+     */
+    @PutMapping("/boards/update/confirm/{boardCode}")
+    public ResponseEntity<ResponseDTO> updateBoard(
+            @AuthenticationPrincipal UserDTO user,
+            @RequestPart BoardUpdateDTO boardData,
+            @RequestPart(required = false) List<MultipartFile> images) {
+        log.info("[CommunityController] updateBoard 호출");
+
+        boardData.setUserCode(user.getUserCode());
+        log.debug("[CommunityController] boardData : {}", boardData);
+        //ex: BoardUpdateDTO(id=null, boardCode=110, userCode=0, boardCategoryCode=8, title=udpat3e, content=updaete, beforeContains=5,
+        //    position=[0, 2, 1, 3, -1, 4], size=[7796963, 2915658, 2386155, 1660972, 1515927, 3192464], fileItems=null)
+        //게시글 반영
+        BoardCreateDTO boardUpdate = new BoardCreateDTO();
+        boardUpdate.setBoardCode(boardData.getBoardCode());
+        boardUpdate.setBoardCategoryCode(boardData.getBoardCategoryCode());
+        boardUpdate.setTitle(boardData.getTitle());
+        boardUpdate.setContent(boardData.getContent());
+        communityService.updateBoard(boardUpdate);
+
+        //사진 처리
+        int imageAmount = boardData.getPosition().size();
+        int imageCursor = 0;
+        //처리 후 최종적으로 사용하지 않는 사진을 비트마스크로 구분
+        int positionBit = (1<<boardData.getBeforeContains()) - 1;
+        //결과변수 정의
+        int resultAdd = 0;
+        List<String> resultAddedImageName = new ArrayList<>();
+        int resultRemove = 0;
+        int resultModify = 0;
+        for(int i = 0; i < imageAmount; i++) {
+            //변경 사항이 없는 사진 유지
+            if(boardData.getPosition().get(i) == i) {
+                positionBit ^= 1<<i;
+                log.info("[CommunityController] " + i + "번째 요청을 건너뛰었습니다.");
+                continue;
+            }
+            //새로 첨부된 사진 추가
+            if(boardData.getPosition().get(i) == -1) {
+                log.info("[CommunityController] " + i + "번째 요청으로 사진을 삽입합니다.");
+                BoardCreateDTO boardCreate = new BoardCreateDTO();
+                boardCreate.setId(boardData.getBoardCode()+"");
+                boardCreate.setUserCode(boardData.getUserCode());
+                boardCreate.setBoardCategoryCode(boardData.getBoardCategoryCode());
+                boardCreate.setTitle(boardData.getTitle());
+                boardCreate.setContent(boardData.getContent());
+
+                List<Integer> singleSize = new ArrayList<>();
+                singleSize.add(boardData.getSize().get(i));
+                boardCreate.setSize(singleSize);
+
+                List<ImageFormDTO> imageForm = new ArrayList<>();
+                imageForm.add(new ImageFormDTO());
+                imageForm.get(0).setImageFile(images.get(imageCursor++));
+                imageForm.get(0).setUsage((char) ('A' + i)+""); // 반영 끝내고 -'A' 연산
+                //imageForm.get(0).setHasThumbnail(i==0 ? "O" : "X");
+                boardCreate.setFileItems(imageForm);
+                List<String> result = communityService.insertBoardImage(boardCreate);
+                resultAdd += 1;
+                resultAddedImageName.addAll(result);
+                continue;
+            }
+            //파일은 남아있으나 위치가 변경된 사진 수정
+            positionBit ^= 1<<boardData.getPosition().get(i);
+            log.info("[CommunityController] " + i + "번째 요청으로 사진 위치를 변경합니다.");
+            Map<String, String> moveParams = new HashMap<>();
+            moveParams.put("boardCode", boardData.getBoardCode()+"");
+            moveParams.put("beforeIdx", boardData.getPosition().get(i)+"");
+            moveParams.put("afterIdx", (char) ('A' + i)+""); // 반영 끝내고 -'A' 연산
+            communityService.updateBoardImageUsage(moveParams);
+        }
+        //더 이상 사용하지 않는 사진 삭제
+        if(positionBit > 0) {
+            //사진 삭제 진행
+            for(int i = 0; i < imageAmount; i++) {
+                if((positionBit&(1<<i)) > 0) {
+                    positionBit ^= 1<<i;
+                    Map<String, String> unusedParams = new HashMap<>();
+                    unusedParams.put("boardCode", boardData.getBoardCode()+"");
+                    unusedParams.put("usage", i+"");
+                    resultRemove += communityService.deleteBoardImageTableWithUsage(unusedParams);
+                    communityService.deleteBoardImageUnused(unusedParams);
+                }
+            }
+        }
+        //변경된 사진 usage는 문자상태, 문자 상태의 usage가 존재할 경우 숫자로 변환
+        for(int i = 0; i < imageAmount; i++) {
+            Map<String, String> moveParams = new HashMap<>();
+            moveParams.put("boardCode", boardData.getBoardCode()+"");
+            moveParams.put("beforeIdx", (char) ('A' + i)+""); // -'A' 연산
+            moveParams.put("afterIdx", i+"");
+            resultModify += communityService.updateBoardImageUsage(moveParams);
+        }
+
+
+        String outputMessage = "반환 결과는 다음과 같습니다.";
+        StringBuilder resultData = new StringBuilder();
+        resultData.append("추가된 사진 : ").append(resultAdd).append("\n");
+        for(String str : resultAddedImageName) {
+            resultData.append(str).append("\n");
+        }
+        resultData.append("수정된 사진 : ").append(resultModify)
+                .append("삭제된 사진 : ").append(resultRemove);
+
+        log.info("[CommunityController] updateBoard 종료");
+        return ResponseEntity.ok()
+                .body(new ResponseDTO(HttpStatus.OK, outputMessage, resultData.toString()));
     }
 
     /**

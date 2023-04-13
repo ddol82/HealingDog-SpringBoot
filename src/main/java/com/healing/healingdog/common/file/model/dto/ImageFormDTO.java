@@ -15,15 +15,16 @@ import org.springframework.web.multipart.MultipartFile;
 public class ImageFormDTO {
     private String usage; //첨부 위치
     private MultipartFile imageFile; // 파일
+    @Deprecated
     private String hasThumbnail; // 썸네일
+
+    public ImageFormDTO() {}
 
     public ImageFormDTO(String usage, MultipartFile imageFile, String hasThumbnail) {
         this.usage = usage;
         this.imageFile = imageFile;
         this.hasThumbnail = hasThumbnail;
     }
-
-    public ImageFormDTO() {}
 
     public String getUsage() {
         return usage;
@@ -41,10 +42,12 @@ public class ImageFormDTO {
         this.imageFile = imageFile;
     }
 
+    @Deprecated
     public String getHasThumbnail() {
         return hasThumbnail;
     }
 
+    @Deprecated
     public void setHasThumbnail(String hasThumbnail) {
         this.hasThumbnail = hasThumbnail;
     }

@@ -193,6 +193,14 @@
         WHERE board_code = #{ boardCode }
     </update>
 
+    <update id="updateBoard" parameterType="BoardCreateDTO">
+        UPDATE boards
+           SET board_category_code = #{ boardCategoryCode }
+             , title = #{ title }
+             , content = #{ content }
+         WHERE board_code = #{ boardCode }
+    </update>
+
     <delete id="deleteLikeChange" parameterType="java.util.Map">
         DELETE
           FROM board_likes
