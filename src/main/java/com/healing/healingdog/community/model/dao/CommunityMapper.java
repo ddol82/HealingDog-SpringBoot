@@ -200,10 +200,10 @@ public interface CommunityMapper {
     /**
      * 게시글의 사진 일부를 삭제합니다.
      *
-     * @param unusedParams 대상 게시글 코드와 삭제 대상입니다.
+     * @param codeWithListParams 대상 게시글 코드가 포함되어있습니다.
      * @return 삭제된 수량을 반환합니다.
      */
-    int deleteBoardTableWithUsage(Map<String, String> unusedParams);
+    int deleteBoardTableWithUsage(Map<String, Object> codeWithListParams);
 
     /**
      * 게시글 조건에 맞는 댓글들을 모두 조회합니다.

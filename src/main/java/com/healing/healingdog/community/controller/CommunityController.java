@@ -428,17 +428,19 @@ public class CommunityController {
         //사진 처리
         int imageAmount = boardData.getPosition().size();
         int imageCursor = 0;
-        //처리 후 최종적으로 사용하지 않는 사진을 비트마스크로 구분
-        int positionBit = (1<<boardData.getBeforeContains()) - 1;
         //결과변수 정의
         int resultAdd = 0;
         List<String> resultAddedImageName = new ArrayList<>();
         int resultRemove = 0;
         int resultModify = 0;
         for(int i = 0; i < imageAmount; i++) {
+            Map<String, String> moveParams = new HashMap<>();
             //변경 사항이 없는 사진 유지
             if(boardData.getPosition().get(i) == i) {
-                positionBit ^= 1<<i;
+                moveParams.put("boardCode", boardData.getBoardCode()+"");
+                moveParams.put("beforeIdx", i+"");
+                moveParams.put("afterIdx", (char) ('A' + i)+""); // 반영 끝내고 -'A' 연산
+                communityService.updateBoardImageUsage(moveParams);
                 log.info("[CommunityController] " + i + "번째 요청을 건너뛰었습니다.");
                 continue;
             }
@@ -468,28 +470,16 @@ public class CommunityController {
                 continue;
             }
             //파일은 남아있으나 위치가 변경된 사진 수정
-            positionBit ^= 1<<boardData.getPosition().get(i);
             log.info("[CommunityController] " + i + "번째 요청으로 사진 위치를 변경합니다.");
-            Map<String, String> moveParams = new HashMap<>();
             moveParams.put("boardCode", boardData.getBoardCode()+"");
             moveParams.put("beforeIdx", boardData.getPosition().get(i)+"");
             moveParams.put("afterIdx", (char) ('A' + i)+""); // 반영 끝내고 -'A' 연산
             communityService.updateBoardImageUsage(moveParams);
         }
-        //더 이상 사용하지 않는 사진 삭제
-        if(positionBit > 0) {
-            //사진 삭제 진행
-            for(int i = 0; i < imageAmount; i++) {
-                if((positionBit&(1<<i)) > 0) {
-                    positionBit ^= 1<<i;
-                    Map<String, String> unusedParams = new HashMap<>();
-                    unusedParams.put("boardCode", boardData.getBoardCode()+"");
-                    unusedParams.put("usage", i+"");
-                    resultRemove += communityService.deleteBoardImageTableWithUsage(unusedParams);
-                    communityService.deleteBoardImageUnused(unusedParams);
-                }
-            }
-        }
+        //스캔된 파일은 usage가 +'A'된 상태, 스캔되지 않은 usage가 숫자인 파일 삭제
+        communityService.deleteBoardImageUnused(boardData.getBoardCode());
+        resultRemove += communityService.deleteBoardImageTableWithUsage(boardData.getBoardCode());
+
         //변경된 사진 usage는 문자상태, 문자 상태의 usage가 존재할 경우 숫자로 변환
         for(int i = 0; i < imageAmount; i++) {
             Map<String, String> moveParams = new HashMap<>();

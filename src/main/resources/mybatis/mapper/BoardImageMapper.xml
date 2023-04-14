@@ -92,6 +92,9 @@
         DELETE
           FROM board_images
          WHERE board_code = #{ boardCode }
-           AND `usage` = #{ usage }
+           AND `usage` IN
+        <foreach collection="usageList" index="index" item="usage" open="(" close=")" separator=",">
+            #{ usage }
+        </foreach>
     </delete>
 </mapper>
