@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -528,27 +529,26 @@ public class CommunityService {
     /**
      * 저장된 게시글의 특정 사진 파일을 찾아 삭제합니다.
      *
-     * @param unusedData 게시글 번호와 사용처가 포함되어있습니다.
-     * @return 삭제에 성공한 사진 개수를 반환합니다.
+     * @param boardCode 게시글 번호입니다.
      */
-    public int deleteBoardImageUnused(Map<String, String> unusedData) {
+    public void deleteBoardImageUnused(int boardCode) {
         log.info("[CommunityService] deleteBoardImageUnused 호출");
         String direction = IMAGE_DIR_PREFIX + IMAGE_TYPE;
         int result = 0;
-        List<ImageTableDTO> files = communityMapper.getFileItems(Integer.parseInt(unusedData.get("boardCode")));
+        List<ImageTableDTO> files = communityMapper.getFileItems(boardCode);
         if(files == null || files.size() == 0) {
             log.info("[CommunityService] 조회된 이미지가 없습니다!");
-            return 0;
+            return;
         }
         for(ImageTableDTO image : files) {
             log.info("[CommunityService] 파일 삭제를 진행합니다.");
-            if(image.getUsage().equals(unusedData.get("usage")+"")) {
+            char usageVal = image.getUsage().charAt(0);
+            if(usageVal >= '0' && usageVal <= '9') {
                 result += ImageUtils.deleteImage(direction, image);
                 break;
             }
         }
         log.info("[CommunityService] deleteBoardImageUnused 종료");
-        return result;
     }
 
     /**
@@ -567,12 +567,19 @@ public class CommunityService {
     /**
      * 저장된 게시글의 사진 테이블 정보를 삭제합니다.
      *
-     * @param unusedParams 대상 게시글 코드와 사용하지 않는 usage입니다.
+     * @param boardCode 대상 게시글 코드입니다.
      * @return 삭제에 성공한 데이터 수를 반환합니다.
      */
-    public int deleteBoardImageTableWithUsage(Map<String, String> unusedParams) {
+    public int deleteBoardImageTableWithUsage(int boardCode) {
         log.info("[CommunityService] deleteBoardImageTable 호출");
-        int result = communityMapper.deleteBoardTableWithUsage(unusedParams);
+        List<String> usageForeach = new ArrayList<>();
+        for(int i = 0; i <= 9; i++) {
+            usageForeach.add(i+"");
+        }
+        Map<String, Object> codeWithListParams = new HashMap<>();
+        codeWithListParams.put("boardCode", boardCode);
+        codeWithListParams.put("usageList", usageForeach);
+        int result = communityMapper.deleteBoardTableWithUsage(codeWithListParams);
         log.info("[CommunityService] deleteBoardImageTable 종료");
         return result;
     }
