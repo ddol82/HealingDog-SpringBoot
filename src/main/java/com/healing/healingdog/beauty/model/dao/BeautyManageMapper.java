@@ -14,9 +14,13 @@ public interface BeautyManageMapper {
 
     BeautyDTO selectBeautyInfo(int providerCode);
 
-    CommonDTO selectBeautyTimes(int providerCode);
+    BeautyDTO selectBeautyTimes(int providerCode);
+
+    List<BeautyDTO> selectBeautyPrice(int providerCode);
 
     List<BeautyDTO> selectBeautyReservation(int providerCode);
+
+    BeautyDTO selectBeautyReservationOne(int beautyReservationListCode);
 
     List<ReviewDTO> selectReviewList(int providerCode);
 
@@ -41,6 +45,10 @@ public interface BeautyManageMapper {
     int deleteBeautyInfo(int providerCode);
 
     int deleteBeautyTimes(int providerCode);
+
+
+    int deleteBeautyReservationOne(int mypetCode);
+
 
 }
 

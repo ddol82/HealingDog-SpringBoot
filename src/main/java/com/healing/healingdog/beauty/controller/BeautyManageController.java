@@ -44,25 +44,36 @@ public class BeautyManageController {
      * 미용실 운영시간 조회
      */
     @GetMapping("/times")
-    public ResponseEntity<ResponseDTO> selectBeautyTimes(@RequestBody HashMap<String, String> input) {
-        log.info("REQUEST API selectBeautyTimes ={}", input);
-        int providerCode = Integer.parseInt(input.get("providerCode"));
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "미용실 운영시간조회 성공",beautyManageService.selectBeautyTimes(providerCode)));
+    public ResponseEntity<ResponseDTO> selectBeautyTimes(@AuthenticationPrincipal ProviderDTO provider) {
+        log.info("REQUEST API selectBeautyTimes ={}", provider);
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "미용실 운영시간조회 성공",beautyManageService.selectBeautyTimes(provider.getProviderCode())));
+    }
+    /**
+     * 미용실 가격 조회
+     */
+    @GetMapping("/price")
+    public ResponseEntity<ResponseDTO> selectBeautyPrice(@AuthenticationPrincipal ProviderDTO provider) {
+        log.info("REQUEST API selectBeautyPrice ={}", provider);
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "미용실 가격조회 성공",beautyManageService.selectBeautyPrice(provider.getProviderCode())));
     }
 
     /**
      * 미용실 신청내역 조회
      */
-//    @GetMapping("/reservation")
-//    public ResponseEntity<ResponseDTO> selectBeautyReservation(@RequestBody HashMap<String, String> input){
-//        log.info("REQUEST API selectBeautyReservation ={}", input);
-//        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK,"미용실 신청내역 조회 성공",beautyManageService.selectBeautyReservation(input)));
-//    }
     @GetMapping("/reservation")
     public ResponseEntity<ResponseDTO> selectBeautyReservation(@AuthenticationPrincipal ProviderDTO provider){
         log.info("REQUEST API selectBeautyReservation ={}", provider);
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK,"미용실 신청내역 조회 성공",beautyManageService.selectBeautyReservation(provider.getProviderCode())));
     }
+    /**
+     * 미용실 신청내역 상세조회
+     */
+    @GetMapping("/reservation/{beautyReservationListCode}")
+    public ResponseEntity<ResponseDTO> selectBeautyReservationOne(@PathVariable int beautyReservationListCode){
+        log.info("REQUEST API selectBeautyReservationOne ={}", beautyReservationListCode);
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK,"미용실 신청내역 상세조회 성공",beautyManageService.selectBeautyReservationOne(beautyReservationListCode)));
+    }
+
     /**
      * 미용실 리뷰 전체 조회
      */
@@ -173,5 +184,11 @@ public class BeautyManageController {
         log.info("REQUEST API deleteBeautyTimes ={}", input);
         int providerCode = Integer.parseInt(input.get("providerCode"));
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK, "미용실 운영시간 삭제 성공", (beautyManageService.deleteBeautyTimes(providerCode)) + "개"));
+    }
+
+    @DeleteMapping("/reservation/{mypetCode}")
+    public ResponseEntity<ResponseDTO> deleteBeautyReservationOne(@PathVariable int mypetCode){
+        log.info("REQUEST API deleteBeautyReservationOne ={}", mypetCode);
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK,"미용실 신청내역 삭제 성공",beautyManageService.deleteBeautyReservationOne(mypetCode)));
     }
 }
