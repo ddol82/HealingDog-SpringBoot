@@ -1,9 +1,6 @@
 package com.healing.healingdog.beauty.model.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -12,6 +9,7 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @Getter
 @Setter
+@ToString
 public class BeautyDTO {
     /**
      * 미용실 코드

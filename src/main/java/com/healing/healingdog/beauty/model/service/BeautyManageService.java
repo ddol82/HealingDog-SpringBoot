@@ -130,10 +130,24 @@ public class BeautyManageService {
     /**
      *  미용실 정보 수정
      * */
-    public int updateBeautyInfo( BeautyDTO beautyDTO) {
+//    public int updateBeautyInfo( BeautyDTO beautyDTO) {
+//        log.info("REQUEST SERVICE updateBeautyInfo = {}", beautyDTO);
+//        int result = beautyManageMapper.updateBeautyInfo(beautyDTO);
+//        log.info("result,toString() ={}", result +"개 수정 완료");
+//        return result;
+//    }
+    public int updateBeautyInfo(BeautyDTO beautyDTO) {
         log.info("REQUEST SERVICE updateBeautyInfo = {}", beautyDTO);
+        StringBuilder addressBuilder = new StringBuilder();
+        addressBuilder.append(beautyDTO.getZoneCode())
+                .append("^")
+                .append(beautyDTO.getAddress())
+                .append("^")
+                .append(beautyDTO.getAddressDetail());
+        beautyDTO.setAddress(addressBuilder.toString());
         int result = beautyManageMapper.updateBeautyInfo(beautyDTO);
-        log.info("result,toString() ={}", result +"개 수정 완료");
+        log.info("result,toString() = {} 수정 완료", beautyDTO);
+        log.info("result,toString() = {} 수정 완료", result);
         return result;
     }
 
