@@ -6,40 +6,50 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     #url: jdbc:oracle:thin:@3.36.218.186:1522/xe
     #url: jdbc:oracle:thin:@192.168.0.10:1522/xe
-    url: jdbc:mysql:@localhost:3306/healingdog
+    url: jdbc:mysql://localhost:3306/healingdog?useSSL=false&
     username: healingdog
     password: healingdog
   servlet:
     multipart:
       enabled: true
-      max-file-size: 10MB
-      max-request-size: 10MB
+      max-file-size: 64MB
+      max-request-size: 64MB
   web:
     resources:
       static-locations: classpath:/healingimgs/
-  profiles:
-    include: security
+  config:
+    import:
+      - classpath:/application-security.yml
+      - classpath:/application-sms.yml
+  #Timestamp의 TimeZone을 +09:00으로 설정
+  jackson:
+    deserialization:
+      adjust-dates-to-context-time-zone: false
+    time-zone: Asia/Seoul
+
 
 # 이미지 저장할 위치와 응답할 때 이미지 주소 세팅
 image:
-  # WebConfig에 세팅
-  #add-resource-locations: classpath:/static/healingimgs/
-  #add-resource-handler: /healingimgs/**
-
-  add-resource-locations: /healingimgs/
+  # configuration/WebConfig.java
   add-resource-handler: /healingimgs/**
+  add-resource-locations: C:/edu/file/healingimgs/
 
+  # **Service.java
+  image-directory-prefix: /healingimgs/
+  # AWS EC2 등록 시 필요한 prefix
+  # image-url-prefix: http://3.36.218.186:8090/healingimgs/
+  image-url-prefix: http://localhost:8090/healingimgs/
 
-  # ProductService에 세팅
-  #image-dir: src/main/resources/static/healingimgs/
-  image-dir: /healingimgs/
-  #image-url: http://3.36.218.186:8090/healingimgs/
-  #image-url: http://192.168.0.10:8090/healingimgs/
-  image-url: http://localhost:8090/healingimgs/
+  type:
+    member: member/
+    service: service/
+    review: review/
+    board: board/
+    certificate: certificate/
 
 # HS512 알고리즘을 사용할 것이기 때문에 512bit, 즉 64byte 이상의 secret key를 사용
 # Secret 값은 특정 문자열을 Base64 로 인코딩한 값 사용
-# jwt 설정은 application-security.yml 파일에서 적용
+# jwt 설정은 application-security.yml 파일에서 적용 - line 21
 
 mybatis:
   # mapper.xml location Setting
@@ -52,5 +62,6 @@ mybatis:
 logging:
   level:
     root: info
-
+#어느 로그 단계 이상부터 출력할 것인지 설정, 예)info 기입 시 trace를 제외한 모든 로그 출력.
+#(가장 낮음) trace, info, debug, warn, error (가장 높음)
 

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.healing.healingdog.membermanagement.model.dao.MemberMapper">
+
+    <!--  사용자 목록 조회  -->
+    <select id="selectAllUserList" resultType="UserDTO">
+        SELECT
+            user_code
+             ,  name
+             ,  email
+             ,  phone
+             ,  nickname
+        FROM users
+    </select>
+
+    <!-- 사용자 상세정보 조회   -->
+    <select id="selectMyUserDetailInfo" resultType="UserDTO">
+        SELECT
+            user_code
+             ,  name
+             ,  email
+             ,  phone
+             ,  nickname
+             ,  address
+             ,  simple_intro
+             ,  self_intro
+             ,  blacklist
+             ,  role
+        FROM users
+        WHERE user_code = #{userCode}
+    </select>
+
+    <!-- 사용자 정보 수정   -->
+    <update id="updateUserDetailInfo" parameterType="UserDTO">
+        UPDATE users
+        SET
+            blacklist = #{blacklist},
+            role = #{role}
+        WHERE user_code = #{userCode}
+    </update>
+
+    <!--  사용자 삭제  -->
+    <delete id="deleteUserDetailInfo" parameterType="_int">
+        DELETE
+        FROM users
+        WHERE user_code = #{userCode}
+    </delete>
+
+    <!--  제공자 목록 조회  -->
+    <select id="selectAllProviderList" resultType="ProviderDTO">
+        SELECT
+            provider_code
+             ,  name
+             ,  email
+             ,  phone
+        FROM providers
+    </select>
+
+    <!-- 제공자 상세정보 조회   -->
+    <select id="selectProviderDetailInfo" resultType="ProviderDTO">
+        SELECT
+            provider_code
+             ,  name
+             ,  email
+             ,  phone
+             ,  beauty_approval
+             ,  petsitter_approval
+             ,  trainers_approval
+             ,  kindergarden_approval
+             ,  boarding_approval
+             ,  blacklist
+             ,  role
+        FROM providers
+        WHERE provider_code = #{providerCode}
+    </select>
+
+    <!-- 제공자 정보 수정   -->
+    <update id="updateProviderDetailInfo" parameterType="ProviderDTO">
+        UPDATE providers
+        SET
+            beauty_approval = #{beautyApproval},
+            petsitter_approval = #{petsitterApproval},
+            trainers_approval = #{trainersApproval},
+            kindergarden_approval = #{kindergardenApproval},
+            boarding_approval = #{boardingApproval},
+            blacklist = #{blacklist},
+            role = #{role}
+        WHERE provider_code = #{providerCode}
+    </update>
+
+    <!--  제공자 삭제  -->
+    <delete id="deleteProviderDetailInfo" parameterType="_int">
+        DELETE
+        FROM providers
+        WHERE provider_code = #{providerCode}
+    </delete>
+
+</mapper>
