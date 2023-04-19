@@ -5,7 +5,7 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     #url: jdbc:oracle:thin:@3.36.218.186:1522/xe
-    #url: jdbc:oracle:thin:@192.168.0.10:1522/xe
+    #url: jdbc:mysql://192.168.0.10:3307/healingdog?useSSL=false&allowPublicKeyRetrieval=true
     url: jdbc:mysql://localhost:3306/healingdog?useSSL=false&
     username: healingdog
     password: healingdog
