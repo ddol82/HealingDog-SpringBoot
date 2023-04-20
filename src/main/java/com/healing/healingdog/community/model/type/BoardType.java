@@ -4,7 +4,9 @@ import lombok.Getter;
 import lombok.ToString;
 
 /**
- * 게시판의 카테고리 정보의 열거형입니다.
+ * 게시판의 카테고리 정보의 열거형입니다.<br>처음엔 DB로 진행할 예정이었으나,
+ * 변화가 많은 항목이 아니므로 back단에서 관리하기 위해 열거형으로 선언하였습니다.<br>
+ * 각 항목은 {@code code}, {@code type}, {@code name}으로 구성되어있습니다.
  *
  * @author 이진녕
  * @since 1.0
