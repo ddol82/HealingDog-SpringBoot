@@ -17,18 +17,12 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 
-;
-
 /**
  * 이미지 파일을 관리합니다.
  * 파일 이름은 UUID를 이용하여 랜덤 생성합니다.<br>
- * {@link Slf4j @Slf4j} 가 포함되어있어 {@code log}를 통한 Logger사용이 가능합니다.
- * <pre>
- * {@code
- * ImageUtils imageUtils = new ImageUtils();
- * imageUtils.uploadImage(...);
- * }
- * </pre>
+ * {@link Slf4j @Slf4j} 가 포함되어있어 {@code log}를 통한 Logger사용이 가능합니다.<br>
+ * Singleton Pattern으로 제작되었습니다<br>예)
+ * {@code ImageUtils.saveImage(...);}
  * @since 1.0
  * @author 이진녕
  * @version 1.0
@@ -59,6 +53,15 @@ public class ImageUtils {
         return saveName;
     }
 
+    /**
+     * 파일의 썸네일을 저장합니다.<br>
+     * 썸네일의 이름은 {@link UUID}를 이용하여 랜덤으로 생성됩니다.
+     *
+     * @param uploadDir 업로드 할 경로입니다.
+     * @param multipartFile 업로드 할 이미지 파일입니다.
+     * @return 파일 저장 후 저장된 이름의 파일명을 반환합니다.
+     * @throws IOException 입출력 과정에서 오류 발생 시 오류를 출력합니다.
+     */
     public static String saveThumbnail(String uploadDir, MultipartFile multipartFile, int width, int height) throws IOException {
         log.info("saveThumbnail 호출");
         Path uploadPath = Paths.get(uploadDir);
@@ -217,6 +220,7 @@ public class ImageUtils {
     public static int deleteImage(String fileDir, ImageTableDTO image) {
         log.info("deleteFile 호출");
         Path imagePath = Paths.get(fileDir);
+        log.info("getting imagePath : {}", imagePath);
         //경로 존재 확인
         if(!pathExistCheckForDelete(imagePath)) {
             return 0;
@@ -224,15 +228,18 @@ public class ImageUtils {
         //경로가 없으면 패스
         int result = 0;
         //썸네일이 존재할 때, 썸네일 삭제 시도.
-        if(image.getThumbnail() != null || fileDelete(imagePath, image.getThumbnail())) {
+        log.info("getting Thumbnail() : {}", image.getThumbnail());
+        if(image.getThumbnail() != null && fileDelete(imagePath, image.getThumbnail())) {
             result += 1;
         }
         //미리보기 이미지 삭제 시도.
-        if(!fileDelete(imagePath, image.getPreview())) {
+        log.info("getting Preview() : {}", image.getPreview());
+        if(fileDelete(imagePath, image.getPreview())) {
             result += 1;
         }
         //원본 이미지 삭제 시도.
-        if(!fileDelete(imagePath, image.getOriginal())) {
+        log.info("getting Original() : {}", image.getOriginal());
+        if(fileDelete(imagePath, image.getOriginal())) {
             result += 1;
         }
 
@@ -263,7 +270,10 @@ public class ImageUtils {
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     private static boolean fileDelete(Path filePath, String fileName) {
         try {
+            log.debug("filePath : {}", filePath);
+            log.info("fileName : {}", fileName);
             Path imagePath = filePath.resolve(fileName);
+            log.debug("imagePath : {}", imagePath);
             Files.delete(imagePath);
         } catch (IOException e) {
             log.warn("파일을 삭제할 수 없었습니다. : " + fileName, e);

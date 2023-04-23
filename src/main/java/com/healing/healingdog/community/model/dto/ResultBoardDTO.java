@@ -40,6 +40,7 @@ public class ResultBoardDTO {
     private List<String> originalImageUrl;
     private String thumbnailImageUrl;
     private List<String> previewImageUrl;
+    private List<Integer> size;
     private int imageCount;
     private int commentCount;
     private int likeState;

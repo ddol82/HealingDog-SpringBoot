@@ -14,8 +14,12 @@
 	<typeAliases>
 		<!-- boarding -->
 		<typeAlias alias="BoardingServiceDTO" type="com.healing.healingdog.boarding.dto.BoardingServiceDTO"/>
+		<typeAlias alias="BoardingBookingDTO" type="com.healing.healingdog.boarding.dto.BoardingBookingDTO"/>
+		<typeAlias alias="ReviewSummaryDTO" type="com.healing.healingdog.boarding.dto.ReviewSummaryDTO"/>
+
 		<!-- review -->
 		<typeAlias alias="ReviewDTO" type="com.healing.healingdog.review.dto.ReviewDTO" />
+		<typeAlias alias="ReviewCountDTO" type="com.healing.healingdog.review.dto.ReviewCountDTO" />
 
 		<typeAlias alias="ImageTableDTO" type="com.healing.healingdog.common.file.model.dto.ImageTableDTO" />
 		<!-- login -->
@@ -25,9 +29,9 @@
 		<typeAlias alias="MypetDTO" type="com.healing.healingdog.mypage.model.dto.MypetDTO"/>
 		<typeAlias alias="ChecklistDTO" type="com.healing.healingdog.mypage.model.dto.ChecklistDTO"/>
 		<!-- community -->
-		<typeAlias alias="DetailForGettingBoard" type="com.healing.healingdog.community.model.dto.CatAndPageDataForBoard"/>
 		<typeAlias alias="BoardTableDTO" type="com.healing.healingdog.community.model.dto.BoardTableDTO"/>
 		<typeAlias alias="BoardCreateDTO" type="com.healing.healingdog.community.model.dto.BoardCreateDTO"/>
+		<typeAlias alias="CommentDTO" type="com.healing.healingdog.community.model.dto.CommentDTO"/>
 		<typeAlias alias="LikeDTO" type="com.healing.healingdog.community.model.dto.LikeDTO"/>
 		<!-- beauty -->
 		<typeAlias alias="BeautyDTO" type="com.healing.healingdog.beauty.model.dto.BeautyDTO"/>

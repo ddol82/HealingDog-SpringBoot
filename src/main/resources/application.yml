@@ -5,7 +5,7 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     #url: jdbc:oracle:thin:@3.36.218.186:1522/xe
-    #url: jdbc:oracle:thin:@192.168.0.10:1522/xe
+    #url: jdbc:mysql://192.168.0.10:3307/healingdog?useSSL=false&allowPublicKeyRetrieval=true
     url: jdbc:mysql://localhost:3306/healingdog?useSSL=false&
     username: healingdog
     password: healingdog
@@ -20,9 +20,13 @@ spring:
   config:
     import:
       - classpath:/application-security.yml
-  mvc:
-    async:
-      request-timeout: 6000
+      - classpath:/application-sms.yml
+  #Timestamp의 TimeZone을 +09:00으로 설정
+  jackson:
+    deserialization:
+      adjust-dates-to-context-time-zone: false
+    time-zone: Asia/Seoul
+
 
 # 이미지 저장할 위치와 응답할 때 이미지 주소 세팅
 image:

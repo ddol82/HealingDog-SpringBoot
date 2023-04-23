@@ -1,6 +1,7 @@
 package com.healing.healingdog.review.service;
 
 import com.healing.healingdog.review.dao.ReviewMapper;
+import com.healing.healingdog.review.dto.ReviewCountDTO;
 import com.healing.healingdog.review.dto.ReviewDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,8 +24,10 @@ public class ReviewService {
     }
 
 
+    public Object selectReviewCount(int providerCode, int serviceCategoryCode) {
+        log.info("REQUEST SERVICE selectReviewSummary ={}",serviceCategoryCode);
+        ReviewCountDTO result = reviewMapper.selectReviewCount(providerCode, serviceCategoryCode);
+        return result;
 
-
-
-
+    }
 }

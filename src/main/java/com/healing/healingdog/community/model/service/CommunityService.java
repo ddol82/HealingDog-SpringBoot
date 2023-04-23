@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -90,14 +91,14 @@ public class CommunityService {
 
     /**
      * 조건에 맞는 게시글을 {@link List}로 조회합니다.
-     * @param detailData {@link CatAndPageDataForBoard} 타입을 사용하며, 게시글의 인덱스 정보와 카테고리 코드 정보를 가지고 있습니다.
+     * @param boardListParams {@link PageData 페이지 정보}, {@link BoardType 카테고리 정보}를 입력받습니다.
      * @return 카테고리 타입이 일치하고, {@link PageData#getStartCursor 시작 인덱스}와 {@link PageData#getEndCursor() 끝 인덱스}
      * 사이에 있는 게시글들을<br> {@link List}<{@link BoardTableDTO}>타입으로 반환합니다.
      */
-    public List<BoardTableDTO> selectBoardList(CatAndPageDataForBoard detailData) {
+    public List<BoardTableDTO> selectBoardList(Map<String, Integer> boardListParams) {
         log.info("[CommunityService] selectBoardList 호출");
 
-        List<BoardTableDTO> boardList= communityMapper.selectBoardList(detailData);
+        List<BoardTableDTO> boardList= communityMapper.selectBoardList(boardListParams);
         log.debug("(selectBoardCount) 조회 결과 : " + boardList.size() + "건");
 
         log.info("[CommunityService] selectBoardList 종료");
@@ -154,6 +155,7 @@ public class CommunityService {
         result.setOriginalImageUrl(selectBoardOriginalUrl(boardTableData.getBoardCode()));
         result.setPreviewImageUrl(selectBoardPreviewUrl(boardTableData.getBoardCode()));
         result.setImageCount(selectBoardImageCount(boardTableData.getBoardCode()));
+        result.setSize(selectBoardImageSize(boardTableData.getBoardCode()));
 
         log.debug("게시글 번호 " + boardTableData.getBoardCode() + " 변환 종료");
         return result;
@@ -185,7 +187,6 @@ public class CommunityService {
         log.info("[CommunityService] selectBoardThumbnailUrl 호출");
 
         String thumbnailUrl = communityMapper.selectBoardThumbnailUrl(boardCode);
-        log.debug("(selectBoardThumbnailUrl) 조회 결과 : " + (thumbnailUrl != null ? thumbnailUrl : "없음 - null 반환"));
 
         log.info("[CommunityService] selectBoardThumbnailUrl 종료");
         return thumbnailUrl;
@@ -223,6 +224,27 @@ public class CommunityService {
         return count;
     }
 
+    /**
+     * 게시글의 용량 정보를 조회합니다.
+     *
+     * @param boardCode 대상 게시글의 코드입니다.
+     * @return 게시글의 용량 {@link List}를 불러옵니다.
+     */
+    private List<Integer> selectBoardImageSize(int boardCode) {
+        log.info("[CommunityService] selectBoardImageCount 호출");
+
+        List<Integer> result = communityMapper.selectBoardSizeCount(boardCode);
+
+        log.info("[CommunityService] selectBoardImageCount 종료");
+        return result;
+    }
+
+    /**
+     * 게시글의 상세 정보를 조회합니다.
+     *
+     * @param boardCode 대상 게시글 코드입니다.
+     * @return 대상 게시글의 {@link BoardTableDTO 정보}를 반환합니다.
+     */
     public BoardTableDTO selectBoardDetail(int boardCode) {
         log.info("[CommunityService] selectBoardDetail 호출");
         BoardTableDTO boardTableData = communityMapper.selectBoardDetail(boardCode);
@@ -308,20 +330,21 @@ public class CommunityService {
         String direction = IMAGE_DIR_PREFIX + IMAGE_TYPE;
         List<String> result = new ArrayList<>();
         List<ImageFormDTO> files = boardCreateDTO.getFileItems();
-        for(ImageFormDTO imageFile : files) {
+        for(int i = 0; i < files.size(); i++) {
             try {
+                ImageFormDTO imageFile = files.get(i);
                 log.info("[CommunityService] 이미지 1건의 저장을 시도합니다.");
                 String original = ImageUtils.saveImage(direction, imageFile.getImageFile());
                 String thumbnail = null;
-                if(imageFile.getHasThumbnail().equals("O")) {
-                    log.info("[CommunityService] 썸네일을 포함해서요!");
-                    int resizeWidth = 140;
-                    int resizeHeight = 140;
-                    thumbnail = ImageUtils.saveThumbnail(direction, imageFile.getImageFile(), resizeWidth, resizeHeight);
-                }
+
+                log.info("[CommunityService] 썸네일 포함해서요!");
+                int resizeWidth = 140;
+                int resizeHeight = 140;
+                thumbnail = ImageUtils.saveThumbnail(direction, imageFile.getImageFile(), resizeWidth, resizeHeight);
+
                 log.info("[CommunityService] 미리보기(64 x 64)를 생성합니다.");
-                int resizeWidth = 64;
-                int resizeHeight = 64;
+                resizeWidth = 64;
+                resizeHeight = 64;
                 String preview = ImageUtils.saveThumbnail(direction, imageFile.getImageFile(), resizeWidth, resizeHeight);
 
                 ImageTableDTO imageTableDTO = new ImageTableDTO();
@@ -331,12 +354,12 @@ public class CommunityService {
                 imageTableDTO.setOriginal(original);
                 imageTableDTO.setThumbnail(thumbnail);
                 imageTableDTO.setPreview(preview);
+                imageTableDTO.setSize(boardCreateDTO.getSize().get(i));
                 communityMapper.insertBoardImage(imageTableDTO);
 
+                result.add(imageTableDTO.getCode() + "번째 사진이 등록되었습니다.");
                 result.add("original - " + original);
-                if(thumbnail != null) {
-                    result.add("thumbnail - " + thumbnail);
-                }
+                result.add("thumbnail - " + thumbnail);
                 result.add("preview - " + preview);
                 log.info("[CommunityService] 이미지 1건의 저장이 끝났습니다.");
             } catch (IOException e) {
@@ -475,7 +498,57 @@ public class CommunityService {
             result += ImageUtils.deleteImage(direction, image);
         }
         log.info("[CommunityService] deleteBoardImage 종료");
-        return 0;
+        return result;
+    }
+
+    /**
+     * 썸네일을 변경합니다.
+     *
+     * @param boardCode 대상 게시글 코드입니다.
+     * @return 반영에 성공한 사진 개수를 반환합니다.
+     * @deprecated 썸네일은 이제 항상 생성됩니다.
+     */
+    @Deprecated
+    public int changeThumbnail(int boardCode) {
+        log.info("[CommunityService] changeThumbnail 호출");
+        String direction = IMAGE_DIR_PREFIX + IMAGE_TYPE;
+        int result = 0;
+        List<ImageTableDTO> files = communityMapper.getFileItems(boardCode);
+        if(files == null || files.size() == 0) {
+            log.info("[CommunityService] 조회된 이미지가 없습니다!");
+            return 0;
+        }
+        for (ImageTableDTO image : files) {
+            log.info("[CommunityService] 파일 삭제를 진행합니다.");
+            result += ImageUtils.deleteImage(direction, image);
+        }
+        log.info("[CommunityService] changeThumbnail 종료");
+        return result;
+    }
+
+    /**
+     * 저장된 게시글의 특정 사진 파일을 찾아 삭제합니다.
+     *
+     * @param boardCode 게시글 번호입니다.
+     */
+    public void deleteBoardImageUnused(int boardCode) {
+        log.info("[CommunityService] deleteBoardImageUnused 호출");
+        String direction = IMAGE_DIR_PREFIX + IMAGE_TYPE;
+        int result = 0;
+        List<ImageTableDTO> files = communityMapper.getFileItems(boardCode);
+        if(files == null || files.size() == 0) {
+            log.info("[CommunityService] 조회된 이미지가 없습니다!");
+            return;
+        }
+        for(ImageTableDTO image : files) {
+            log.info("[CommunityService] 파일 삭제를 진행합니다.");
+            char usageVal = image.getUsage().charAt(0);
+            if(usageVal >= '0' && usageVal <= '9') {
+                result += ImageUtils.deleteImage(direction, image);
+                break;
+            }
+        }
+        log.info("[CommunityService] deleteBoardImageUnused 종료");
     }
 
     /**
@@ -489,5 +562,92 @@ public class CommunityService {
         int result = communityMapper.deleteBoardTable(boardCode);
         log.info("[CommunityService] deleteBoardImageTable 종료");
         return result;
+    }
+
+    /**
+     * 저장된 게시글의 사진 테이블 정보를 삭제합니다.
+     *
+     * @param boardCode 대상 게시글 코드입니다.
+     * @return 삭제에 성공한 데이터 수를 반환합니다.
+     */
+    public int deleteBoardImageTableWithUsage(int boardCode) {
+        log.info("[CommunityService] deleteBoardImageTable 호출");
+        List<String> usageForeach = new ArrayList<>();
+        for(int i = 0; i <= 9; i++) {
+            usageForeach.add(i+"");
+        }
+        Map<String, Object> codeWithListParams = new HashMap<>();
+        codeWithListParams.put("boardCode", boardCode);
+        codeWithListParams.put("usageList", usageForeach);
+        int result = communityMapper.deleteBoardTableWithUsage(codeWithListParams);
+        log.info("[CommunityService] deleteBoardImageTable 종료");
+        return result;
+    }
+
+    /**
+     * 삭제되는 게시글의 좋아요 정보를 모두 지웁니다.
+     *
+     * @param boardCode 대상 게시글 코드입니다.
+     * @return 삭제된 수량을 반환합니다.
+     */
+    public int deleteAllLikeChange(int boardCode) {
+        log.info("[CommunityService] deleteBoardImageTable 호출");
+        int result = communityMapper.deleteAllLikeChange(boardCode);
+        log.info("[CommunityService] deleteBoardImageTable 종료");
+        return result;
+    }
+
+    /**
+     * 게시글 조건에 맞는 모든 댓글들을 불러옵니다.
+     *
+     * @param boardCode 대상 게시글 코드입니다.
+     * @return 조회된 {@link List}를 반환합니다.
+     */
+    public List<CommentDTO> selectAllComments(int userCode, int boardCode) {
+        log.info("[CommunityService] selectAllComments 호출");
+        List<CommentDTO> result = communityMapper.selectAllComments(boardCode);
+        for(int i = 0; i < result.size(); i++) {
+            result.get(i).setIsMine(userCode == result.get(i).getUserCode());
+        }
+        log.info("[CommunityService] selectAllComments 종료");
+        return result;
+    }
+
+    /**
+     * 댓글을 작성합니다.
+     *
+     * @param commentParams {@code boardCode}, {@code userCode}, {@code ref}
+     * 값이 담겨있습니다.
+     * @return 성공 시 1을 반환합니다.
+     */
+    public int registComment(Map<String, String> commentParams) {
+        log.info("[CommunityService] selectAllComments 호출");
+        int result = communityMapper.registComment(commentParams);
+        log.info("[CommunityService] selectAllComments 종료");
+        return result;
+    }
+
+    /**
+     * 사진의 위치를 변경합니다.
+     *
+     * @param moveParams 변경 전 정보와 변경 후 정보가 담겨있습니다.
+     * @return 성공 시 1을 반환합니다.
+     */
+    public int updateBoardImageUsage(Map<String, String> moveParams) {
+        log.info("[CommunityService] updateBoardImageUsage 호출"); //[1 2]
+        int result = communityMapper.updateBoardImageUsage(moveParams); //[1 t]
+        log.info("[CommunityService] updateBoardImageUsage 종료");
+        return result;
+    }
+
+    /**
+     * 게시글을 수정합니다.
+     *
+     * @param boardUpdate 대상 게시글 코드입니다.
+     */
+    public void updateBoard(BoardCreateDTO boardUpdate) {
+        log.info("[CommunityService] updateBoard 호출");
+        communityMapper.updateBoard(boardUpdate);
+        log.info("[CommunityService] updateBoard 종료");
     }
 }

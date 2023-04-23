@@ -1,6 +1,5 @@
 package com.healing.healingdog.community.model.dto;
 
-import com.healing.healingdog.common.file.model.dto.ImageFormDTO;
 import lombok.*;
 
 import java.util.List;
@@ -10,13 +9,14 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class BoardCreateDTO {
+public class BoardUpdateDTO {
     private String id;
     private int boardCode;
     private int userCode;
     private int boardCategoryCode;
     private String title;
     private String content;
+    private int beforeContains;
+    private List<Integer> position;
     private List<Integer> size;
-    private List<ImageFormDTO> fileItems;
 }

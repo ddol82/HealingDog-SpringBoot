@@ -66,5 +66,60 @@
     </delete>
 
 
+<!--  borading-manage/booking CRUD  -->
+
+    <select id="selectBoardingBooking" resultType="BoardingBookingDTO">
+        SELECT
+            boarding_booking_code,
+            boarding_service_code,
+            user_code,
+            mypet_code,
+            booking_date,
+            boarding_category,
+            check_in,
+            check_out,
+            payment
+        FROM healingdog.boarding_bookings
+        WHERE boarding_service_code IN (
+            SELECT
+                boarding_service_code
+            FROM boarding_services
+            WHERE
+                provider_code=#{providerCode}
+        )
+    </select>
+
+<!--  borading-manage/review  -->
+    <select id="selectBoardingReviewSummary" resultType="ReviewSummaryDTO">
+        SELECT
+            COUNT(reviews_code) as review_count,
+            ROUND(AVG(score) , 1) as score_average
+        FROM healingdog.reviews
+        WHERE
+            provider_code = #{providerCode}
+            AND service_category_code = 5
+    </select>
+
+<!--  borading-manage/income  -->
+    <select id="selectBoardingIncomeByMonth" resultType="String">
+        SELECT
+            SUM(payment) AS monthIncome
+        FROM healingdog.boarding_bookings
+        WHERE
+            MONTH(check_in) = MONTH(#{selectedDate})
+            AND YEAR(check_in) = YEAR(#{selectedDate})
+            AND boarding_service_code = (SELECT boarding_service_code FROM boarding_services WHERE provider_code = #{providerCode})
+    </select>
+
+    <select id="selectBoardingIncomeByYear"  resultType="String">
+        SELECT
+            SUM(payment) AS yearIncome
+        FROM healingdog.boarding_bookings
+        WHERE
+            YEAR(check_in) = YEAR(#{selectedDate})
+            AND boarding_service_code = (SELECT boarding_service_code FROM boarding_services WHERE provider_code = #{providerCode})
+    </select>
+
+
 
 </mapper>
