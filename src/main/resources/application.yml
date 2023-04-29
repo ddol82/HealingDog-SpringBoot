@@ -6,7 +6,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     #url: jdbc:oracle:thin:@3.36.218.186:1522/xe
     #url: jdbc:mysql://192.168.0.10:3307/healingdog?useSSL=false&allowPublicKeyRetrieval=true
-    url: jdbc:mysql://localhost:3306/healingdog?useSSL=false&
+    url: jdbc:mysql://localhost:3306/healingdog?useSSL=false&allowPublicKeyRetrieval=true
     username: healingdog
     password: healingdog
   servlet:
