@@ -1,5 +1,12 @@
 package com.healing.healingdog.common.file.model.dto;
 
+/**
+ * 사진의 용도를 묶어놓은 enum입니다.
+ *
+ * @author 이진녕
+ * @version 1.0
+ * @since 1.0
+ */
 public enum ImageType {
     BOARD("board_images"),
     CERTIFICATE("certificate_images"),
