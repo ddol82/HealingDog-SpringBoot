@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.healing.healingdog.beauty.model.dao.BeautyManageMapper">
+
+
+    <!--  beauty-manage  -->
+<!--  미용실 정보조회  -->
+    <select id="selectBeautyInfo" resultType="BeautyDTO">
+        SELECT
+            B.beauty_code,
+            B.provider_code,
+            B.name,
+            B.phone,
+            B.web,
+            B.address,
+            B.intro,
+            B.blacklist,
+            B.large,
+            B.medium,
+            B.small,
+            B.open_beauty,
+            B.spa,
+            B.massage,
+            B.self_beauty,
+            B.hoteling,
+            B.playground,
+            B.free_parking,
+            B.wi_fi,
+            T.time_code,
+            T.service_category_code,
+            T.day,
+            T.start_time,
+            T.end_time,
+            C.name AS certificate_name,
+            C.text
+        FROM beauties B
+        JOIN times T
+        ON B.provider_code=T.provider_code
+        JOIN certificates C
+             ON B.provider_code=C.provider_code
+
+        WHERE
+            B.provider_code=#{providerCode}
+    </select>
+<!--  미용실 운영시간 조회  -->
+    <select id="selectBeautyTimes" resultType="BeautyDTO">
+        SELECT *
+        FROM times
+        WHERE provider_code = #{providerCode}
+          AND service_category_code = 4
+    </select>
+<!--  미용실 가격조회 성공  -->
+    <select id="selectBeautyPrice" resultType="BeautyDTO">
+        SELECT *
+        FROM beauty_prices
+        WHERE beauty_code = (SELECT beauty_code
+                             FROM (SELECT beauty_code
+                                   FROM beauties
+                                   WHERE provider_code = #{providerCode}) tmp)
+    </select>
+<!--  미용실 신청내역 조회  -->
+    <select id="selectBeautyReservation"  resultType="BeautyDTO">
+        SELECT B.beauty_reservation_list_code
+             , B.mypet_code
+             , B.beauty_code
+             , B.user_code
+             , B.date
+             , B.time
+             , B.reservation
+             , B.beauty_prices_code
+             , M.user_code
+             , M.name
+             , M.gender
+             , M.variety
+             , M.birthday
+             , M.weight
+             , M.neutered
+             , M.animal_hospital
+             , M.reference_info
+        FROM beauty_reservation_lists B
+                 JOIN mypets M
+                      ON B.mypet_code = M.mypet_code
+        WHERE beauty_code = (SELECT beauty_code
+                             FROM (SELECT beauty_code
+                                   FROM beauties
+                                   WHERE provider_code = #{providerCode}) tmp)
+    </select>
+    <select id="selectBeautyReservationOne" resultType="BeautyDTO">
+        SELECT B.beauty_reservation_list_code
+             , B.mypet_code
+             , B.beauty_code
+             , B.user_code
+             , B.date
+             , B.time
+             , B.reservation
+             , B.beauty_prices_code
+             , M.user_code
+             , M.name
+             , M.gender
+             , M.variety
+             , M.birthday
+             , M.weight
+             , M.neutered
+             , M.animal_hospital
+             , M.reference_info
+             , P.size
+             , P.cut
+             , P.price
+        FROM beauty_reservation_lists B
+                 JOIN mypets M
+                      ON B.mypet_code = M.mypet_code
+                 JOIN beauty_prices P
+                      ON B.beauty_prices_code = P.beauty_price_code
+        WHERE B.beauty_reservation_list_code = #{beautyReservationListCode}
+    </select>
+
+    <select id="selectReviewList" resultType="ReviewDTO">
+        SELECT
+            R.reviews_code,
+            R.service_category_code,
+            R.provider_code,
+            R.user_code,
+            R.regist_date,
+            R.content,
+            R.score,
+            U.nickname
+        FROM reviews R
+        JOIN users U
+        ON R.user_code = U.user_code
+
+        WHERE provider_code = #{providerCode}
+    </select>
+
+    <select id="selectLastReview" resultType="ReviewDTO">
+        SELECT R.reviews_code,
+               R.service_category_code,
+               R.provider_code,
+               R.user_code,
+               R.regist_date,
+               R.content,
+               R.score,
+               U.nickname
+        FROM reviews R
+                 JOIN users U
+                      ON R.user_code = U.user_code
+        WHERE provider_code = #{providerCode}
+        ORDER BY R.regist_date
+                DESC limit #{num},1
+    </select>
+
+<!--  미용실 정보등록  -->
+    <insert id="registerBeautyInfo">
+        INSERT INTO beauties
+        (
+            beauty_code,
+            provider_code,
+            name,
+            phone,
+            web,
+            address,
+            intro
+        )
+        VALUES (
+                null,
+                #{providerCode},
+                #{name},
+                #{phone},
+                #{web},
+                #{address},
+                #{intro}
+               )
+    </insert>
+<!--  미용실 자격증 등록  -->
+    <insert id="registerBeautyCertificates">
+        INSERT INTO certificates
+        (
+            certificate_code,
+            provider_code,
+            service_category_code,
+            name,
+            text
+        )
+        VALUES (
+                null,
+                #{providerCode},
+                4,
+                #{name},
+                #{text}
+               )
+    </insert>
+
+<!--  미용실 운영시간 등록  -->
+    <insert id="registerBeautyTimes">
+        INSERT INTO times
+        (
+            time_code,
+            provider_code,
+            service_category_code,
+            day,
+            start_time,
+            end_time
+        )
+        VALUES (
+                null,
+                #{providerCode},
+                4,
+                #{day},
+                #{startTime},
+                #{endTime}
+               )
+    </insert>
+
+<!--  미용실 정보 수정  -->
+    <update id="updateBeautyInfo">
+        UPDATE beauties
+        SET
+            name=#{name},
+            phone=#{phone},
+            web=#{web},
+            address=#{address},
+            intro=#{intro}
+        WHERE provider_code = #{providerCode}
+    </update>
+<!--  미용실 카테고리 수정  -->
+    <update id="updateBeautyCategories">
+        UPDATE beauties
+        SET
+            large=#{large},
+            medium=#{medium},
+            small=#{small},
+            open_beauty=#{openBeauty},
+            spa=#{spa},
+            massage=#{massage},
+            self_beauty=#{selfBeauty},
+            hoteling=#{hoteling},
+            playground=#{playground},
+            free_parking=#{freeParking},
+            wi_fi=#{wiFi}
+        WHERE provider_code = #{providerCode}
+    </update>
+<!--  미용실 자격증 수정  -->
+    <update id="updateCertificates">
+        UPDATE certificates
+        SET
+            name=#{name},
+            text=#{text}
+        WHERE provider_code = #{providerCode}
+        AND service_category_code = 4
+
+    </update>
+
+<!--  미용실 운영시간 수정  -->
+    <update id="updateBeautyTimes">
+        UPDATE times
+        SET
+            day=#{day},
+            start_time=#{startTime},
+            end_time=#{endTime}
+        WHERE provider_code = #{providerCode}
+        AND service_category_code = 4
+    </update>
+<!--  미용실 신청내역 수락(수정)  -->
+    <update id="updateBeautyReservation">
+        UPDATE beauty_reservation_lists
+        SET
+            reservation=#{reservation}
+        WHERE beauty_reservation_list_code = #{beautyReservationListCode}
+    </update>
+
+<!--  미용실 삭제  -->
+    <delete id="deleteBeautyInfo">
+        DELETE FROM beauties
+        WHERE beauty_code=(
+            SELECT beauty_code
+            FROM(
+                SELECT beauty_code
+                FROM beauties
+                WHERE provider_code=#{providerCode}
+                )tmp
+            )
+    </delete>
+<!--  미용실 운영시간 식제   -->
+    <delete id="deleteBeautyTimes">
+        DELETE FROM times
+        WHERE provider_code = #{providerCode}
+        AND time_code = #{timeCode}
+    </delete>
+
+    <delete id="deleteBeautyReservationOne">
+        DELETE FROM beauty_reservation_lists
+        WHERE mypet_code = #{mypetCode}
+    </delete>
+
+
+</mapper>

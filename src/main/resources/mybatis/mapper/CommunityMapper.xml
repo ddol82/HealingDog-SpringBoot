@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.healing.healingdog.community.model.dao.CommunityMapper">
+
+    <select id="selectBoardHeadline" resultType="BoardTableDTO">
+        SELECT
+            bd.board_code
+             , bd.user_code
+             , bd.board_category_code
+             , bd.title
+             , bd.content
+             , bd.uptime
+             , bd.view
+             , bd.share
+          FROM boards AS bd
+         WHERE bd.important = 'O'
+    </select>
+
+    <select id="selectBoardCountAll" parameterType="_int" resultType="_int">
+        SELECT
+               COUNT(*)
+          FROM boards
+         WHERE 1=1
+        <if test="categoryCode != 5">
+           AND board_category_code = #{ code }
+        </if>
+    </select>
+
+    <select id="selectBoardList" parameterType="java.util.Map" resultType="BoardTableDTO">
+        SELECT
+               bs.board_code
+             , bs.user_code
+             , bs.board_category_code
+             , bs.title
+             , bs.content
+             , bs.uptime
+             , bs.view
+             , bs.share
+          FROM boards bs
+         WHERE 1=1
+        <if test="categoryCode != 5">
+           AND bs.board_category_code = #{ categoryCode }
+        </if>
+         ORDER BY bs.uptime DESC
+         LIMIT #{ limitParam } OFFSET #{ offsetParam }
+    </select>
+
+    <select id="selectBoardImageCount" parameterType="_int" resultType="_int">
+        SELECT
+               COUNT(*)
+          FROM board_images I
+         WHERE I.board_code = #{ code }
+    </select>
+    
+    <select id="selectBoardDetail" parameterType="_int" resultType="BoardTableDTO">
+        SELECT bs.board_code
+             , bs.user_code
+             , ud.profile_name
+             , bs.board_category_code
+             , bs.title
+             , bs.content
+             , bs.uptime
+             , bs.view
+             , bs.share
+             , COUNT(cj.user_code) AS comment_count
+        FROM boards AS bs
+        LEFT JOIN (
+            SELECT us.user_code
+                 , us.name AS profile_name
+              FROM users AS us
+            ) AS ud
+          ON ud.user_code = bs.user_code
+        LEFT JOIN (
+            SELECT cm.user_code
+            FROM comments AS cm
+        ) AS cj
+          ON cj.user_code = bs.user_code
+       WHERE bs.board_code = #{ boardCode }
+    </select>
+
+    <select id="selectAllLikeActivityDetail" parameterType="_int" resultType="_int">
+        SELECT COUNT(*)
+        FROM board_likes
+        WHERE board_code = #{ boardCode }
+    </select>
+
+    <select id="selectAllShareActivityDetail" parameterType="_int" resultType="_int">
+        SELECT bd.share
+        FROM boards bd
+        WHERE board_code = #{ boardCode }
+    </select>
+
+    <select id="selectAllCommentActivityDetail" parameterType="_int" resultType="_int">
+        SELECT COUNT(*)
+        FROM comments
+        WHERE board_code = #{ boardCode }
+    </select>
+
+    <select id="checkLikeState" parameterType="java.util.Map" resultType="_int">
+        SELECT COUNT(*)
+          FROM board_likes
+         WHERE board_code = #{ boardCode }
+           AND user_code = #{ userCode }
+    </select>
+
+    <select id="selectAllComments" parameterType="_int" resultType="CommentDTO">
+        SELECT cm.comment_code
+             , cm.board_code
+             , cm.user_code
+             , us.nickname AS user_name
+             , cm.ref
+             , cm.uptime
+             , cm.content
+          FROM comments AS cm
+          JOIN users AS us ON us.user_code = cm.user_code
+         WHERE cm.board_code = #{ boardCode }
+    </select>
+
+    <insert id="insertBoard" parameterType="BoardCreateDTO" useGeneratedKeys="true" keyProperty="id">
+        INSERT
+          INTO boards (
+               board_code
+             , user_code
+             , board_category_code
+             , title
+             , content
+             , uptime
+        )
+        VALUES (
+               NULL
+             , #{ userCode }
+             , #{ boardCategoryCode }
+             , #{ title }
+             , #{ content }
+             , NOW()
+        )
+    </insert>
+
+    <insert id="insertLikeChange" parameterType="java.util.Map">
+        INSERT
+          INTO board_likes (
+               like_code
+             , board_code
+             , user_code
+             , `time`
+        )
+        VALUES (
+               NULL
+             , #{ boardCode }
+             , #{ userCode }
+             , NOW()
+        )
+    </insert>
+
+    <insert id="registComment" parameterType="java.util.Map">
+        INSERT
+          INTO comments (
+               comment_code
+             , board_code
+             , user_code
+             , `ref`
+             , uptime
+             , content
+          )
+        VALUES (
+               NULL
+             , #{ boardCode }
+             , #{ userCode }
+        <choose>
+            <when test="ref == 0">
+             , NULL
+            </when>
+            <otherwise>
+             , #{ ref }
+            </otherwise>
+        </choose>
+             , NOW()
+             , #{ content }
+        )
+    </insert>
+
+    <update id="viewIncrement" parameterType="_int">
+        UPDATE boards
+           SET view = boards.view + 1
+         WHERE board_code = #{ boardCode }
+    </update>
+
+    <update id="shareIncrement" parameterType="_int">
+        UPDATE boards
+        SET share = boards.share + 1
+        WHERE board_code = #{ boardCode }
+    </update>
+
+    <update id="updateBoard" parameterType="BoardCreateDTO">
+        UPDATE boards
+           SET board_category_code = #{ boardCategoryCode }
+             , title = #{ title }
+             , content = #{ content }
+         WHERE board_code = #{ boardCode }
+    </update>
+
+    <delete id="deleteLikeChange" parameterType="java.util.Map">
+        DELETE
+          FROM board_likes
+         WHERE board_code = #{ boardCode }
+           AND user_code = #{ userCode }
+    </delete>
+
+    <delete id="deleteAllLikeChange" parameterType="_int">
+        DELETE
+        FROM board_likes
+        WHERE board_code = #{ boardCode }
+    </delete>
+
+    <delete id="deleteBoard" parameterType="_int">
+        DELETE
+          FROM boards
+         WHERE board_code = #{ boardCode }
+    </delete>
+</mapper>

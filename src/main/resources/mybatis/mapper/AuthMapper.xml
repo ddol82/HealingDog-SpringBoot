@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.healing.healingdog.login.model.dao.AuthMapper">
+
+    <select id="selectByUserSignupEmail" resultType="UserDTO">
+        SELECT
+            user_code
+             ,  name
+             ,  email
+             ,  user_password
+             ,  phone
+             ,  nickname
+             ,  address
+             ,  simple_intro
+             ,  self_intro
+             ,  blacklist
+             ,  role
+        FROM users
+        WHERE email = #{email}
+    </select>
+
+    <select id="selectByProviderSignupEmail" resultType="ProviderDTO">
+        SELECT
+            provider_code
+             ,  name
+             ,  email
+             ,  provider_password
+             ,  phone
+             ,  beauty_approval
+             ,  petsitter_approval
+             ,  trainers_approval
+             ,  kindergarden_approval
+             ,  boarding_approval
+             ,  role
+        FROM providers
+        WHERE email = #{email}
+    </select>
+
+    <select id="findByUserEmail" resultType="UserDTO">
+        SELECT
+            user_code
+             ,  name
+             ,  email
+             ,  user_password
+             ,  phone
+             ,  nickname
+             ,  address
+             ,  simple_intro
+             ,  self_intro
+             ,  blacklist
+             ,  role
+        FROM users
+        WHERE email = #{email}
+    </select>
+
+    <select id="findByProviderEmail" resultType="ProviderDTO">
+        SELECT
+            provider_code
+             ,  name
+             ,  email
+             ,  provider_password
+             ,  phone
+             ,  beauty_approval
+             ,  petsitter_approval
+             ,  trainers_approval
+             ,  kindergarden_approval
+             ,  boarding_approval
+             ,  role
+        FROM providers
+        WHERE email = #{email}
+    </select>
+
+    <insert id="insertUser" parameterType="UserDTO">
+        INSERT INTO users
+        (
+         user_code,
+         name,
+         email,
+         user_password,
+         phone,
+         nickname,
+         address,
+         simple_intro,
+         self_intro,
+         blacklist,
+         role
+         )
+        VALUES (
+                null,
+                #{name},
+                #{email},
+                #{userPassword},
+                #{phone},
+                #{nickname},
+                #{address},
+                #{simpleIntro},
+                #{selfIntro},
+                default,
+                default
+
+                )
+    </insert>
+
+    <insert id="insertProvider" parameterType="ProviderDTO">
+        INSERT INTO providers
+        (
+            provider_code,
+            name,
+            email,
+            provider_password,
+            phone
+        )
+        VALUES (
+                   null,
+                   #{name},
+                   #{email},
+                   #{providerPassword},
+                   #{phone}
+               )
+    </insert>
+
+</mapper>

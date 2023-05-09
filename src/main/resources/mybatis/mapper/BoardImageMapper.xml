@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.healing.healingdog.community.model.dao.CommunityMapper">
+    <select id="getFileItems" parameterType="_int" resultType="ImageTableDTO">
+        SELECT
+               bi.board_image_code
+             , bi.board_code
+             , bi.usage
+             , bi.thumbnail
+             , bi.original
+             , bi.preview
+          FROM board_images bi
+         WHERE bi.board_code = #{ boardCode }
+    </select>
+
+    <select id="selectBoardOriginalUrl" parameterType="_int" resultType="string">
+        SELECT
+               I.original
+          FROM board_images AS I
+         WHERE I.board_code = #{ boardCode }
+         ORDER BY I.usage ASC
+    </select>
+
+    <select id="selectBoardThumbnailUrl" parameterType="_int" resultType="string">
+        SELECT
+               I.thumbnail
+          FROM board_images AS I
+         WHERE I.board_code = #{ code }
+           AND I.usage = 0
+    </select>
+
+    <select id="selectBoardPreviewUrl" parameterType="_int" resultType="string">
+        SELECT
+               I.preview
+          FROM board_images AS I
+         WHERE I.board_code = #{ boardCode }
+         ORDER BY I.usage ASC
+    </select>
+
+    <select id="selectBoardSizeCount" parameterType="_int" resultType="_int">
+        SELECT
+               I.size
+          FROM board_images AS I
+         WHERE I.board_code = #{ code }
+    </select>
+
+    <insert id="insertBoardImage" parameterType="ImageTableDTO">
+        INSERT
+          INTO board_images (
+               board_image_code
+             , board_code
+             , `usage`
+             , thumbnail
+             , original
+             , preview
+             , `size`
+        )
+        VALUES (
+               NULL
+             , #{ refCode }
+             , #{ usage }
+             , #{ thumbnail }
+             , #{ original }
+             , #{ preview }
+             , #{ size }
+        )
+    </insert>
+
+    <update id="updateBoardImageUsage" parameterType="java.util.Map">
+        UPDATE board_images
+           SET `usage` = #{ afterIdx }
+         WHERE board_image_code = (
+            SELECT board_image_code
+            FROM (
+                     SELECT board_image_code
+                     FROM board_images
+                     WHERE board_code = #{ boardCode }
+                       AND `usage` = #{ beforeIdx }
+                 )tmp
+        );
+    </update>
+
+    <delete id="deleteBoardTable" parameterType="_int">
+        DELETE
+          FROM board_images
+         WHERE board_code = #{ boardCode }
+    </delete>
+
+    <delete id="deleteBoardTableWithUsage" parameterType="java.util.Map">
+        DELETE
+          FROM board_images
+         WHERE board_code = #{ boardCode }
+           AND `usage` IN
+        <foreach collection="usageList" index="index" item="usage" open="(" close=")" separator=",">
+            #{ usage }
+        </foreach>
+    </delete>
+</mapper>
